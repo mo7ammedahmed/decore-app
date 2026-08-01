@@ -1,13 +1,13 @@
-import PublicLayout from '@/Layouts/PublicLayout';
-import PublicMaterialCard from '@/Components/PublicMaterialCard';
-import ImagePreview from '@/Components/ImagePreview';
-import BlurText from '@/Components/BlurText';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
+import PublicLayout from '@/Layouts/PublicLayout';
+import PublicImage from '@/Components/PublicImage';
+import PublicMaterialCard from '@/Components/PublicMaterialCard';
+import PublicSectionHeading from '@/Components/PublicSectionHeading';
 import { fadeUp, fadeUpTransition, staggerContainer, staggerItem } from '@/Utilities/motion';
 import { useI18n } from '@/Utilities/i18n';
 import type { TranslationKey } from '@/Utilities/i18n';
-import type { ReactNode } from 'react';
+import { useAppearance } from '@/Utilities/appearance';
 import type { Classification, PublicMaterial } from '@/types/domain';
 import type { PageProps } from '@/types';
 
@@ -17,17 +17,26 @@ interface LandingProps extends PageProps {
         classifications: number;
         suppliers: number;
     };
+    hero: { image_url: string | null; alt_text: string | null } | null;
+    /** Admin-picked final CTA background (null = automatic). */
+    cta?: { image_url: string | null; alt_text: string | null } | null;
     featured: PublicMaterial[];
-    classifications: (Classification & { materials_count: number })[];
+    inspiration: { id: number; image_url: string | null; alt_text: string | null; section_name: string }[];
+    classifications: (Classification & { image_url?: string | null; image_alt_text?: string | null; materials_count: number })[];
+    /** Which sections the admin chose to show (false = hidden). */
+    landing_sections?: Record<string, boolean>;
+    /** Admin-curated bilingual 'Why Decore' cards (empty = code defaults). */
+    why_cards?: { title_en: string; title_ar: string | null; body_en: string; body_ar: string | null }[];
+    /** Admin-curated bilingual customer-journey steps (empty = code defaults). */
+    journey_steps?: { title_en: string; title_ar: string | null; body_en: string; body_ar: string | null }[];
 }
 
 /* ---- Inline SVG icons (the app ships its iconography inline, no icon lib) ---- */
 
-function ArrowUpRightIcon({ className }: { className?: string }) {
+function ArrowRightIcon({ className }: { className?: string }) {
     return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M7 17L17 7" />
-            <path d="M7 7h10v10" />
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
     );
 }
@@ -50,36 +59,6 @@ function LayersIcon({ className }: { className?: string }) {
     );
 }
 
-function ReceiptIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M7 3h10a1 1 0 011 1v17l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21V4a1 1 0 011-1z" />
-            <path d="M9 8h6M9 12h6M9 16h4" />
-        </svg>
-    );
-}
-
-function BoxIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" />
-            <path d="M3 8l9 5 9-5" />
-            <path d="M12 13v8" />
-        </svg>
-    );
-}
-
-function PaletteIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2a10 10 0 100 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.2A4.8 4.8 0 0022 10.8 8.8 8.8 0 0012 2z" />
-            <circle cx="7.5" cy="11.5" r="1" fill="currentColor" />
-            <circle cx="10.5" cy="7.5" r="1" fill="currentColor" />
-            <circle cx="15" cy="7.5" r="1" fill="currentColor" />
-        </svg>
-    );
-}
-
 function HandshakeIcon({ className }: { className?: string }) {
     return (
         <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
@@ -92,295 +71,283 @@ function HandshakeIcon({ className }: { className?: string }) {
     );
 }
 
-const STAT_META: { key: keyof LandingProps['stats']; labelKey: TranslationKey; icon: ReactNode }[] = [
+function ShieldIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
+            <path d="M9 12l2 2 4-4" />
+        </svg>
+    );
+}
+
+function RulerIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 17l4 4L21 7l-4-4L3 17z" />
+            <path d="M8 12l1.5 1.5M11 9l1.5 1.5M14 6l1.5 1.5" />
+        </svg>
+    );
+}
+
+function HomeIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 11l9-8 9 8" />
+            <path d="M5 9.5V21h14V9.5" />
+            <path d="M10 21v-6h4v6" />
+        </svg>
+    );
+}
+
+function QuoteIcon({ className }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 10h3v4a3 3 0 01-3 3" />
+            <path d="M14 10h3v4a3 3 0 01-3 3" />
+            <path d="M4 4h16v14a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+        </svg>
+    );
+}
+
+const STATS: { key: keyof LandingProps['stats']; labelKey: TranslationKey; icon: React.ReactNode }[] = [
     { key: 'materials', labelKey: 'landing.stat_materials', icon: <LayersIcon className="h-5 w-5" /> },
-    { key: 'classifications', labelKey: 'landing.stat_classifications', icon: <PaletteIcon className="h-5 w-5" /> },
+    { key: 'classifications', labelKey: 'landing.stat_classifications', icon: <RulerIcon className="h-5 w-5" /> },
     { key: 'suppliers', labelKey: 'landing.stat_suppliers', icon: <HandshakeIcon className="h-5 w-5" /> },
 ];
 
-const CAPABILITY_TAGS_2: TranslationKey[] = ['landing.cap2_tag1', 'landing.cap2_tag2', 'landing.cap2_tag3', 'landing.cap2_tag4'];
-const CAPABILITY_TAGS_3: TranslationKey[] = ['landing.cap3_tag1', 'landing.cap3_tag2', 'landing.cap3_tag3', 'landing.cap3_tag4'];
+const WHY: { titleKey: TranslationKey; bodyKey: TranslationKey; icon: React.ReactNode }[] = [
+    { titleKey: 'landing.why_1_title', bodyKey: 'landing.why_1_body', icon: <LayersIcon className="h-5 w-5" /> },
+    { titleKey: 'landing.why_2_title', bodyKey: 'landing.why_2_body', icon: <HandshakeIcon className="h-5 w-5" /> },
+    { titleKey: 'landing.why_3_title', bodyKey: 'landing.why_3_body', icon: <ShieldIcon className="h-5 w-5" /> },
+    { titleKey: 'landing.why_4_title', bodyKey: 'landing.why_4_body', icon: <RulerIcon className="h-5 w-5" /> },
+    { titleKey: 'landing.why_5_title', bodyKey: 'landing.why_5_body', icon: <HomeIcon className="h-5 w-5" /> },
+    { titleKey: 'landing.why_6_title', bodyKey: 'landing.why_6_body', icon: <QuoteIcon className="h-5 w-5" /> },
+];
 
-export default function Landing({ auth, stats, featured, classifications }: LandingProps) {
-    const user = auth.user;
-    const { t } = useI18n();
+const WHY_ICONS = [
+    <LayersIcon className="h-5 w-5" />,
+    <HandshakeIcon className="h-5 w-5" />,
+    <ShieldIcon className="h-5 w-5" />,
+    <RulerIcon className="h-5 w-5" />,
+    <HomeIcon className="h-5 w-5" />,
+    <QuoteIcon className="h-5 w-5" />,
+];
+
+const JOURNEY_STEPS: { titleKey: TranslationKey; bodyKey: TranslationKey }[] = [
+    { titleKey: 'landing.step1_title', bodyKey: 'landing.step1_body' },
+    { titleKey: 'landing.step2_title', bodyKey: 'landing.step2_body' },
+    { titleKey: 'landing.step3_title', bodyKey: 'landing.step3_body' },
+    { titleKey: 'landing.step4_title', bodyKey: 'landing.step4_body' },
+];
+
+/** Pick the Arabic text when it exists, else fall back to English. */
+function localized(en: string, ar: string | null, locale: string): string {
+    return locale === 'ar' && ar ? ar : en;
+}
+
+export default function Landing({ stats, hero, cta, featured, inspiration, classifications, landing_sections, why_cards, journey_steps }: LandingProps) {
+    const { t, locale } = useI18n();
     const reduceMotion = useReducedMotion();
+    const appearance = useAppearance();
+    const heroImage = hero?.image_url ?? null;
+    const heroAlt = hero?.alt_text ?? t('landing.hero_kicker');
+    // Final CTA background: the admin-picked gallery image, else the newest
+    // published image (same source as the inspiration mosaic), else the texture.
+    const ctaImage = cta?.image_url ?? inspiration[0]?.image_url ?? null;
 
-    const heroHeadline = `${t('landing.hero_line1')} ${t('landing.hero_accent')} ${t('landing.hero_line2')}`;
+    // Dashboard-controlled section visibility (default: everything visible).
+    const show = {
+        collections: landing_sections?.collections !== false,
+        featured: landing_sections?.featured !== false,
+        inspiration: landing_sections?.inspiration !== false,
+        why: landing_sections?.why !== false,
+        journey: landing_sections?.journey !== false,
+        cta: landing_sections?.cta !== false,
+    };
 
-    const ambient = reduceMotion
+    // The hero sits behind the transparent header — scrim darkens the top in
+    // dark mode and lightens it in light mode so the header stays readable.
+    const topScrim = appearance === 'light'
+        ? 'from-white/70 via-white/25 to-transparent'
+        : 'from-black/60 via-black/25 to-transparent';
+
+    const motionProps = reduceMotion
         ? {}
-        : {
-              animate: { opacity: [0.45, 0.85, 0.45], scale: [1, 1.08, 1] },
-              transition: { duration: 12, repeat: Infinity, ease: 'easeInOut' as const },
-          };
+        : { initial: fadeUp.initial, whileInView: fadeUp.animate, viewport: { once: true, margin: '-60px' }, transition: fadeUpTransition };
 
     return (
-        <PublicLayout title={t('public.tagline')}>
-            {/* ================= Hero — full viewport cinematic ================= */}
-            <section className="relative flex min-h-screen flex-col overflow-hidden">
-                {/* Atmospheric glows — the shop's own cinematic backdrop (no video asset) */}
-                <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                    <motion.div
-                        {...ambient}
-                        className="absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-accent/[0.08] blur-[130px]"
-                    />
-                    <motion.div
-                        {...ambient}
-                        className="absolute right-[-10%] top-1/3 h-80 w-80 rounded-full bg-fg/[0.05] blur-[110px]"
-                    />
-                    <div className="absolute bottom-0 left-[-5%] h-72 w-72 rounded-full bg-accent/[0.05] blur-[120px]" />
+        <PublicLayout title={t('landing.hero_kicker')} transparentHeader>
+            <Head>
+                <meta name="description" content={t('landing.hero_sub')} />
+                <meta property="og:title" content={`${t('landing.hero_line1')} ${t('landing.hero_line2')}`} />
+                <meta property="og:description" content={t('landing.hero_sub')} />
+                {heroImage && <meta property="og:image" content={heroImage} />}
+            </Head>
+
+            {/* ================= Hero — image-led, full viewport ================= */}
+            <section className="relative -mt-16 flex min-h-[92vh] flex-col overflow-hidden">
+                {/* Background image (or warm texture when no project photo exists) */}
+                <div className="absolute inset-0" aria-hidden="true">
+                    {heroImage ? (
+                        // Hero image loads eagerly by default — no loading=lazy,
+                        // no fetchPriority (unsupported by React 18 and a no-op).
+                        <img src={heroImage} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                        <div className="material-texture h-full w-full" />
+                    )}
+                    <div className={`absolute inset-x-0 top-0 h-64 bg-gradient-to-b ${topScrim}`} />
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-canvas via-canvas/70 to-transparent" />
                 </div>
 
-                <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-4 pb-16 pt-24 text-center sm:px-6">
-                    {/* Badge */}
-                    <motion.div
-                        initial={fadeUp.initial}
-                        animate={fadeUp.animate}
-                        transition={{ ...fadeUpTransition, delay: 0.4 }}
-                        className="liquid-glass inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm text-fg/85"
-                    >
-                        <span className="rounded-full bg-fg px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-canvas">
-                            {t('landing.hero_badge_tag')}
-                        </span>
-                        <span className="font-light">{t('landing.hero_badge')}</span>
-                    </motion.div>
-
-                    {/* Headline — word-by-word blur-in */}
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-                        <h1 className="mt-8 max-w-4xl text-6xl leading-[0.82] md:text-7xl lg:text-[5.5rem]">
-                            <BlurText text={heroHeadline} highlightWord={t('landing.hero_accent')} delay={0.55} />
-                        </h1>
-                    </motion.div>
-
-                    {/* Subtext */}
-                    <motion.p
-                        initial={fadeUp.initial}
-                        animate={fadeUp.animate}
-                        transition={{ ...fadeUpTransition, delay: 0.9 }}
-                        className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-fg/70 md:text-base"
-                    >
-                        {t('landing.hero_sub')}
-                    </motion.p>
-
-                    {/* CTAs */}
-                    <motion.div
-                        initial={fadeUp.initial}
-                        animate={fadeUp.animate}
-                        transition={{ ...fadeUpTransition, delay: 1.15 }}
-                        className="mt-8 flex flex-wrap items-center justify-center gap-6"
-                    >
-                        <Link
-                            href={route('catalog')}
-                            className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
-                        >
-                            {t('landing.browse_catalog')}
-                            <ArrowUpRightIcon className="h-4 w-4 rtl:-scale-x-100" />
-                        </Link>
-                        <Link
-                            href={route('contact')}
-                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-light text-fg/70 transition-colors duration-200 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
-                        >
-                            <ChatIcon className="h-4 w-4" />
-                            {t('nav.contact')}
-                        </Link>
-                    </motion.div>
-
-                    {/* Stats — real catalogue numbers */}
-                    <motion.dl
-                        initial="hidden"
-                        animate="show"
-                        variants={staggerContainer}
-                        className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3"
-                    >
-                        {STAT_META.map(({ key, labelKey, icon }) => (
-                            <motion.div
-                                key={key}
-                                variants={staggerItem}
-                                className="liquid-glass flex items-center gap-4 rounded-[1.25rem] p-5 text-start"
-                            >
-                                <span className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.75rem] text-accent">
-                                    {icon}
-                                </span>
-                                <div className="min-w-0">
-                                    <dt className="truncate text-[11px] uppercase tracking-[0.14em] text-fg/40">
-                                        {t(labelKey)}
-                                    </dt>
-                                    <dd className="mt-1 font-heading text-4xl italic leading-none tracking-[-1px] text-fg">
-                                        {stats[key]}
-                                    </dd>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.dl>
-                </div>
-
-                {/* Trust bar — real collections, italic serif */}
-                {classifications.length > 0 && (
-                    <motion.div
-                        initial={fadeUp.initial}
-                        animate={fadeUp.animate}
-                        transition={{ ...fadeUpTransition, delay: 1.35 }}
-                        className="relative z-10 flex flex-col items-center gap-4 px-4 pb-10"
-                    >
-                        <span className="liquid-glass rounded-full px-4 py-1.5 text-xs text-fg/60">
-                            {t('landing.trust_label')}
-                        </span>
-                        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 md:gap-x-16">
-                            {classifications.map((classification) => (
-                                <Link
-                                    key={classification.id}
-                                    href={route('catalog', { classification: classification.id })}
-                                    className="font-heading text-2xl italic tracking-tight text-fg/45 transition-colors duration-300 hover:text-fg md:text-3xl"
-                                >
-                                    {classification.localized_name ?? classification.name_en}
-                                </Link>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-            </section>
-
-            {/* ================= Capabilities — // The atelier ================= */}
-            <section className="relative overflow-hidden py-24 sm:py-28">
-                <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                    <div className="absolute left-1/2 top-0 h-96 w-[700px] -translate-x-1/2 rounded-full bg-fg/[0.04] blur-[120px]" />
-                </div>
-
-                <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
+                <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-4 pb-16 pt-40 sm:px-6 lg:px-8">
                     <div className="max-w-3xl">
                         <motion.p
-                            initial={fadeUp.initial}
-                            whileInView={fadeUp.animate}
-                            viewport={{ once: true }}
+                            initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+                            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                             transition={fadeUpTransition}
-                            className="text-sm text-fg/70"
+                            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white backdrop-blur-sm"
                         >
-                            {t('landing.capabilities_eyebrow')}
+                            {t('landing.hero_kicker')}
                         </motion.p>
-                        <h2 className="mt-6 text-5xl leading-[0.85] md:text-6xl lg:text-[4.5rem]">
-                            <BlurText text={t('landing.capabilities_title')} align="start" />
-                        </h2>
+
+                        <motion.h1
+                            initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
+                            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                            transition={{ ...fadeUpTransition, delay: 0.1 }}
+                            className="mt-6 text-5xl leading-[0.98] text-white sm:text-6xl lg:text-7xl"
+                        >
+                            {t('landing.hero_line1')}{' '}
+                            <em className="text-accent">{t('landing.hero_accent')}</em>{' '}
+                            {t('landing.hero_line2')}
+                        </motion.h1>
+
                         <motion.p
-                            initial={fadeUp.initial}
-                            whileInView={fadeUp.animate}
-                            viewport={{ once: true }}
-                            transition={fadeUpTransition}
-                            className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-fg/55 md:text-base"
+                            initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+                            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                            transition={{ ...fadeUpTransition, delay: 0.2 }}
+                            className="mt-6 max-w-xl text-sm font-light leading-relaxed text-white/75 md:text-base"
                         >
-                            {t('landing.capabilities_sub')}
+                            {t('landing.hero_sub')}
                         </motion.p>
-                    </div>
 
-                    <div className="mt-14 grid gap-6 md:grid-cols-3">
-                        {/* Card 1 — Materials (tags come from the real catalogue) */}
                         <motion.div
-                            initial={fadeUp.initial}
-                            whileInView={fadeUp.animate}
-                            viewport={{ once: true, margin: '-80px' }}
-                            transition={fadeUpTransition}
-                            className="liquid-glass flex min-h-[380px] flex-col rounded-[1.25rem] p-6"
-                        >
-                            <div className="flex items-start justify-between gap-3">
-                                <span className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.75rem] text-accent">
-                                    <LayersIcon className="h-5 w-5" />
-                                </span>
-                                <div className="flex flex-wrap justify-end gap-1.5">
-                                    {classifications.slice(0, 4).map((classification) => (
-                                        <span
-                                            key={classification.id}
-                                            className="liquid-glass whitespace-nowrap rounded-full px-3 py-1 text-[11px] text-fg/85"
-                                        >
-                                            {classification.localized_name ?? classification.name_en}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex-1" />
-                            <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
-                                {t('landing.cap1_title')}
-                            </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
-                                {t('landing.cap1_body')}
-                            </p>
-                        </motion.div>
-
-                        {/* Card 2 — Pricing & Invoicing */}
-                        <motion.div
-                            initial={fadeUp.initial}
-                            whileInView={fadeUp.animate}
-                            viewport={{ once: true, margin: '-80px' }}
-                            transition={{ ...fadeUpTransition, delay: 0.15 }}
-                            className="liquid-glass flex min-h-[380px] flex-col rounded-[1.25rem] p-6"
-                        >
-                            <div className="flex items-start justify-between gap-3">
-                                <span className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.75rem] text-accent">
-                                    <ReceiptIcon className="h-5 w-5" />
-                                </span>
-                                <div className="flex flex-wrap justify-end gap-1.5">
-                                    {CAPABILITY_TAGS_2.map((tag) => (
-                                        <span key={tag} className="liquid-glass whitespace-nowrap rounded-full px-3 py-1 text-[11px] text-white/85">
-                                            {t(tag)}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex-1" />
-                            <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
-                                {t('landing.cap2_title')}
-                            </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
-                                {t('landing.cap2_body')}
-                            </p>
-                        </motion.div>
-
-                        {/* Card 3 — Supplier Workspace */}
-                        <motion.div
-                            initial={fadeUp.initial}
-                            whileInView={fadeUp.animate}
-                            viewport={{ once: true, margin: '-80px' }}
+                            initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
+                            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                             transition={{ ...fadeUpTransition, delay: 0.3 }}
-                            className="liquid-glass flex min-h-[380px] flex-col rounded-[1.25rem] p-6"
+                            className="mt-9 flex flex-wrap items-center gap-4"
                         >
-                            <div className="flex items-start justify-between gap-3">
-                                <span className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.75rem] text-accent">
-                                    <BoxIcon className="h-5 w-5" />
-                                </span>
-                                <div className="flex flex-wrap justify-end gap-1.5">
-                                    {CAPABILITY_TAGS_3.map((tag) => (
-                                        <span key={tag} className="liquid-glass whitespace-nowrap rounded-full px-3 py-1 text-[11px] text-white/85">
-                                            {t(tag)}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="flex-1" />
-                            <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
-                                {t('landing.cap3_title')}
-                            </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
-                                {t('landing.cap3_body')}
-                            </p>
+                            <Link
+                                href={route('catalog')}
+                                className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-200 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                            >
+                                {t('landing.hero_cta_catalog')}
+                                <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                            </Link>
+                            <Link
+                                href={route('gallery')}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                            >
+                                {t('landing.hero_cta_gallery')}
+                            </Link>
                         </motion.div>
+
+                        {/* Trust indicators — real catalogue numbers */}
+                        <motion.dl
+                            initial="hidden"
+                            animate="show"
+                            variants={staggerContainer}
+                            className="mt-14 grid max-w-xl grid-cols-3 gap-6 border-t border-white/15 pt-6"
+                        >
+                            {STATS.map(({ key, labelKey }) => (
+                                <motion.div key={key} variants={staggerItem} className="flex items-center gap-3">
+                                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-accent">
+                                        {STATS.find((s) => s.key === key)?.icon}
+                                    </span>
+                                    <div>
+                                        <dd className="font-heading text-2xl italic leading-none text-white">{stats[key]}</dd>
+                                        <dt className="mt-1 text-[10px] uppercase tracking-[0.16em] text-white/50">{t(labelKey)}</dt>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.dl>
                     </div>
                 </div>
             </section>
 
-            {/* ---- Featured materials (live catalogue data) ---- */}
-            {featured.length > 0 && (
-                <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
-                    <div className="flex items-end justify-between gap-4">
-                        <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">
-                                {t('landing.atelier_eyebrow')}
-                            </p>
-                            <h2 className="mt-3 text-4xl sm:text-5xl">{t('landing.featured_title')}</h2>
-                        </div>
+            {/* ================= Collections — showroom tiles ================= */}
+            {show.collections && classifications.length > 0 && (
+                <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 sm:py-24">
+                    <div className="flex items-end justify-between gap-6">
+                        <PublicSectionHeading
+                            eyebrow={t('landing.collections_eyebrow')}
+                            title={t('landing.collections_title')}
+                            sub={t('landing.collections_sub')}
+                        />
                         <Link
                             href={route('catalog')}
-                            className="shrink-0 rounded-full px-4 py-2 text-sm text-fg/60 transition-colors hover:text-fg"
+                            className="hidden shrink-0 items-center gap-1.5 text-sm font-medium text-fg/60 transition-colors hover:text-fg sm:inline-flex"
                         >
-                            {t('common.view_all')} <span className="inline-block rtl:-scale-x-100">→</span>
+                            {t('common.view_all')}
+                            <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                        </Link>
+                    </div>
+
+                    <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        {classifications.map((classification, index) => (
+                            <motion.div
+                                key={classification.id}
+                                initial={reduceMotion ? undefined : fadeUp.initial}
+                                whileInView={reduceMotion ? undefined : fadeUp.animate}
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ ...fadeUpTransition, delay: (index % 3) * 0.08 }}
+                                className={index === 0 ? 'sm:col-span-2 sm:row-span-2' : ''}
+                            >
+                                <Link
+                                    href={route('catalog', { classification: classification.id })}
+                                    className="group relative block overflow-hidden rounded-2xl border border-line bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                                >
+                                    <PublicImage
+                                        src={classification.image_url}
+                                        alt={classification.image_alt_text ?? classification.localized_name ?? classification.name_en}
+                                        label={classification.localized_name ?? classification.name_en}
+                                        className={`w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] ${index === 0 ? 'aspect-[16/10] lg:aspect-[16/9]' : 'aspect-[4/3]'}`}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
+                                        <div>
+                                            <h3 className="font-heading text-2xl italic leading-snug text-white sm:text-3xl">
+                                                {classification.localized_name ?? classification.name_en}
+                                            </h3>
+                                            <p className="mt-1 text-xs uppercase tracking-[0.16em] text-white/60">
+                                                {t('landing.materials_count', { count: classification.materials_count })}
+                                            </p>
+                                        </div>
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1">
+                                            <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                                        </span>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {/* ================= Featured finishes ================= */}
+            {show.featured && featured.length > 0 && (
+                <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 sm:py-20">
+                    <div className="flex items-end justify-between gap-6">
+                        <PublicSectionHeading
+                            eyebrow={t('landing.featured_eyebrow')}
+                            title={t('landing.featured_title')}
+                            sub={t('landing.featured_sub')}
+                        />
+                        <Link
+                            href={route('catalog')}
+                            className="hidden shrink-0 items-center gap-1.5 text-sm font-medium text-fg/60 transition-colors hover:text-fg sm:inline-flex"
+                        >
+                            {t('common.view_all')}
+                            <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
                         </Link>
                     </div>
 
@@ -388,7 +355,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         initial="hidden"
                         animate="show"
                         variants={staggerContainer}
-                        className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                        className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3"
                     >
                         {featured.map((material) => (
                             <PublicMaterialCard key={material.id} material={material} />
@@ -397,105 +364,202 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                 </section>
             )}
 
-            {/* ---- Collections ---- */}
-            {classifications.length > 0 && (
-                <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">{t('landing.collections_eyebrow')}</p>
-                    <h2 className="mt-3 text-4xl sm:text-5xl">{t('landing.collections_title')}</h2>
+            {/* ================= Project inspiration ================= */}
+            {show.inspiration && inspiration.length > 0 && (
+                <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 sm:py-20">
+                    <div className="flex items-end justify-between gap-6">
+                        <PublicSectionHeading
+                            eyebrow={t('landing.inspiration_eyebrow')}
+                            title={t('landing.inspiration_title')}
+                            sub={t('landing.inspiration_sub')}
+                        />
+                        <Link
+                            href={route('gallery')}
+                            className="hidden shrink-0 items-center gap-1.5 text-sm font-medium text-fg/60 transition-colors hover:text-fg sm:inline-flex"
+                        >
+                            {t('landing.inspiration_cta')}
+                            <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                        </Link>
+                    </div>
 
-                    <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {classifications.map((classification, index) => {
-                            const palette = ['#D4AF7A', '#C89B6C', '#8A7B6B', '#B58E5B', '#A88B5E', '#7C6F5E'];
-                            const hex = palette[index % palette.length];
-
-                            return (
-                                <Link
-                                    key={classification.id}
-                                    href={route('catalog', { classification: classification.id })}
-                                    className="liquid-glass group flex items-center gap-4 rounded-card p-5 transition-all duration-300 hover:bg-fg/[0.03]"
-                                >
-                                    <ImagePreview url={null} hex={hex} alt={classification.localized_name ?? classification.name_en} size="md" />
-                                    <div className="min-w-0 flex-1">
-                                        <h3 className="font-heading text-xl italic leading-snug text-fg/90 group-hover:text-fg">
-                                            {classification.localized_name ?? classification.name_en}
-                                        </h3>
-                                        {classification.description && (
-                                            <p className="mt-1 truncate text-xs text-fg/40">
-                                                {classification.description}
-                                            </p>
-                                        )}
-                                        <p className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-fg/35">
-                                            {t('landing.materials_count', { count: classification.materials_count })}
-                                        </p>
-                                    </div>
+                    <div className="mt-10 columns-2 gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-4">
+                        {inspiration.map((image, index) => (
+                            <motion.figure
+                                key={image.id}
+                                initial={reduceMotion ? undefined : { opacity: 0, y: 20 }}
+                                whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ ...fadeUpTransition, delay: (index % 4) * 0.06 }}
+                                className="group relative break-inside-avoid overflow-hidden rounded-2xl border border-line"
+                            >
+                                <Link href={route('gallery')} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50">
+                                    <PublicImage
+                                        src={image.image_url}
+                                        alt={image.alt_text ?? image.section_name}
+                                        label={image.section_name}
+                                        className="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                                    />
+                                    {image.section_name && (
+                                        <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-xs font-medium uppercase tracking-[0.14em] text-white/85 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                            {image.section_name}
+                                        </figcaption>
+                                    )}
                                 </Link>
-                            );
-                        })}
+                            </motion.figure>
+                        ))}
+                    </div>
+
+                    <div className="mt-8 text-center sm:hidden">
+                        <Link href={route('gallery')} className="inline-flex items-center gap-1.5 text-sm font-medium text-accent">
+                            {t('landing.inspiration_cta')}
+                            <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                        </Link>
                     </div>
                 </section>
             )}
 
-            {/* ---- How it works ---- */}
-            <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
-                <div className="liquid-glass-strong rounded-modal p-8 sm:p-12">
-                    <div className="mx-auto max-w-2xl text-center">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">
-                            {t('landing.how_eyebrow')}
-                        </p>
-                        <h2 className="mt-3 text-4xl sm:text-5xl">{t('landing.how_title')}</h2>
-                        <p className="mt-4 text-fg/50">
-                            {t('landing.how_sub')}
-                        </p>
-                    </div>
+            {/* ================= Why choose Decore ================= */}
+            {show.why && (
+            <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 sm:py-20">
+                <PublicSectionHeading
+                    eyebrow={t('landing.why_eyebrow')}
+                    title={t('landing.why_title')}
+                    sub={t('landing.why_sub')}
+                    align="center"
+                />
 
-                    <div className="mt-12 grid gap-8 sm:grid-cols-3">
-                        {[
-                            { step: '01', title: t('landing.step1_title'), body: t('landing.step1_body') },
-                            { step: '02', title: t('landing.step2_title'), body: t('landing.step2_body') },
-                            { step: '03', title: t('landing.step3_title'), body: t('landing.step3_body') },
-                        ].map((item) => (
-                            <div key={item.step} className="text-center sm:text-start">
-                                <span className="font-heading text-5xl italic text-accent/60">{item.step}</span>
-                                <h3 className="mt-4 font-heading text-2xl italic text-fg/90">{item.title}</h3>
-                                <p className="mt-2 text-sm leading-relaxed text-fg/45">{item.body}</p>
-                            </div>
-                        ))}
-                    </div>
+                <motion.div
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: '-60px' }}
+                    variants={staggerContainer}
+                    className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                    {(() => {
+                        const cards = why_cards && why_cards.length > 0
+                            ? why_cards.map((card, index) => ({
+                                  title: localized(card.title_en, card.title_ar, locale),
+                                  body: localized(card.body_en, card.body_ar, locale),
+                                  icon: WHY_ICONS[index % WHY_ICONS.length],
+                                  key: `card-${index}`,
+                              }))
+                            : WHY.map(({ titleKey, bodyKey, icon }) => ({
+                                  title: t(titleKey),
+                                  body: t(bodyKey),
+                                  icon,
+                                  key: titleKey,
+                              }));
+
+                        return cards.map((card) => (
+                            <motion.div
+                                key={card.key}
+                                variants={staggerItem}
+                                className="rounded-2xl border border-line bg-surface/60 p-6 transition-colors duration-300 hover:border-accent/30"
+                            >
+                                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                                    {card.icon}
+                                </span>
+                                <h3 className="mt-5 font-heading text-2xl italic text-fg">{card.title}</h3>
+                                <p className="mt-2 text-sm leading-relaxed text-fg/55">{card.body}</p>
+                            </motion.div>
+                        ));
+                    })()}
+                </motion.div>
+            </section>
+            )}
+
+            {/* ================= Customer journey ================= */}
+            {show.journey && (
+            <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 sm:py-20">
+                <div className="rounded-3xl border border-line bg-surface/40 p-8 sm:p-12">
+                    <PublicSectionHeading
+                        eyebrow={t('landing.journey_eyebrow')}
+                        title={t('landing.journey_title')}
+                        sub={t('landing.journey_sub')}
+                        align="center"
+                    />
+
+                    <motion.ol
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: '-60px' }}
+                        variants={staggerContainer}
+                        className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4"
+                    >
+                        {(() => {
+                            const steps = journey_steps && journey_steps.length > 0
+                                ? journey_steps.map((step) => ({
+                                      title: localized(step.title_en, step.title_ar, locale),
+                                      body: localized(step.body_en, step.body_ar, locale),
+                                  }))
+                                : JOURNEY_STEPS.map(({ titleKey, bodyKey }) => ({
+                                      title: t(titleKey),
+                                      body: t(bodyKey),
+                                  }));
+
+                            return steps.map((step, index) => (
+                                <motion.li
+                                    key={`step-${index}`}
+                                    variants={staggerItem}
+                                    className="relative text-center sm:text-start"
+                                >
+                                    <span className="font-heading text-5xl italic text-accent/50">{String(index + 1).padStart(2, '0')}</span>
+                                    <h3 className="mt-3 font-heading text-xl italic text-fg/90">{step.title}</h3>
+                                    <p className="mt-2 text-sm leading-relaxed text-fg/45">{step.body}</p>
+                                </motion.li>
+                            ));
+                        })()}
+                    </motion.ol>
                 </div>
             </section>
+            )}
 
-            {/* ---- Final CTA ---- */}
-            <section className="mx-auto max-w-6xl px-4 pb-24 text-center sm:px-6">
-                <h2 className="text-4xl sm:text-5xl">{t('landing.cta_title')}</h2>
-                <p className="mx-auto mt-4 max-w-md text-fg/50">
-                    {user ? t('landing.cta_authed') : t('landing.cta_guest')}
-                </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                    {user ? (
-                        <Link
-                            href={route('dashboard')}
-                            className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.07]"
-                        >
-                            {t('common.open_dashboard')}
-                        </Link>
+            {/* ================= Final CTA — image-backed ================= */}
+            {show.cta && (
+            <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
+                <motion.div {...motionProps} className="relative overflow-hidden rounded-3xl border border-line">
+                    {ctaImage ? (
+                        <img
+                            src={ctaImage}
+                            alt=""
+                            loading="lazy"
+                            className="absolute inset-0 h-full w-full object-cover"
+                        />
                     ) : (
-                        <>
+                        <div className="material-texture absolute inset-0" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+                    <div className="relative z-10 flex flex-col items-center px-6 py-20 text-center sm:py-24">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">{t('landing.cta_sub')}</p>
+                        <h2 className="mt-4 max-w-2xl text-4xl leading-[1.02] text-white sm:text-5xl">
+                            {t('landing.cta_title')}
+                        </h2>
+                        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                            <Link
+                                href={route('catalog')}
+                                className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-200 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                            >
+                                {t('landing.cta_catalog')}
+                                <ArrowRightIcon className="h-4 w-4 rtl:-scale-x-100" />
+                            </Link>
+                            <Link
+                                href={route('gallery')}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                            >
+                                {t('landing.cta_gallery')}
+                            </Link>
                             <Link
                                 href={route('contact')}
-                                className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.07]"
+                                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                             >
-                                {t('nav.contact')}
+                                <ChatIcon className="h-4 w-4" />
+                                {t('landing.cta_contact')}
                             </Link>
-                            <Link
-                                href={route('login')}
-                                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg/70 transition-colors hover:text-fg"
-                            >
-                                {t('common.sign_in')}
-                            </Link>
-                        </>
-                    )}
-                </div>
+                        </div>
+                    </div>
+                </motion.div>
             </section>
+            )}
         </PublicLayout>
     );
 }

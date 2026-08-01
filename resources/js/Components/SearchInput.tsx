@@ -43,6 +43,12 @@ export default function SearchInput({
         return () => window.clearTimeout(timeout);
     }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    const clear = () => {
+        setValue('');
+        // The debounced effect only fires on the next tick when the value has
+        // changed, so clearing navigates back to the unfiltered list too.
+    };
+
     return (
         <div className="relative">
             <svg
@@ -62,8 +68,21 @@ export default function SearchInput({
                 onChange={(e) => setValue(e.target.value)}
                 placeholder={placeholder}
                 aria-label={placeholder}
-                className="form-input w-full ps-10 sm:w-64"
+                className="form-input w-full ps-10 pe-9 sm:w-64"
             />
+            {value !== '' && (
+                <button
+                    type="button"
+                    onClick={clear}
+                    aria-label="Clear search"
+                    title="Clear search"
+                    className="absolute end-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-fg/40 transition-colors hover:bg-fg/[0.06] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+                >
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                        <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                </button>
+            )}
         </div>
     );
 }

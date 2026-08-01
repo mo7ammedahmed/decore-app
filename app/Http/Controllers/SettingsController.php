@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateShopSettingsRequest;
+use App\Models\GalleryImage;
+use App\Models\Material;
 use App\Models\ShopSetting;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,26 @@ class SettingsController extends Controller
 
         return Inertia::render('Settings/Index', [
             'settings' => ShopSetting::instance()->printFields(),
+            // Active finishes available for the featured-materials picker.
+            'materials' => Material::query()
+                ->active()
+                ->orderBy('name_en')
+                ->get(['id', 'name_en', 'name_ar', 'sku']),
+            // Published portfolio images available for the hero + CTA pickers.
+            'gallery_images' => GalleryImage::query()
+                ->visible()
+                ->whereHas('section', fn ($q) => $q->visible())
+                ->with('section:id,name_en,name_ar')
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get(['id', 'section_id', 'path', 'disk', 'alt_text'])
+                ->map(fn (GalleryImage $image) => [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                    'alt_text' => $image->alt_text,
+                    'section_name' => $image->section?->localized_name ?? 'Gallery image',
+                ])
+                ->values(),
         ]);
     }
 

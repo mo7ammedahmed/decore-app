@@ -446,12 +446,13 @@ export default function Dashboard({ metrics, period, periodBounds, baseCurrency 
                         {t('dash.manage_website_elements')}
                         <select
                             className="form-select w-36 ml-2"
+                            value=""
                             onChange={(e) => {
                                 const path = e.target.value;
                                 if (path) router.visit(path);
                             }}
                         >
-                            <option value="" disabled selected>{t('dash.select_action')}</option>
+                            <option value="" disabled>{t('dash.select_action')}</option>
                             <option value={route('site-content.index')}>{t('dash.site_content')}</option>
                             <option value={route('integrations.index')}>{t('dash.integrations')}</option>
                             <option value={route('settings.edit')}>{t('dash.shop_settings')}</option>

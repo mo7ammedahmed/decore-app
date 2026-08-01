@@ -24,9 +24,44 @@ use Illuminate\Support\Facades\Storage;
     'theme_dark_foreground', 'theme_dark_muted', 'theme_light_accent',
     'theme_light_background', 'theme_light_surface', 'theme_light_foreground',
     'theme_light_muted', 'glass_effect_enabled',
+    // Public landing-page structure
+    'landing_sections', 'featured_material_ids',
+    'hero_image_id', 'cta_image_id',
+    'why_cards', 'journey_steps',
 ])]
 class ShopSetting extends Model
 {
+    /**
+     * The landing-page sections an admin can show or hide from the dashboard.
+     * The hero is deliberately not included — it is the page's primary job.
+     */
+    public const LANDING_SECTIONS = ['collections', 'featured', 'inspiration', 'why', 'journey', 'cta'];
+
+    /**
+     * Landing section visibility with defaults, e.g.
+     * ['featured' => false, 'inspiration' => false] leaves the rest on.
+     * Unknown keys are ignored so a stale override can never hide a section
+     * that no longer exists.
+     *
+     * The settings form submits multipart data (it also uploads the logo), so
+     * unchecked checkboxes arrive as the strings "0" / "false" rather than
+     * the boolean false — both must disable the section.
+     *
+     * @return array<string, bool>
+     */
+    public function landingSectionFlags(): array
+    {
+        $flags = array_fill_keys(self::LANDING_SECTIONS, true);
+
+        foreach ((array) $this->landing_sections as $key => $value) {
+            if (in_array($key, self::LANDING_SECTIONS, true) && ! filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
+                $flags[$key] = false;
+            }
+        }
+
+        return $flags;
+    }
+
     public const INVOICE_TEMPLATES = ['classic', 'modern', 'minimal'];
 
     public const DEFAULT_NOTIFICATION_SUBJECT = 'New enquiry: {subject}';
@@ -75,6 +110,12 @@ class ShopSetting extends Model
             'is_available' => 'boolean',
             'contact_auto_reply_enabled' => 'boolean',
             'glass_effect_enabled' => 'boolean',
+            'landing_sections' => 'array',
+            'featured_material_ids' => 'array',
+            'hero_image_id' => 'integer',
+            'cta_image_id' => 'integer',
+            'why_cards' => 'array',
+            'journey_steps' => 'array',
         ];
     }
 
@@ -290,6 +331,13 @@ class ShopSetting extends Model
             'invoice_accent' => $this->invoice_accent,
             'invoice_footer_note' => $this->invoice_footer_note,
             'invoice_thank_you' => $this->invoice_thank_you,
+            // Public landing-page structure (settings page form).
+            'landing_sections' => $this->landingSectionFlags(),
+            'featured_material_ids' => $this->featured_material_ids ?? [],
+            'hero_image_id' => $this->hero_image_id,
+            'cta_image_id' => $this->cta_image_id,
+            'why_cards' => $this->why_cards ?? [],
+            'journey_steps' => $this->journey_steps ?? [],
         ];
     }
 }

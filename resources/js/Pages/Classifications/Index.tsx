@@ -41,7 +41,18 @@ export default function Index({ classifications, filters, canManage }: IndexProp
                             <tbody>
                                 {classifications.data.map((classification) => (
                                     <tr key={classification.id}>
-                                        <td className="font-medium text-white">{classification.localized_name ?? classification.name_en}</td>
+                                        <td>
+                                            <div className="flex items-center gap-3">
+                                                {classification.image_url && (
+                                                    <img
+                                                        src={classification.image_url}
+                                                        alt={classification.image_alt_text ?? classification.localized_name ?? classification.name_en}
+                                                        className="h-10 w-14 shrink-0 rounded-lg border border-white/10 object-cover"
+                                                    />
+                                                )}
+                                                <span className="font-medium text-white">{classification.localized_name ?? classification.name_en}</span>
+                                            </div>
+                                        </td>
                                         <td className="text-white/50">{classification.slug}</td>
                                         <td>{classification.materials_count ?? 0}</td>
                                         <td>{classification.sort_order}</td>

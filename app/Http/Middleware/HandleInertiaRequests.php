@@ -44,15 +44,24 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        // One row, one query — reused for both public identity views.
+        $settings = ShopSetting::instance();
 
         return [
             ...parent::share($request),
             'locale' => app()->getLocale(),
             'availableLocales' => config('app.available_locales'),
             // Brand identity for headers, footers and public pages — editable by admins.
-            'shop' => ShopSetting::instance()->publicFields(),
+            'shop' => $settings->publicFields(),
             // Public-facing identity + theme palette — editable on the Profile settings page.
-            'profile' => ShopSetting::instance()->publicProfileFields(),
+            'profile' => $settings->publicProfileFields(),
+            // Main collections for the public header/footer navigation.
+            'public_collections' => Classification::query()
+                ->active()
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->limit(6)
+                ->get(['id', 'name_en', 'name_ar', 'slug']),
             // Admin-editable overrides for visitor-facing text (empty => code default).
             'site_content' => SiteContent::overrides(),
             // Enabled analytics/pixels rendered by the tracking blade components.

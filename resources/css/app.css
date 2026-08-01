@@ -396,6 +396,42 @@ input[type="color"].form-input {
 }
 
 /* ---------------------------------------------------------------------------
+ * Public showroom — material placeholder texture
+ *
+ * A warm architectural fallback for materials or projects without a photo:
+ * layered stone/linen gradients built from the semantic palette (never raw
+ * hex), so it follows the shop's configured light/dark appearance.
+ * ------------------------------------------------------------------------- */
+
+.material-texture {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(140% 90% at 15% 0%, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 60%),
+        linear-gradient(160deg, color-mix(in srgb, var(--color-surface-strong) 88%, var(--color-accent) 4%), var(--color-surface-strong));
+}
+
+.material-texture::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(118deg, transparent 0 34px, color-mix(in srgb, var(--color-foreground) 4%, transparent) 34px 36px),
+        repeating-linear-gradient(62deg, transparent 0 52px, color-mix(in srgb, var(--color-foreground) 3%, transparent) 52px 54px);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Light appearance — soften the page glow to warm ivory rather than the
+ * dark-cinematic gradients used in dark mode. */
+html[data-theme="light"] body {
+    background-image:
+        radial-gradient(1200px 600px at 15% -10%, rgba(255, 255, 255, 0.65), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, color-mix(in srgb, var(--color-accent) 7%, transparent), transparent 55%),
+        radial-gradient(1000px 700px at 50% 110%, rgba(255, 255, 255, 0.5), transparent 60%);
+}
+
+/* ---------------------------------------------------------------------------
  * Reduced motion
  * ------------------------------------------------------------------------- */
 

@@ -14,4 +14,6 @@ export type PageProps<
     availableLocales: Record<string, string>;
     /** Editable brand identity shared with every page (guests included). */
     shop?: ShopSettings | null;
+    /** Active classification links for the public header/footer navigation. */
+    public_collections?: { id: number; name_en: string; name_ar?: string | null; localized_name?: string; slug: string }[];
 };

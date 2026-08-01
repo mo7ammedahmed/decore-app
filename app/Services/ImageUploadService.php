@@ -2,30 +2,32 @@
 
 namespace App\Services;
 
+use App\Models\Classification;
 use App\Models\Material;
 use Illuminate\Http\UploadedFile;
 
 class ImageUploadService
 {
     /**
-     * Store the product image on a material, deleting and replacing any
-     * previous image file. One image per material, stored directly on the row.
+     * Store a single image on a model that carries image_* columns, deleting
+     * and replacing any previous image file. Used for material product photos
+     * and classification collection covers.
      */
-    public function store(UploadedFile $file, Material $material, ?string $altText = null): Material
+    public function store(UploadedFile $file, Material|Classification $model, ?string $altText = null): Material|Classification
     {
         $disk = (string) config('filesystems.default', 'public');
 
-        $path = $file->store('materials/'.$material->id, $disk);
+        $path = $file->store($model->getTable().'/'.$model->id, $disk);
 
         if ($path === false) {
             throw new \RuntimeException('Unable to store the uploaded image.');
         }
 
         // Remove the previous stored file before overwriting the row, so a
-        // failed store never leaves the material without its old image.
-        $material->deleteStoredImage();
+        // failed store never leaves the model without its old image.
+        $model->deleteStoredImage();
 
-        $material->forceFill([
+        $model->forceFill([
             'image_disk' => $disk,
             'image_path' => $path,
             'image_original_name' => $file->getClientOriginalName(),
@@ -34,17 +36,17 @@ class ImageUploadService
             'image_alt_text' => $altText,
         ])->save();
 
-        return $material;
+        return $model;
     }
 
     /**
-     * Permanently remove the material's stored image file and clear the row.
+     * Permanently remove the model's stored image file and clear the row.
      */
-    public function delete(Material $material): void
+    public function delete(Material|Classification $model): void
     {
-        $material->deleteStoredImage();
+        $model->deleteStoredImage();
 
-        $material->forceFill([
+        $model->forceFill([
             'image_disk' => null,
             'image_path' => null,
             'image_original_name' => null,

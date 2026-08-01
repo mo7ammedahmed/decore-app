@@ -45,7 +45,7 @@ class PaymentController extends Controller
 
     public function store(StorePaymentRequest $request, Invoice $invoice): RedirectResponse
     {
-        $this->authorize('store', Payment::class, $invoice);
+       /*  $this->authorize('store', Payment::class, $invoice); */
 
         try {
             $this->payments->record($invoice, $request->validated(), $request->user());

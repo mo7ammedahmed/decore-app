@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnalyticsCollectorController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\ClassificationImageController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -27,6 +28,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // ---- Public guest pages (no authentication required) ----
+// DB-free health endpoint (uptime probes, preview registration). It bypasses
+// the session/CSRF middleware so it answers fast even against a remote DB.
+Route::get('/up', fn () => response('ok'))->name('health')->withoutMiddleware(['web']);
+
 Route::get('/', [PublicController::class, 'landing'])->name('landing');
 Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 Route::get('/catalog/{material:slug}', [PublicController::class, 'show'])->name('catalog.show');
@@ -60,6 +65,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 
     Route::middleware('role:admin')->group(function () {
         Route::resource('classifications', ClassificationController::class)->except(['show']);
+        Route::post('classifications/{classification}/image', [ClassificationImageController::class, 'store'])->name('classifications.image.store');
+        Route::put('classifications/{classification}/image', [ClassificationImageController::class, 'update'])->name('classifications.image.update');
+        Route::delete('classifications/{classification}/image', [ClassificationImageController::class, 'destroy'])->name('classifications.image.destroy');
     });
 
     Route::resource('materials', MaterialController::class)->parameters(['materials' => 'material']);

@@ -8,6 +8,7 @@ import Textarea from '@/Components/Textarea';
 import PrimaryButton from '@/Components/PrimaryButton';
 import DangerButton from '@/Components/DangerButton';
 import ConfirmDialog from '@/Components/ConfirmDialog';
+import ImageUpload from '@/Components/ImageUpload';
 import { Head, router, useForm } from '@inertiajs/react';
 import type { Classification } from '@/types/domain';
 import { useState } from 'react';
@@ -81,6 +82,74 @@ export default function Edit({ classification }: { classification: Classificatio
                 message="Classifications with materials cannot be deleted."
                 confirmLabel="Archive"
             />
+
+            <ClassificationImageCard classification={classification} />
         </AuthenticatedLayout>
+    );
+}
+
+/**
+ * Inline upload/replace form for the collection cover shown on the landing
+ * 'Shop by collection' tiles and the public catalogue. Falls back to the
+ * newest material photo when no cover is uploaded.
+ */
+function ClassificationImageCard({ classification }: { classification: Classification }) {
+    const isReplacement = Boolean(classification.image_url);
+    const { data, setData, post, put, processing, errors } = useForm<{
+        image: File | null;
+        alt_text: string;
+    }>({
+        image: null,
+        alt_text: classification.image_alt_text ?? '',
+    });
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (isReplacement) {
+            put(route('classifications.image.update', classification.id));
+        } else {
+            post(route('classifications.image.store', classification.id));
+        }
+    };
+
+    return (
+        <GlassCard className="mt-6 max-w-xl p-8">
+            <h2 className="font-heading text-xl italic text-white">Collection image</h2>
+            <p className="mt-1 text-sm text-white/40">
+                The cover shown on the landing page tiles and catalogue. Leave empty to use the newest material photo automatically.
+            </p>
+
+            <form onSubmit={submit} className="mt-5 space-y-5">
+                <FormField
+                    label={isReplacement ? 'Replace image' : 'Upload image'}
+                    required
+                    error={errors.image}
+                    hint="JPEG, PNG or WebP · max 2MB · wide landscape crops look best."
+                >
+                    <ImageUpload
+                        value={data.image}
+                        onChange={(file) => setData('image', file)}
+                        error={errors.image}
+                        existingUrl={classification.image_url ?? null}
+                        altText={data.alt_text}
+                    />
+                </FormField>
+
+                <FormField label="Alt text" error={errors.alt_text} htmlFor="classif_alt_text">
+                    <TextInput
+                        id="classif_alt_text"
+                        value={data.alt_text}
+                        onChange={(e) => setData('alt_text', e.target.value)}
+                        placeholder="Describe the collection, e.g. 'Veined marble-effect panels'"
+                    />
+                </FormField>
+
+                <div className="flex items-center justify-end gap-3">
+                    <PrimaryButton disabled={processing || !data.image}>
+                        {processing ? 'Uploading…' : isReplacement ? 'Replace image' : 'Upload image'}
+                    </PrimaryButton>
+                </div>
+            </form>
+        </GlassCard>
     );
 }

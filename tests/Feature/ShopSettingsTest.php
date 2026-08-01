@@ -208,4 +208,53 @@ class ShopSettingsTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page->where('permissions.settings', true));
     }
+
+    public function test_admin_can_save_structured_landing_cards_and_steps(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patch('/settings', $this->validPayload([
+            'why_cards' => [
+                ['title_en' => 'Curated finishes', 'title_ar' => 'لمسات منتقاة', 'body_en' => 'Quality first.', 'body_ar' => 'الجودة أولاً.'],
+            ],
+            'journey_steps' => [
+                ['title_en' => 'Discover', 'title_ar' => 'اكتشف', 'body_en' => 'Browse the catalog.', 'body_ar' => 'تصفح الكتالوج.'],
+                ['title_en' => 'Confirm', 'title_ar' => null, 'body_en' => 'Share details.', 'body_ar' => null],
+            ],
+        ]))->assertSessionHasNoErrors();
+
+        $settings = ShopSetting::instance();
+
+        $this->assertSame('Curated finishes', $settings->why_cards[0]['title_en']);
+        $this->assertSame('لمسات منتقاة', $settings->why_cards[0]['title_ar']);
+        $this->assertCount(2, $settings->journey_steps);
+        $this->assertSame('Confirm', $settings->journey_steps[1]['title_en']);
+    }
+
+    public function test_structured_landing_content_preserves_admin_order(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patch('/settings', $this->validPayload([
+            'journey_steps' => [
+                ['title_en' => 'Third', 'title_ar' => null, 'body_en' => 'Body', 'body_ar' => null],
+                ['title_en' => 'First', 'title_ar' => null, 'body_en' => 'Body', 'body_ar' => null],
+                ['title_en' => 'Second', 'title_ar' => null, 'body_en' => 'Body', 'body_ar' => null],
+            ],
+        ]))->assertSessionHasNoErrors();
+
+        $steps = ShopSetting::instance()->journey_steps;
+        $this->assertSame(['Third', 'First', 'Second'], array_column($steps, 'title_en'));
+    }
+
+    public function test_structured_landing_content_rejects_missing_english_title(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patch('/settings', $this->validPayload([
+            'why_cards' => [
+                ['title_en' => '', 'title_ar' => 'عنوان', 'body_en' => 'Body', 'body_ar' => null],
+            ],
+        ]))->assertSessionHasErrors('why_cards.0.title_en');
+    }
 }

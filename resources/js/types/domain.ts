@@ -69,6 +69,26 @@ export interface ShopSettings {
     invoice_accent: string;
     invoice_footer_note: string | null;
     invoice_thank_you: string | null;
+    /** Landing section visibility — false means the section is hidden. */
+    landing_sections?: Record<string, boolean>;
+    /** Admin-curated featured finish ids (ordered). Empty = auto newest. */
+    featured_material_ids?: number[];
+    /** Admin-picked gallery image for the landing hero (null = automatic). */
+    hero_image_id?: number | null;
+    /** Admin-picked gallery image for the final CTA background (null = auto). */
+    cta_image_id?: number | null;
+    /** Admin-curated bilingual 'Why Decore' cards (empty = code defaults). */
+    why_cards?: BilingualCard[];
+    /** Admin-curated bilingual customer-journey steps (empty = code defaults). */
+    journey_steps?: BilingualCard[];
+}
+
+/** A bilingual card/step with English + Arabic title and body. */
+export interface BilingualCard {
+    title_en: string;
+    title_ar: string | null;
+    body_en: string;
+    body_ar: string | null;
 }
 
 /**
@@ -245,6 +265,11 @@ export interface Classification {
     is_active: boolean;
     sort_order: number;
     materials_count?: number;
+    /** Admin-chosen collection cover shown on the landing tiles/catalogue. */
+    image_disk?: string | null;
+    image_path?: string | null;
+    image_url?: string | null;
+    image_alt_text?: string | null;
 }
 
 export interface Material {

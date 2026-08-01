@@ -9,7 +9,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import InvoiceDocument, { type InvoiceDocumentInvoice } from '@/Components/InvoiceDocument';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
-import type { InvoiceTemplate, ShopSettings } from '@/types/domain';
+import type { BilingualCard, InvoiceTemplate, ShopSettings } from '@/types/domain';
 
 const ACCENTS = ['#8a6d3b', '#0f766e', '#1d4ed8', '#7c3aed', '#be123c', '#334155'];
 
@@ -40,7 +40,24 @@ const MOCK_INVOICE: InvoiceDocumentInvoice = {
     base_currency_code: 'SAR',
 };
 
-export default function Index({ settings }: { settings: ShopSettings }) {
+const LANDING_SECTIONS: { key: string; title: string; hint: string }[] = [
+    { key: 'collections', title: 'Shop by collection', hint: 'The category tiles' },
+    { key: 'featured', title: 'Featured finishes', hint: 'The curated material cards' },
+    { key: 'inspiration', title: 'Project inspiration', hint: 'The editorial image mosaic' },
+    { key: 'why', title: 'Why Decore', hint: 'The six benefit cards' },
+    { key: 'journey', title: 'Customer journey', hint: 'The four-step process' },
+    { key: 'cta', title: 'Final call to action', hint: 'The closing image banner' },
+];
+
+export default function Index({
+    settings,
+    materials,
+    gallery_images,
+}: {
+    settings: ShopSettings;
+    materials: { id: number; name_en: string; name_ar: string | null; sku: string }[];
+    gallery_images: { id: number; image_url: string | null; alt_text: string | null; section_name: string }[];
+}) {
     const { data, setData, patch, processing, errors } = useForm({
         shop_name: settings.shop_name,
         tagline: settings.tagline ?? '',
@@ -57,6 +74,12 @@ export default function Index({ settings }: { settings: ShopSettings }) {
         invoice_thank_you: settings.invoice_thank_you ?? '',
         logo: null as File | null,
         remove_logo: false,
+        landing_sections: settings.landing_sections ?? {},
+        featured_material_ids: settings.featured_material_ids ?? [],
+        hero_image_id: settings.hero_image_id ?? null,
+        cta_image_id: settings.cta_image_id ?? null,
+        why_cards: settings.why_cards ?? [],
+        journey_steps: settings.journey_steps ?? [],
     });
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
@@ -182,6 +205,137 @@ export default function Index({ settings }: { settings: ShopSettings }) {
                                 </FormField>
                             </div>
                         </GlassCard>
+
+                        {/* ---- Landing page structure ---- */}
+                        <GlassCard className="p-6">
+                            <h2 className="font-heading text-xl italic text-white">Landing page</h2>
+                            <p className="mt-1 text-xs text-white/40">Choose which sections visitors see and which finishes are featured.</p>
+
+                            <p className="form-label mt-6">Sections</p>
+                            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                {LANDING_SECTIONS.map(({ key, title, hint }) => (
+                                    <label
+                                        key={key}
+                                        className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 ${
+                                            data.landing_sections[key] === false
+                                                ? 'border-white/10 bg-white/[0.02] opacity-60'
+                                                : 'border-accent/40 bg-accent/[0.06]'
+                                        }`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={data.landing_sections[key] !== false}
+                                            onChange={(e) =>
+                                                setData('landing_sections', {
+                                                    ...data.landing_sections,
+                                                    [key]: e.target.checked,
+                                                })
+                                            }
+                                            className="mt-0.5 accent-[#8a6d3b]"
+                                        />
+                                        <span>
+                                            <span className="block text-sm font-semibold text-white/85">{title}</span>
+                                            <span className="block text-xs text-white/40">{hint}</span>
+                                        </span>
+                                    </label>
+                                ))}
+                            </div>
+                            {errors.landing_sections && <p className="field-error">{errors.landing_sections}</p>}
+
+                            <p className="form-label mt-6">Featured finishes</p>
+                            <p className="text-xs text-white/40">Pick the materials shown in the featured section. Empty = newest active finishes automatically.</p>
+                            {materials.length === 0 ? (
+                                <p className="mt-3 text-sm text-white/40">No active materials yet.</p>
+                            ) : (
+                                <div className="mt-3 grid max-h-64 gap-1 overflow-y-auto rounded-xl border border-white/10 bg-white/[0.02] p-3 sm:grid-cols-2">
+                                    {materials.map((material) => {
+                                        const selected = data.featured_material_ids.includes(material.id);
+                                        return (
+                                            <label
+                                                key={material.id}
+                                                className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
+                                                    selected ? 'bg-accent/10 text-white' : 'text-white/60 hover:bg-white/[0.04]'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selected}
+                                                    onChange={() =>
+                                                        setData(
+                                                            'featured_material_ids',
+                                                            selected
+                                                                ? data.featured_material_ids.filter((id) => id !== material.id)
+                                                                : [...data.featured_material_ids, material.id],
+                                                        )
+                                                    }
+                                                    className="accent-[#8a6d3b]"
+                                                />
+                                                <span className="truncate">{material.name_en}</span>
+                                                <span className="ms-auto shrink-0 text-[10px] uppercase tracking-wider text-white/35">{material.sku}</span>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                            {errors.featured_material_ids && <p className="field-error">{errors.featured_material_ids}</p>}
+
+                            <p className="form-label mt-8">Why Decore — cards</p>
+                            <p className="text-xs text-white/40">The benefit cards under the "Why Decore" heading. Add, reorder or remove cards; empty = the built-in six cards.</p>
+                            <BilingualListEditor
+                                items={data.why_cards}
+                                onChange={(items) => setData('why_cards', items)}
+                                itemNoun="card"
+                                error={errors.why_cards}
+                            />
+
+                            <p className="form-label mt-8">Customer journey — steps</p>
+                            <p className="text-xs text-white/40">The numbered process steps. Add, reorder or remove steps; empty = the built-in four steps.</p>
+                            <BilingualListEditor
+                                items={data.journey_steps}
+                                onChange={(items) => setData('journey_steps', items)}
+                                itemNoun="step"
+                                error={errors.journey_steps}
+                            />
+
+                            <div className="mt-6 grid gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label htmlFor="hero_image" className="form-label">Hero image</label>
+                                    <p className="text-xs text-white/40">The large landing hero photo. Empty = newest published image.</p>
+                                    <select
+                                        id="hero_image"
+                                        className="form-input mt-2 w-full"
+                                        value={data.hero_image_id ?? ''}
+                                        onChange={(e) => setData('hero_image_id', e.target.value === '' ? null : Number(e.target.value))}
+                                    >
+                                        <option value="">Automatic (newest image)</option>
+                                        {gallery_images.map((image) => (
+                                            <option key={image.id} value={image.id}>
+                                                {image.alt_text ? `${image.alt_text} · ${image.section_name}` : image.section_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.hero_image_id && <p className="field-error">{errors.hero_image_id}</p>}
+                                </div>
+                                <div>
+                                    <label htmlFor="cta_image" className="form-label">Final CTA background</label>
+                                    <p className="text-xs text-white/40">The closing banner photo. Empty = automatic.</p>
+                                    <select
+                                        id="cta_image"
+                                        className="form-input mt-2 w-full"
+                                        value={data.cta_image_id ?? ''}
+                                        onChange={(e) => setData('cta_image_id', e.target.value === '' ? null : Number(e.target.value))}
+                                    >
+                                        <option value="">Automatic</option>
+                                        {gallery_images.map((image) => (
+                                            <option key={image.id} value={image.id}>
+                                                {image.alt_text ? `${image.alt_text} · ${image.section_name}` : image.section_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.cta_image_id && <p className="field-error">{errors.cta_image_id}</p>}
+                                </div>
+                            </div>
+                        </GlassCard>
                     </div>
 
                     <div className="space-y-6">
@@ -292,5 +446,135 @@ export default function Index({ settings }: { settings: ShopSettings }) {
                 <GlassButton href={route('dashboard')} variant="secondary">Back to dashboard</GlassButton>
             </div>
         </AuthenticatedLayout>
+    );
+}
+
+/**
+ * Ordered bilingual card/step editor: add, remove and reorder entries with
+ * English + Arabic title and body. Used for the "Why Decore" cards and the
+ * customer-journey steps on the landing page.
+ */
+function BilingualListEditor({
+    items,
+    onChange,
+    itemNoun,
+    error,
+}: {
+    items: BilingualCard[];
+    onChange: (items: BilingualCard[]) => void;
+    itemNoun: string;
+    error?: string;
+}) {
+    const update = (index: number, patch: Partial<BilingualCard>) => {
+        onChange(items.map((item, i) => (i === index ? { ...item, ...patch } : item)));
+    };
+
+    const move = (index: number, direction: -1 | 1) => {
+        const target = index + direction;
+        if (target < 0 || target >= items.length) return;
+        const next = [...items];
+        [next[index], next[target]] = [next[target], next[index]];
+        onChange(next);
+    };
+
+    const remove = (index: number) => {
+        onChange(items.filter((_, i) => i !== index));
+    };
+
+    return (
+        <div className="mt-3 space-y-3">
+            {items.length === 0 && (
+                <p className="rounded-xl border border-dashed border-white/15 px-4 py-3 text-sm text-white/35">
+                    No custom {itemNoun}s — the built-in defaults are shown on the site.
+                </p>
+            )}
+
+            {items.map((item, index) => (
+                <div key={index} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
+                            {itemNoun} {index + 1}
+                        </p>
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                type="button"
+                                onClick={() => move(index, -1)}
+                                disabled={index === 0}
+                                aria-label={`Move ${itemNoun} up`}
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:text-white disabled:opacity-30"
+                            >
+                                ↑
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => move(index, 1)}
+                                disabled={index === items.length - 1}
+                                aria-label={`Move ${itemNoun} down`}
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:text-white disabled:opacity-30"
+                            >
+                                ↓
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => remove(index)}
+                                aria-label={`Remove ${itemNoun}`}
+                                className="flex h-7 w-7 items-center justify-center rounded-lg border border-danger/30 text-danger/70 transition-colors hover:border-danger/60 hover:text-danger"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                        <div>
+                            <label className="form-label">Title — EN</label>
+                            <input
+                                dir="ltr"
+                                className="form-input"
+                                value={item.title_en}
+                                onChange={(e) => update(index, { title_en: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="form-label">Title — AR</label>
+                            <input
+                                dir="rtl"
+                                className="form-input"
+                                value={item.title_ar ?? ''}
+                                onChange={(e) => update(index, { title_ar: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="form-label">Body — EN</label>
+                            <textarea
+                                dir="ltr"
+                                className="form-input min-h-20"
+                                value={item.body_en}
+                                onChange={(e) => update(index, { body_en: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="form-label">Body — AR</label>
+                            <textarea
+                                dir="rtl"
+                                className="form-input min-h-20"
+                                value={item.body_ar ?? ''}
+                                onChange={(e) => update(index, { body_ar: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                </div>
+            ))}
+
+            <button
+                type="button"
+                onClick={() => onChange([...items, { title_en: '', title_ar: '', body_en: '', body_ar: '' }])}
+                className="rounded-xl border border-dashed border-accent/40 px-4 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent/10"
+            >
+                + Add {itemNoun}
+            </button>
+
+            {error && <p className="field-error">{error}</p>}
+        </div>
     );
 }

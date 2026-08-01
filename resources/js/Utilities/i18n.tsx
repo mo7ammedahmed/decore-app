@@ -76,7 +76,17 @@ const en = {
     'role.supplier': 'Supplier',
 
     // ---- Public layout ----
-    'public.tagline': 'Decoration materials atelier',
+    'public.tagline': 'Decoration materials showroom',
+
+    // ---- Public header & footer ----
+    'header.explore_materials': 'Explore materials',
+    'footer.collections': 'Collections',
+    'footer.explore': 'Explore',
+    'footer.contact': 'Contact',
+    'footer.follow': 'Follow us',
+    'footer.rights': 'All rights reserved.',
+    'footer.staff_sign_in': 'Staff sign in',
+    'footer.working_hours': 'Working hours',
 
     // ---- Appearance ----
     'theme.switch_to_light': 'Switch to light mode',
@@ -87,74 +97,88 @@ const en = {
     'fab.whatsapp': 'Chat on WhatsApp',
 
     // ---- Landing ----
-    'landing.hero_line1': 'The surfaces that',
-    'landing.hero_accent': 'define',
-    'landing.hero_line2': 'a space.',
+    'landing.hero_kicker': 'Decorative materials showroom',
+    'landing.hero_line1': 'Materials that',
+    'landing.hero_accent': 'transform',
+    'landing.hero_line2': 'ordinary spaces.',
     'landing.hero_sub':
-        'Wood alternatives, marble looks, wall panels, flooring and profiles — curated from partner suppliers, priced transparently, delivered for your next project.',
-    'landing.browse_catalog': 'Browse the catalog',
-    'landing.hero_badge_tag': 'New',
-    'landing.hero_badge': 'New finishes from partner suppliers — Q3 2026',
-    'landing.trust_label': 'Trusted by partner suppliers',
+        'Wood alternatives, marble looks, wall panels, flooring and decorative profiles — curated from trusted suppliers for homes and commercial projects.',
+    'landing.hero_cta_catalog': 'Explore materials',
+    'landing.hero_cta_gallery': 'View our projects',
+    'landing.trust_label': 'Curated finishes, trusted suppliers',
     'landing.stat_materials': 'Materials',
     'landing.stat_classifications': 'Collections',
     'landing.stat_suppliers': 'Partner suppliers',
-    'landing.atelier_eyebrow': 'The atelier',
-    'landing.capabilities_eyebrow': '// The atelier',
-    'landing.capabilities_title': 'Curated finishes, end to end',
-    'landing.capabilities_sub':
-        'One workspace for the whole material journey — curation, honest pricing, and a self-service portal for the suppliers who stock the atelier.',
-    'landing.cap1_title': 'Materials',
-    'landing.cap1_body':
-        'Wood alternatives, marble looks, wall panels, flooring and profiles — live from partner suppliers, priced per unit, ready for your next project.',
-    'landing.cap2_title': 'Pricing & Invoicing',
-    'landing.cap2_body':
-        'Transparent per-unit pricing with configurable VAT and multi-currency conversion. Every invoice total is recalculated and validated on the server.',
-    'landing.cap3_title': 'Supplier Workspace',
-    'landing.cap3_body':
-        'Suppliers manage their own catalogue, product imagery and cost history through a dedicated workspace — no phone calls or spreadsheets required.',
-    'landing.cap2_tag1': 'Transparent pricing',
-    'landing.cap2_tag2': 'VAT rates',
-    'landing.cap2_tag3': 'Multi-currency',
-    'landing.cap2_tag4': 'Server totals',
-    'landing.cap3_tag1': 'Self-service',
-    'landing.cap3_tag2': 'Product imagery',
-    'landing.cap3_tag3': 'Live stock',
-    'landing.cap3_tag4': 'Cost history',
-    'landing.featured_title': 'Featured finishes',
     'landing.collections_eyebrow': 'Collections',
-    'landing.collections_title': 'Browse by collection',
+    'landing.collections_title': 'Shop by collection',
+    'landing.collections_sub':
+        'Browse finishes the way you would in a showroom — by family of materials.',
     'landing.materials_count': '{count} materials',
-    'landing.how_eyebrow': 'How it works',
-    'landing.how_title': 'From sample to specification',
-    'landing.how_sub':
-        'One workspace for the whole material journey — for project owners, designers and the suppliers who keep the atelier stocked.',
-    'landing.step1_title': 'Browse the catalog',
-    'landing.step1_body':
-        'Explore curated finishes by collection, filter by material, and compare materials side by side.',
-    'landing.step2_title': 'Order through invoices',
+    'landing.featured_eyebrow': 'Featured',
+    'landing.featured_title': 'Featured finishes',
+    'landing.featured_sub':
+        'A curated selection of finishes our partners stock right now.',
+    'landing.inspiration_eyebrow': 'Projects',
+    'landing.inspiration_title': 'Spaces shaped by our materials',
+    'landing.inspiration_sub':
+        'Finished interiors, installations and material close-ups from our portfolio.',
+    'landing.inspiration_cta': 'View the full gallery',
+    'landing.why_eyebrow': 'Why Decore',
+    'landing.why_title': 'Choosing the right finish, made easy',
+    'landing.why_sub':
+        'A decoration shop built around the way people actually choose materials — by seeing, comparing and asking.',
+    'landing.why_1_title': 'Curated finishes',
+    'landing.why_1_body':
+        'Every material is selected for quality and how it looks in a real space — never just to fill a shelf.',
+    'landing.why_2_title': 'Trusted suppliers',
+    'landing.why_2_body':
+        'We work with established material suppliers and stand behind what we recommend.',
+    'landing.why_3_title': 'Transparent information',
+    'landing.why_3_body':
+        'Clear per-unit pricing, honest descriptions and real product photography.',
+    'landing.why_4_title': 'Selection support',
+    'landing.why_4_body':
+        'Tell us about your project and we will help you match the right finishes to your space and budget.',
+    'landing.why_5_title': 'Residential & commercial',
+    'landing.why_5_body':
+        'From single rooms to full fit-outs — for homeowners, designers, contractors and architects.',
+    'landing.why_6_title': 'Direct quotations',
+    'landing.why_6_body':
+        'Request a quote in one message — by phone, email or WhatsApp.',
+    'landing.journey_eyebrow': 'How it works',
+    'landing.journey_title': 'From discovery to decision',
+    'landing.journey_sub': 'Four simple steps from browsing to a finished space.',
+    'landing.step1_title': 'Discover materials',
+    'landing.step1_body': 'Browse the catalog and collections at your own pace.',
+    'landing.step2_title': 'Compare finishes',
     'landing.step2_body':
-        'Build orders with live line items, taxes and currency conversion — totals are always recalculated on the server.',
-    'landing.step3_title': 'Track everything',
+        'Review samples, prices and specifications side by side.',
+    'landing.step3_title': 'Contact the team',
     'landing.step3_body':
-        'Payments, outstanding balances, costs and profit margins — visible to the people who need them, nothing more.',
-    'landing.cta_title': 'Ready to build with Decore?',
-    'landing.cta_authed': 'Your workspace is one click away.',
-    'landing.cta_guest':
-        'Reach out to request pricing and materials, or sign in to your workspace.',
+        'Ask questions or request a quote — by phone, email or WhatsApp.',
+    'landing.step4_title': 'Confirm your requirements',
+    'landing.step4_body':
+        'Share your project details and we will prepare the final list.',
+    'landing.cta_title': 'Ready to transform your space?',
+    'landing.cta_sub':
+        'Browse the catalog, explore our projects, or talk to the team about your next project.',
+    'landing.cta_catalog': 'Browse the catalog',
+    'landing.cta_gallery': 'View our projects',
+    'landing.cta_whatsapp': 'Chat on WhatsApp',
+    'landing.cta_contact': 'Contact the team',
 
     // ---- Catalog ----
-    'catalog.eyebrow': 'The atelier',
+    'catalog.eyebrow': 'The collection',
     'catalog.title': 'The catalog',
     'catalog.sub':
         'Every finish currently stocked by our partner suppliers — search by name or SKU, or narrow by collection.',
     'catalog.search_placeholder': 'Search materials…',
-    'catalog.filter_label': 'Filter by classification',
+    'catalog.filter_label': 'Filter by collection',
     'catalog.all_collections': 'All collections',
+    'catalog.results_count': '{count} finishes',
+    'catalog.clear': 'Clear',
     'catalog.empty_title': 'No materials found',
     'catalog.empty_desc': 'Try a different search, or browse another collection.',
-    'catalog.prices_note':
-        'Prices are shown per unit without tax. Supplier pricing and costs are available inside the workspace.',
 
     // ---- Public material card ----
     'pmc.from': 'From',
@@ -168,8 +192,15 @@ const en = {
     'show.back': 'Back to catalog',
     'show.supplied_by': 'Supplied by {name}',
     'show.per_unit': 'per {unit}',
-    'show.interested': 'Interested in this finish?',
-    'show.quote': 'to request a quote from {supplier}.',
+    'show.breadcrumb_home': 'Home',
+    'show.breadcrumb_catalog': 'Catalog',
+    'show.overview_label': 'About this finish',
+    'show.collection_label': 'Collection',
+    'show.sku_label': 'SKU',
+    'show.quote_cta': 'Request a quote',
+    'show.whatsapp_cta': 'Ask on WhatsApp',
+    'show.related_title': 'You may also like',
+    'show.related_sub': 'More finishes from this collection.',
 
     // ---- Units ----
     'unit.piece': 'Piece',
@@ -179,47 +210,62 @@ const en = {
     'unit.sheet': 'Sheet',
 
     // ---- About ----
-    'about.eyebrow': 'About the atelier',
-    'about.title': 'A working catalog for the materials trade.',
-    'about.p1':
-        'Decore is a business system built for a decoration materials shop — one place to manage suppliers, classifications, finishes, pricing, invoicing and payments. The public catalog you\'re browsing is the same live data the shop operates on: when a supplier updates a finish, this page reflects it.',
-    'about.p2':
-        'Behind the catalog is a full workflow: role-based workspaces for administrators, accountants, sales staff and suppliers; server-side invoice totals; historical exchange rates; cost tracking; and profit reporting — with supplier costs kept private to the people who need them.',
-    'about.f1_title': 'Priced transparently',
-    'about.f1_body':
-        'Selling prices are shown per unit without hidden taxes. Invoices apply configured VAT rates and convert between currencies using stored exchange rates.',
-    'about.f2_title': 'Costs stay private',
-    'about.f2_body':
-        'Supplier cost and profit data never appear on public pages — they are restricted to finance roles inside the workspace.',
-    'about.f3_title': 'Built on real processes',
-    'about.f3_body':
-        'Drafts, issued invoices, payments, reversals and cancellations follow the rules a working shop actually depends on.',
-    'about.f4_title': 'One source of truth',
-    'about.f4_body':
-        'Every total is recalculated and validated on the server. What you see here is the same data the dashboards and reports run on.',
+    'about.eyebrow': 'About us',
+    'about.title': 'A showroom of finishes, built on trust.',
+    'about.lead':
+        'Decore is a decoration materials shop for homes and commercial spaces. We curate wood alternatives, marble looks, wall panels, flooring and decorative profiles from trusted suppliers — and help you choose the right finish for every room.',
+    'about.what_title': 'What we offer',
+    'about.what_1_title': 'Curated materials',
+    'about.what_1_body':
+        'A focused range of finishes chosen for quality and performance — from wood alternatives to marble looks, panels, flooring and profiles.',
+    'about.what_2_title': 'Honest product information',
+    'about.what_2_body':
+        'Real photography, clear specifications and per-unit pricing so you can compare finishes with confidence.',
+    'about.what_3_title': 'Project support',
+    'about.what_3_body':
+        'From a single sample to a full fit-out — our team helps you select, estimate and confirm the right materials.',
+    'about.who_title': 'Who we serve',
+    'about.who_1_title': 'Homeowners',
+    'about.who_1_body': 'Refreshing a room or a whole home with finishes that last.',
+    'about.who_2_title': 'Interior designers',
+    'about.who_2_body': 'Reliable materials and quick answers for client projects.',
+    'about.who_3_title': 'Contractors & builders',
+    'about.who_3_body': 'Consistent supply for commercial and residential builds.',
+    'about.who_4_title': 'Architects',
+    'about.who_4_body': 'Specification-ready finishes with honest pricing.',
+    'about.suppliers_title': 'Trusted suppliers',
+    'about.suppliers_body':
+        'We work with established material suppliers and keep our catalog live from their listings — so the finish you see is the finish we can deliver.',
+    'about.cta_title': 'Ready to start your project?',
+    'about.cta_body':
+        'Browse the catalog or get in touch — we are happy to help you choose.',
 
     // ---- Contact ----
     'contact.eyebrow': 'Contact',
-    'contact.title': 'Talk to the atelier.',
+    'contact.title': 'Let\'s talk about your project.',
     'contact.sub':
-        'Questions about a finish, a bulk order, or becoming a partner supplier? Reach out and the team will get back to you.',
+        'Questions about a finish, a bulk order, or a full fit-out? The team is one message away.',
+    'contact.whatsapp_title': 'WhatsApp',
+    'contact.whatsapp_body': 'The fastest way to reach the sales team.',
     'contact.email_title': 'Email',
     'contact.email_body': 'For orders, pricing and general enquiries.',
     'contact.phone_title': 'Phone',
     'contact.phone_body': 'Talk to a sales representative directly.',
-    'contact.workspace_title': 'Workspace',
-    'contact.workspace_body': 'Already have an account?',
-    'contact.workspace_value': 'Sign in to your workspace',
-    'contact.partner_title': 'Partner with us',
-    'contact.partner_body':
-        'Suppliers manage their own materials and product imagery through a dedicated workspace — no phone calls or spreadsheets required. Email us to get started.',
-    'contact.partner_cta': 'Email us',
+    'contact.address_title': 'Showroom',
+    'contact.address_body': 'Visit us to see and touch the finishes in person.',
+    'contact.hours_title': 'Working hours',
+    'contact.hours_value': 'Saturday – Thursday · 9:00 – 18:00',
+    'contact.enquiry_title': 'General enquiries',
+    'contact.enquiry_body':
+        'Tell us what you are planning and we will guide you to the right materials and quantities.',
+    'contact.quote_cta': 'Email us your enquiry',
+    'contact.staff_sign_in': 'Staff & suppliers — sign in',
 
     // ---- Gallery ----
     'gallery.eyebrow': 'The portfolio',
-    'gallery.title': 'Our work',
+    'gallery.title': 'Our projects',
     'gallery.sub':
-        'Finished projects, samples and installations — browsed by collection. New work is added as the shop grows.',
+        'Finished interiors, installations and material close-ups — browsed by collection.',
     'gallery.all_sections': 'All collections',
     'gallery.empty_title': 'No work yet',
     'gallery.empty_desc': 'New gallery images will appear here soon.',
@@ -463,7 +509,17 @@ const ar: Record<TranslationKey, string> = {
     'role.supplier': 'مورد',
 
     // ---- Public layout ----
-    'public.tagline': 'استوديو مواد الديكور',
+    'public.tagline': 'صالة عرض مواد الديكور',
+
+    // ---- Public header & footer ----
+    'header.explore_materials': 'استكشف المواد',
+    'footer.collections': 'المجموعات',
+    'footer.explore': 'استكشف',
+    'footer.contact': 'تواصل معنا',
+    'footer.follow': 'تابعنا',
+    'footer.rights': 'جميع الحقوق محفوظة.',
+    'footer.staff_sign_in': 'تسجيل دخول الموظفين',
+    'footer.working_hours': 'ساعات العمل',
 
     // ---- Appearance ----
     'theme.switch_to_light': 'التبديل إلى الوضع الفاتح',
@@ -474,72 +530,74 @@ const ar: Record<TranslationKey, string> = {
     'fab.whatsapp': 'تواصل عبر واتساب',
 
     // ---- Landing ----
-    'landing.hero_line1': 'الأسطح التي',
-    'landing.hero_accent': 'تُعرّف',
-    'landing.hero_line2': 'المساحة.',
+    'landing.hero_kicker': 'صالة عرض مواد الديكور',
+    'landing.hero_line1': 'مواد تحوّل',
+    'landing.hero_accent': 'المساحات',
+    'landing.hero_line2': 'العادية.',
     'landing.hero_sub':
-        'بدائل الخشب، مظهر الرخام، ألواح الجدران، الأرضيات والبروفيلات — مختارة من موردين شركاء، بأسعار شفافة، وجاهزة لمشروعك القادم.',
-    'landing.browse_catalog': 'تصفّح الكتالوج',
-    'landing.hero_badge_tag': 'جديد',
-    'landing.hero_badge': 'لمسات جديدة من موردين شركاء — الربع الثالث 2026',
-    'landing.trust_label': 'موثوق لدى موردين شركاء',
+        'بدائل الخشب ومظهر الرخام وألواح الجدران والأرضيات والبروفيلات الزخرفية — مختارة من موردين موثوقين للمنازل والمشاريع التجارية.',
+    'landing.hero_cta_catalog': 'استكشف المواد',
+    'landing.hero_cta_gallery': 'شاهد أعمالنا',
+    'landing.trust_label': 'لمسات منتقاة، موردون موثوقون',
     'landing.stat_materials': 'مواد',
     'landing.stat_classifications': 'مجموعات',
     'landing.stat_suppliers': 'موردون شركاء',
-    'landing.atelier_eyebrow': 'الاستوديو',
-    'landing.capabilities_eyebrow': '// الاستوديو',
-    'landing.capabilities_title': 'لمسات مختارة، من البداية إلى النهاية',
-    'landing.capabilities_sub':
-        'مساحة عمل واحدة لرحلة المادة كاملة — انتقاء، تسعير صادق، وبوابة ذاتية للموردين الذين يزوّدون الاستوديو.',
-    'landing.cap1_title': 'المواد',
-    'landing.cap1_body':
-        'بدائل الخشب، مظهر الرخام، ألواح الجدران، الأرضيات والبروفيلات — مباشرة من موردين شركاء، مسعّرة لكل وحدة، جاهزة لمشروعك القادم.',
-    'landing.cap2_title': 'التسعير والفواتير',
-    'landing.cap2_body':
-        'أسعار شفافة لكل وحدة مع ضريبة قابلة للتهيئة وتحويل عملات متعدد. تُعاد حسابات كل فاتورة وتُتحقق على الخادم.',
-    'landing.cap3_title': 'مساحة عمل المورد',
-    'landing.cap3_body':
-        'يدير الموردون كتالوجهم وصور منتجاتهم وسجل تكاليفهم عبر مساحة عمل مخصصة — دون مكالمات أو جداول.',
-    'landing.cap2_tag1': 'أسعار شفافة',
-    'landing.cap2_tag2': 'معدلات ضريبة',
-    'landing.cap2_tag3': 'عملات متعددة',
-    'landing.cap2_tag4': 'إجماليات الخادم',
-    'landing.cap3_tag1': 'خدمة ذاتية',
-    'landing.cap3_tag2': 'صور المنتجات',
-    'landing.cap3_tag3': 'مخزون حي',
-    'landing.cap3_tag4': 'سجل التكاليف',
-    'landing.featured_title': 'لمسات مميزة',
     'landing.collections_eyebrow': 'المجموعات',
-    'landing.collections_title': 'تصفّح حسب المجموعة',
+    'landing.collections_title': 'تسوّق حسب المجموعة',
+    'landing.collections_sub':
+        'تصفّح اللمسات كما لو كنت في صالة عرض — حسب عائلة المواد.',
     'landing.materials_count': '{count} مواد',
-    'landing.how_eyebrow': 'كيف يعمل',
-    'landing.how_title': 'من العينة إلى المواصفات',
-    'landing.how_sub':
-        'مساحة عمل واحدة لرحلة المادة كاملة — لأصحاب المشاريع والمصممين وللموردين الذين يزوّدون الاستوديو.',
-    'landing.step1_title': 'تصفّح الكتالوج',
-    'landing.step1_body':
-        'استكشف اللمسات المختارة حسب المجموعة، وصفِّ حسب المادة، وقارن المواد جنبًا إلى جنب.',
-    'landing.step2_title': 'اطلب عبر الفواتير',
-    'landing.step2_body':
-        'أنشئ الطلبات ببنود مباشرة وضرائب وتحويل عملات — تُعاد حسابات الإجماليات دائمًا على الخادم.',
-    'landing.step3_title': 'تتبّع كل شيء',
-    'landing.step3_body':
-        'المدفوعات والأرصدة المستحقة والتكاليف وهوامش الربح — مرئية لمن يحتاجها فقط، لا أكثر.',
-    'landing.cta_title': 'جاهز للبناء مع ديكور؟',
-    'landing.cta_authed': 'مساحة عملك على بُعد نقرة واحدة.',
-    'landing.cta_guest': 'تواصل معنا لطلب الأسعار والمواد، أو سجّل الدخول إلى مساحة عملك.',
+    'landing.featured_eyebrow': 'مميز',
+    'landing.featured_title': 'لمسات مميزة',
+    'landing.featured_sub': 'تشكيلة منتقاة من اللمسات المتوفرة لدى شركائنا الآن.',
+    'landing.inspiration_eyebrow': 'مشاريع',
+    'landing.inspiration_title': 'مساحات صاغتها موادنا',
+    'landing.inspiration_sub': 'تصميمات داخلية منجزة وتركيبات ولقطات قريبة للمواد من أعمالنا.',
+    'landing.inspiration_cta': 'شاهد المعرض كاملًا',
+    'landing.why_eyebrow': 'لماذا ديكور',
+    'landing.why_title': 'اختيار اللمسة المناسبة أصبح سهلاً',
+    'landing.why_sub': 'متجر ديكور مبني على طريقة الناس الفعلية في اختيار المواد — بالرؤية والمقارنة والسؤال.',
+    'landing.why_1_title': 'لمسات منتقاة',
+    'landing.why_1_body': 'كل مادة تُختار لجودتها وشكلها في مساحة حقيقية — لا لمجرد ملء الرف.',
+    'landing.why_2_title': 'موردون موثوقون',
+    'landing.why_2_body': 'نتعامل مع موردين راسخين لمواد الديكور ونقف خلف ما نوصي به.',
+    'landing.why_3_title': 'معلومات شفافة',
+    'landing.why_3_body': 'أسعار واضحة لكل وحدة، أوصاف صادقة، وصور حقيقية للمنتجات.',
+    'landing.why_4_title': 'دعم في الاختيار',
+    'landing.why_4_body': 'أخبرنا عن مشروعك وسنساعدك على اختيار اللمسات المناسبة لمساحتك وميزانيتك.',
+    'landing.why_5_title': 'سكني وتجاري',
+    'landing.why_5_body': 'من غرفة واحدة إلى تشطيب كامل — لأصحاب المنازل والمصممين والمقاولين والمهندسين المعماريين.',
+    'landing.why_6_title': 'عروض أسعار مباشرة',
+    'landing.why_6_body': 'اطلب عرض سعر برسالة واحدة — عبر الهاتف أو البريد أو واتساب.',
+    'landing.journey_eyebrow': 'كيف نعمل',
+    'landing.journey_title': 'من الاكتشاف إلى القرار',
+    'landing.journey_sub': 'أربع خطوات بسيطة من التصفّح إلى مساحة منجزة.',
+    'landing.step1_title': 'اكتشف المواد',
+    'landing.step1_body': 'تصفّح الكتالوج والمجموعات في وقتك الخاص.',
+    'landing.step2_title': 'قارن اللمسات',
+    'landing.step2_body': 'راجع العينات والأسعار والمواصفات جنبًا إلى جنب.',
+    'landing.step3_title': 'تواصل مع الفريق',
+    'landing.step3_body': 'اطرح أسئلتك أو اطلب عرض سعر — عبر الهاتف أو البريد أو واتساب.',
+    'landing.step4_title': 'أكّد متطلباتك',
+    'landing.step4_body': 'شارك تفاصيل مشروعك وسنُعدّ القائمة النهائية.',
+    'landing.cta_title': 'جاهز لتحويل مساحتك؟',
+    'landing.cta_sub': 'تصفّح الكتالوج، استكشف مشاريعنا، أو تحدث مع الفريق عن مشروعك القادم.',
+    'landing.cta_catalog': 'تصفّح الكتالوج',
+    'landing.cta_gallery': 'شاهد أعمالنا',
+    'landing.cta_whatsapp': 'تحدث عبر واتساب',
+    'landing.cta_contact': 'تواصل مع الفريق',
 
     // ---- Catalog ----
-    'catalog.eyebrow': 'الاستوديو',
+    'catalog.eyebrow': 'المجموعة',
     'catalog.title': 'الكتالوج',
     'catalog.sub': 'كل لمسة متوفرة حاليًا لدى موردينا الشركاء — ابحث بالاسم أو رمز SKU، أو صفِّ حسب المجموعة.',
     'catalog.search_placeholder': 'ابحث عن مواد…',
-    'catalog.filter_label': 'تصفية حسب التصنيف',
+    'catalog.filter_label': 'تصفية حسب المجموعة',
     'catalog.all_collections': 'كل المجموعات',
+    'catalog.results_count': '{count} لمسة',
+    'catalog.clear': 'مسح',
     'catalog.empty_title': 'لا توجد مواد',
     'catalog.empty_desc': 'جرّب بحثًا مختلفًا، أو تصفّح مجموعة أخرى.',
-    'catalog.prices_note':
-        'تُعرض الأسعار لكل وحدة بدون ضريبة. أسعار الموردين وتكاليفهم متاحة داخل مساحة العمل.',
 
     // ---- Public material card ----
     'pmc.from': 'ابتداءً من',
@@ -553,58 +611,75 @@ const ar: Record<TranslationKey, string> = {
     'show.back': 'العودة إلى الكتالوج',
     'show.supplied_by': 'توفّرها {name}',
     'show.per_unit': 'لكل {unit}',
-    'show.interested': 'مهتم بهذه اللمسة؟',
-    'show.quote': 'لطلب عرض سعر من {supplier}.',
+    'show.breadcrumb_home': 'الرئيسية',
+    'show.breadcrumb_catalog': 'الكتالوج',
+    'show.overview_label': 'عن هذه اللمسة',
+    'show.collection_label': 'المجموعة',
+    'show.sku_label': 'رمز SKU',
+    'show.quote_cta': 'اطلب عرض سعر',
+    'show.whatsapp_cta': 'اسأل عبر واتساب',
+    'show.related_title': 'قد يعجبك أيضًا',
+    'show.related_sub': 'لمسات أخرى من هذه المجموعة.',
 
     // ---- Units ----
     'unit.piece': 'قطعة',
     'unit.square_meter': 'م²',
     'unit.meter': 'متر',
     'unit.box': 'صندوق',
-    'unit.sheet': 'لوح',
-
-    // ---- About ----
-    'about.eyebrow': 'عن الاستوديو',
-    'about.title': 'كتالوج عمل لقطاع مواد الديكور.',
-    'about.p1':
-        'ديكور نظام أعمال مبني لمتجر مواد ديكور — مكان واحد لإدارة الموردين والتصنيفات واللمسات والأسعار والفواتير والمدفوعات. الكتالوج العام الذي تتصفحه هو نفس البيانات الحية التي يعمل بها المتجر: عندما يحدّث مورد لمسة ما، تنعكس هنا.',
-    'about.p2':
-        'خلف الكتالوج سير عمل كاملة: مساحات عمل حسب الأدوار للمديرين والمحاسبين وطاقم المبيعات والموردين؛ إجماليات فواتير تُحسب على الخادم؛ أسعار صرف تاريخية؛ تتبّع للتكاليف؛ وتقارير أرباح — مع إبقاء تكاليف الموردين خاصة لمن يحتاجها فقط.',
-    'about.f1_title': 'أسعار شفافة',
-    'about.f1_body':
-        'تُعرض أسعار البيع لكل وحدة دون ضرائب خفية. تطبّق الفواتير معدلات ضريبة القيمة المضافة المُهيأة وتحوّل بين العملات باستخدام أسعار صرف مخزّنة.',
-    'about.f2_title': 'التكاليف تبقى خاصة',
-    'about.f2_body':
-        'لا تظهر تكاليف الموردين وبيانات الأرباح أبدًا على الصفحات العامة — فهي مقيّدة بالأدوار المالية داخل مساحة العمل.',
-    'about.f3_title': 'مبنية على عمليات حقيقية',
-    'about.f3_body':
-        'المسودات والفواتير المصدرة والمدفوعات والإلغاءات تتبع القواعد التي يعتمد عليها متجر عامل فعلًا.',
-    'about.f4_title': 'مصدر واحد للحقيقة',
-    'about.f4_body':
-        'تُعاد حسابات كل الإجماليات وتُتحقق على الخادم. ما تراه هنا هو نفس البيانات التي تعمل بها لوحات التحكم والتقارير.',
+    'unit.sheet': 'لوح',    // ---- About ----
+    'about.eyebrow': 'من نحن',
+    'about.title': 'صالة عرض من اللمسات، مبنية على الثقة.',
+    'about.lead':
+        'ديكور متجر مواد ديكور للمنازل والمساحات التجارية. ننتقي بدائل الخشب ومظهر الرخام وألواح الجدران والأرضيات والبروفيلات الزخرفية من موردين موثوقين — ونساعدك على اختيار اللمسة المناسبة لكل غرفة.',
+    'about.what_title': 'ماذا نقدم',
+    'about.what_1_title': 'مواد منتقاة',
+    'about.what_1_body':
+        'تشكيلة مركّزة من اللمسات المختارة للجودة والأداء — من بدائل الخشب إلى مظهر الرخام والألواح والأرضيات والبروفيلات.',
+    'about.what_2_title': 'معلومات صادقة عن المنتج',
+    'about.what_2_body': 'صور حقيقية ومواصفات واضحة وأسعار لكل وحدة لتقارن اللمسات بثقة.',
+    'about.what_3_title': 'دعم المشاريع',
+    'about.what_3_body': 'من عينة واحدة إلى تشطيب كامل — يساعدك فريقنا على الاختيار والتقدير والتأكيد.',
+    'about.who_title': 'لمن نخدم',
+    'about.who_1_title': 'أصحاب المنازل',
+    'about.who_1_body': 'تجديد غرفة أو منزل كامل بلمسات تدوم.',
+    'about.who_2_title': 'مصممو الديكور',
+    'about.who_2_body': 'مواد موثوقة وإجابات سريعة لمشاريع العملاء.',
+    'about.who_3_title': 'المقاولون والبناؤون',
+    'about.who_3_body': 'توريد ثابت للمشاريع التجارية والسكنية.',
+    'about.who_4_title': 'المهندسون المعماريون',
+    'about.who_4_body': 'لمسات جاهزة للمواصفات بأسعار صادقة.',
+    'about.suppliers_title': 'موردون موثوقون',
+    'about.suppliers_body':
+        'نتعامل مع موردين راسخين لمواد الديكور ونحدّث كتالوجنا مباشرة من قوائمهم — فاللمسة التي تراها هي التي يمكننا توفيرها.',
+    'about.cta_title': 'جاهز لبدء مشروعك؟',
+    'about.cta_body': 'تصفّح الكتالوج أو تواصل معنا — يسعدنا مساعدتك في الاختيار.',
 
     // ---- Contact ----
     'contact.eyebrow': 'تواصل معنا',
-    'contact.title': 'تواصل مع الاستوديو.',
+    'contact.title': 'لنتحدث عن مشروعك.',
     'contact.sub':
-        'أسئلة عن لمسة معينة، أو طلب بالجملة، أو رغبة في أن تصبح موردًا شريكًا؟ تواصل معنا وسيعود إليك الفريق.',
+        'أسئلة عن لمسة معينة، أو طلب بالجملة، أو تشطيب كامل؟ الفريق على بُعد رسالة واحدة.',
+    'contact.whatsapp_title': 'واتساب',
+    'contact.whatsapp_body': 'أسرع طريقة للوصول إلى فريق المبيعات.',
     'contact.email_title': 'البريد الإلكتروني',
     'contact.email_body': 'للطلبات والأسعار والاستفسارات العامة.',
     'contact.phone_title': 'الهاتف',
     'contact.phone_body': 'تحدث مباشرة مع مندوب مبيعات.',
-    'contact.workspace_title': 'مساحة العمل',
-    'contact.workspace_body': 'لديك حساب بالفعل؟',
-    'contact.workspace_value': 'سجّل الدخول إلى مساحة عملك',
-    'contact.partner_title': 'اشترك معنا',
-    'contact.partner_body':
-        'يدير الموردون موادهم وصور منتجاتهم عبر مساحة عمل مخصصة — دون مكالمات أو جداول. راسلنا لتبدأ.',
-    'contact.partner_cta': 'راسلنا',
+    'contact.address_title': 'صالة العرض',
+    'contact.address_body': 'زرنا لترى اللمسات وتلمسها بنفسك.',
+    'contact.hours_title': 'ساعات العمل',
+    'contact.hours_value': 'السبت – الخميس · 9:00 – 18:00',
+    'contact.enquiry_title': 'استفسارات عامة',
+    'contact.enquiry_body':
+        'أخبرنا بما تخطط له وسنرشدك إلى المواد والكميات المناسبة.',
+    'contact.quote_cta': 'راسلنا باستفسارك',
+    'contact.staff_sign_in': 'الموظفون والموردون — تسجيل الدخول',
 
     // ---- Gallery ----
     'gallery.eyebrow': 'المعرض',
-    'gallery.title': 'أعمالنا',
+    'gallery.title': 'مشاريعنا',
     'gallery.sub':
-        'مشاريع وعينات وتركيبات منجزة — تصفّح حسب المجموعة. تُضاف أعمال جديدة مع نمو المتجر.',
+        'تصميمات داخلية منجزة وتركيبات ولقطات قريبة للمواد — تصفّح حسب المجموعة.',
     'gallery.all_sections': 'كل المجموعات',
     'gallery.empty_title': 'لا توجد أعمال بعد',
     'gallery.empty_desc': 'ستظهر صور المعرض الجديدة هنا قريبًا.',
