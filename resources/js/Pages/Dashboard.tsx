@@ -454,7 +454,7 @@ export default function Dashboard({ metrics, period, periodBounds, baseCurrency 
                             <option value="" disabled selected>{t('dash.select_action')}</option>
                             <option value={route('site-content.index')}>{t('dash.site_content')}</option>
                             <option value={route('integrations.index')}>{t('dash.integrations')}</option>
-                            <option value={route('settings.index')}>{t('dash.shop_settings')}</option>
+                            <option value={route('settings.edit')}>{t('dash.shop_settings')}</option>
                             <option value={route('users.index')}>{t('dash.user_management')}</option>
                             <option value={route('materials.index')}>{t('dash.materials_management')}</option>
                         </select>
