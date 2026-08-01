@@ -15,9 +15,7 @@ class GalleryImageController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private readonly GalleryImageService $images)
-    {
-    }
+    public function __construct(private readonly GalleryImageService $images) {}
 
     public function store(StoreGalleryImageRequest $request, GallerySection $section): RedirectResponse
     {

@@ -17,6 +17,7 @@ use Inertia\Response;
 class UserController extends Controller
 {
     use AuthorizesRequests;
+
     public function index(Request $request): Response
     {
         $this->authorize('viewAny', User::class);

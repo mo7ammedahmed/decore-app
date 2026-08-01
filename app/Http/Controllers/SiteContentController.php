@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateSiteContentRequest;
 use App\Models\SiteContent;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,7 +45,7 @@ class SiteContentController extends Controller
 
         // Multi-row upsert — keep it atomic so a failure never leaves the
         // visitor content half-updated.
-        \Illuminate\Support\Facades\DB::transaction(function () use ($updates) {
+        DB::transaction(function () use ($updates) {
             foreach ($updates as $key => $values) {
                 SiteContent::query()->updateOrCreate(
                     ['key' => $key],

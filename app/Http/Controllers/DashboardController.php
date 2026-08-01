@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CurrencyService;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -9,9 +10,7 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function __construct(private readonly DashboardService $dashboard)
-    {
-    }
+    public function __construct(private readonly DashboardService $dashboard) {}
 
     public function index(Request $request): Response
     {
@@ -26,7 +25,7 @@ class DashboardController extends Controller
             'metrics' => $this->dashboard->index($request->user(), $bounds),
             'period' => $period,
             'periodBounds' => $bounds,
-            'baseCurrency' => app(\App\Services\CurrencyService::class)->baseCode(),
+            'baseCurrency' => app(CurrencyService::class)->baseCode(),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Money;
 use Database\Factories\InvoiceItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,7 +62,7 @@ class InvoiceItem extends Model
      */
     public function revenueBeforeTax(): string
     {
-        return \App\Support\Money::sub($this->line_subtotal, $this->discount_amount);
+        return Money::sub($this->line_subtotal, $this->discount_amount);
     }
 
     /**
@@ -69,7 +70,7 @@ class InvoiceItem extends Model
      */
     public function totalSupplierCost(): string
     {
-        return \App\Support\Money::mul($this->unit_cost, $this->quantity);
+        return Money::mul($this->unit_cost, $this->quantity);
     }
 
     /**
@@ -77,7 +78,7 @@ class InvoiceItem extends Model
      */
     public function grossProfit(): string
     {
-        return \App\Support\Money::sub($this->revenueBeforeTax(), $this->totalSupplierCost());
+        return Money::sub($this->revenueBeforeTax(), $this->totalSupplierCost());
     }
 
     /**
@@ -91,6 +92,6 @@ class InvoiceItem extends Model
             return '0.00';
         }
 
-        return \App\Support\Money::div(\App\Support\Money::mul($this->grossProfit(), '100'), $revenue);
+        return Money::div(Money::mul($this->grossProfit(), '100'), $revenue);
     }
 }

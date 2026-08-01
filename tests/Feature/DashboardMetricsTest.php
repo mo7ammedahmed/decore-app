@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\DiscountType;
 use App\Enums\InvoiceStatus;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Material;
 use App\Models\Supplier;
 use App\Models\User;
@@ -38,7 +39,7 @@ class DashboardMetricsTest extends TestCase
         ];
     }
 
-    private function createInvoice(User $user, float $price, string $status = 'issued', float $tax = 15): \App\Models\Invoice
+    private function createInvoice(User $user, float $price, string $status = 'issued', float $tax = 15): Invoice
     {
         $material = Material::factory()->create([
             'selling_price' => $price,
@@ -184,7 +185,7 @@ class DashboardMetricsTest extends TestCase
             'is_active' => true,
         ]);
 
-        $lowStock = \App\Models\Material::query()->lowStock()->get();
+        $lowStock = Material::query()->lowStock()->get();
 
         $this->assertCount(1, $lowStock);
     }

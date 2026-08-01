@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ShopSetting;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateProfileSettingsRequest extends FormRequest
 {

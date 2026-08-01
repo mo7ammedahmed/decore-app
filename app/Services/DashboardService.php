@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\InvoiceStatus;
-use App\Enums\PaymentStatus;
+use App\Enums\UserRole;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Material;
@@ -11,15 +11,14 @@ use App\Models\Payment;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Support\Money;
-use Carbon\CarbonInterface;
+use Illuminate\Support\Collection;
 
 class DashboardService
 {
     public function __construct(
         private readonly ProfitService $profit,
         private readonly VisitorAnalyticsService $analytics,
-    ) {
-    }
+    ) {}
 
     /**
      * Resolve a period key into inclusive [from, to] date strings.
@@ -48,10 +47,10 @@ class DashboardService
     public function index(User $user, array $bounds): array
     {
         return match ($user->role) {
-            \App\Enums\UserRole::Admin => $this->admin($bounds),
-            \App\Enums\UserRole::Accountant => $this->accountant($bounds),
-            \App\Enums\UserRole::SalesStaff => $this->sales($user),
-            \App\Enums\UserRole::Supplier => $this->supplier($user),
+            UserRole::Admin => $this->admin($bounds),
+            UserRole::Accountant => $this->accountant($bounds),
+            UserRole::SalesStaff => $this->sales($user),
+            UserRole::Supplier => $this->supplier($user),
         };
     }
 
@@ -281,7 +280,7 @@ class DashboardService
     /**
      * Top selling materials by quantity across finalized invoices.
      *
-     * @return \Illuminate\Support\Collection<int, object>
+     * @return Collection<int, object>
      */
     protected function topSelling(int $limit, array $bounds)
     {

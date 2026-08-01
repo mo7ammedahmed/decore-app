@@ -14,8 +14,7 @@ class PaymentService
     public function __construct(
         private readonly InvoiceService $invoices,
         private readonly CurrencyService $currencies,
-    ) {
-    }
+    ) {}
 
     /**
      * Generate the next sequential payment number, e.g. PAY-2026-000013.

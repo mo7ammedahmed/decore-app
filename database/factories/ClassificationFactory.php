@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Classification;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Classification>
+ * @extends Factory<Classification>
  */
 class ClassificationFactory extends Factory
 {

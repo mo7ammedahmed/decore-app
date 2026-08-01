@@ -9,6 +9,7 @@ use App\Models\GallerySection;
 use App\Services\AuditService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -99,7 +100,7 @@ class GallerySectionController extends Controller
         // Delete the rows through Eloquent so each GalleryImage's `deleted`
         // hook runs and removes its stored file from the disk — atomically so
         // a failure never leaves a half-deleted section.
-        \Illuminate\Support\Facades\DB::transaction(function () use ($section) {
+        DB::transaction(function () use ($section) {
             $section->images()->get()->each->delete();
             $section->delete();
         });

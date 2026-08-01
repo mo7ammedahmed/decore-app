@@ -6,26 +6,27 @@ use App\Enums\Unit;
 use App\Http\Requests\StoreMaterialRequest;
 use App\Http\Requests\UpdateMaterialRequest;
 use App\Models\Classification;
+use App\Models\Currency;
 use App\Models\Material;
 use App\Models\Supplier;
 use App\Services\AuditService;
 use App\Services\CostHistoryService;
 use App\Services\CurrencyService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class MaterialController extends Controller
 {
-     use AuthorizesRequests;
+    use AuthorizesRequests;
+
     public function __construct(
         private readonly CostHistoryService $costHistory,
         private readonly CurrencyService $currencies,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -85,7 +86,7 @@ class MaterialController extends Controller
             'suppliers' => $user->isSupplier()
                 ? Supplier::query()->whereKey($user->supplier_id)->get(['id', 'name'])
                 : Supplier::query()->active()->orderBy('name')->get(['id', 'name']),
-            'currencies' => \App\Models\Currency::query()->active()->get(['code', 'name', 'symbol']),
+            'currencies' => Currency::query()->active()->get(['code', 'name', 'symbol']),
             'unitOptions' => Unit::options(),
             'isSupplierRole' => $user->isSupplier(),
         ]);
@@ -156,7 +157,7 @@ class MaterialController extends Controller
             'suppliers' => $user->isSupplier()
                 ? Supplier::query()->whereKey($user->supplier_id)->get(['id', 'name'])
                 : Supplier::query()->active()->orderBy('name')->get(['id', 'name']),
-            'currencies' => \App\Models\Currency::query()->active()->get(['code', 'name', 'symbol']),
+            'currencies' => Currency::query()->active()->get(['code', 'name', 'symbol']),
             'unitOptions' => Unit::options(),
             'isSupplierRole' => $user->isSupplier(),
             'canManageCosts' => $user->role->canManageCosts(),

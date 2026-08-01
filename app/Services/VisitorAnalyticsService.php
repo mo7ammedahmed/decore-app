@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\PageView;
 use App\Models\VisitorSession;
+use Carbon\Carbon;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -58,8 +58,8 @@ class VisitorAnalyticsService
      */
     public function series(array $bounds): array
     {
-        $start = \Carbon\Carbon::parse($bounds['from'])->startOfDay();
-        $end = \Carbon\Carbon::parse($bounds['to'])->startOfDay();
+        $start = Carbon::parse($bounds['from'])->startOfDay();
+        $end = Carbon::parse($bounds['to'])->startOfDay();
         $days = (int) $start->diffInDays($end) + 1;
 
         if ($days > self::MAX_DAILY_POINTS) {
@@ -139,7 +139,7 @@ class VisitorAnalyticsService
 
         return $months
             ->map(function (string $monthKey) use ($sessionRows, $pageViewRows): array {
-                $label = \Carbon\Carbon::parse($monthKey.'-01')->format('M Y');
+                $label = Carbon::parse($monthKey.'-01')->format('M Y');
                 $sessionRow = $sessionRows->get($monthKey);
                 $pageViewRow = $pageViewRows->get($monthKey);
 

@@ -27,6 +27,7 @@ export default function ImagePreview({ url, hex, alt = 'Color', className = '', 
                 />
             ) : (
                 <svg className="h-1/2 w-1/2 text-fg/20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                    <title>{alt}</title>
                     <path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm4 5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm11 7l-5-6-4 5-3-3-4 4" />
                 </svg>
             )}

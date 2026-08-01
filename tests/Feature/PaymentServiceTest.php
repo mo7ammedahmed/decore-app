@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\DiscountType;
 use App\Enums\PaymentStatus;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Material;
 use App\Models\User;
 use App\Services\InvoiceService;
@@ -30,7 +31,7 @@ class PaymentServiceTest extends TestCase
         $this->payments = app(PaymentService::class);
     }
 
-    private function issuedInvoice(User $user, float $total = 230.00): \App\Models\Invoice
+    private function issuedInvoice(User $user, float $total = 230.00): Invoice
     {
         $material = Material::factory()->create([
             'selling_price' => $total,

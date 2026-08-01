@@ -17,8 +17,7 @@ class InvoiceService
     public function __construct(
         private readonly CurrencyService $currencies,
         private readonly CostHistoryService $costHistory,
-    ) {
-    }
+    ) {}
 
     /**
      * Generate the next sequential invoice number, e.g. INV-2026-000042.

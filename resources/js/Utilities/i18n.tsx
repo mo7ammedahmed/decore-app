@@ -67,6 +67,7 @@ const en = {
     'nav.skip_to_content': 'Skip to content',
     'nav.toggle_navigation': 'Toggle navigation',
     'nav.close_navigation': 'Close navigation',
+    'nav.sidebar_label': 'Sidebar Navigation',
 
     // ---- Roles ----
     'role.admin': 'Administrator',
@@ -371,6 +372,15 @@ const en = {
     'dash.page_views': 'Page views',
     'dash.no_analytics': 'No visitor data yet',
     'dash.no_analytics_desc': 'Visitor analytics appear here once guests browse the public site.',
+    'dash.quick_management': 'Quick Management',
+    'dash.manage_website_elements': 'Manage website elements',
+    'dash.select_action': 'Select action',
+    'dash.site_content': 'Site content',
+    'dash.integrations': 'Integrations',
+    'dash.shop_settings': 'Shop settings',
+    'dash.user_management': 'User management',
+    'dash.materials_management': 'Materials management',
+    'dash.quick_management_desc': 'Quick access to manage website elements and connected items',
 
     // ---- Profile ----
     'profile.title': 'Profile',
@@ -444,6 +454,7 @@ const ar: Record<TranslationKey, string> = {
     'nav.skip_to_content': 'تخطَّ إلى المحتوى',
     'nav.toggle_navigation': 'تبديل القائمة',
     'nav.close_navigation': 'إغلاق القائمة',
+    'nav.sidebar_label': 'توجيه الشريط الجانبي',
 
     // ---- Roles ----
     'role.admin': 'مدير',
@@ -743,6 +754,15 @@ const ar: Record<TranslationKey, string> = {
     'dash.page_views': 'مشاهدات الصفحات',
     'dash.no_analytics': 'لا توجد بيانات زوار بعد',
     'dash.no_analytics_desc': 'ستظهر تحليلات الزوار بمجرد تصفح الضيوف للموقع العام.',
+    'dash.quick_management': 'إدارة سريعة',
+    'dash.manage_website_elements': 'إدارة عناصر الموقع',
+    'dash.select_action': 'اختر إجراء',
+    'dash.site_content': 'محتوى الموقع',
+    'dash.integrations': 'التكاملات',
+    'dash.shop_settings': 'إعدادات المتجر',
+    'dash.user_management': 'إدارة المستخدمين',
+    'dash.materials_management': 'إدارة المواد',
+    'dash.quick_management_desc': 'الوصول السريع لإدارة عناصر الموقع والعناصر المتصلة',
 
     // ---- Profile ----
     'profile.title': 'الملف الشخصي',

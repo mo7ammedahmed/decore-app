@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class CostHistoryService
 {
-    public function __construct(private readonly CurrencyService $currencies)
-    {
-    }
+    public function __construct(private readonly CurrencyService $currencies) {}
 
     /**
      * Record a cost change for a material, closing any currently open record

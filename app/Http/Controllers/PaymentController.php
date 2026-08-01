@@ -8,17 +8,15 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Services\PaymentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PaymentController extends Controller
 {
-     use AuthorizesRequests;
-    public function __construct(private readonly PaymentService $payments)
-    {
-    }
+    use AuthorizesRequests;
+
+    public function __construct(private readonly PaymentService $payments) {}
 
     public function index(Invoice $invoice): Response
     {

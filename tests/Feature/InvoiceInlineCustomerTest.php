@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Material;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -126,7 +127,7 @@ class InvoiceInlineCustomerTest extends TestCase
         $sales = User::factory()->salesStaff()->create();
         $material = Material::factory()->create(['currency_code' => 'SAR']);
         $customer = Customer::factory()->create(['created_by' => $sales->id]);
-        $invoice = \App\Models\Invoice::factory()->draft()->create([
+        $invoice = Invoice::factory()->draft()->create([
             'customer_id' => $customer->id,
             'created_by' => $sales->id,
         ]);
@@ -157,7 +158,7 @@ class InvoiceInlineCustomerTest extends TestCase
         $accountant = User::factory()->accountant()->create();
         $material = Material::factory()->create(['currency_code' => 'SAR']);
         $customer = Customer::factory()->create();
-        $invoice = \App\Models\Invoice::factory()->draft()->create([
+        $invoice = Invoice::factory()->draft()->create([
             'customer_id' => $customer->id,
             'created_by' => $accountant->id,
         ]);
@@ -180,7 +181,7 @@ class InvoiceInlineCustomerTest extends TestCase
         $sales = User::factory()->salesStaff()->create();
         $material = Material::factory()->create(['currency_code' => 'SAR']);
         $customer = Customer::factory()->create(['created_by' => $sales->id]);
-        $invoice = \App\Models\Invoice::factory()->draft()->create([
+        $invoice = Invoice::factory()->draft()->create([
             'customer_id' => $customer->id,
             'created_by' => $sales->id,
         ]);
@@ -201,7 +202,7 @@ class InvoiceInlineCustomerTest extends TestCase
     {
         $sales = User::factory()->salesStaff()->create();
         $customer = Customer::factory()->create(['created_by' => $sales->id]);
-        $invoice = \App\Models\Invoice::factory()->draft()->create([
+        $invoice = Invoice::factory()->draft()->create([
             'customer_id' => $customer->id,
             'created_by' => $sales->id,
         ]);

@@ -17,8 +17,7 @@ class ReportController extends Controller
     public function __construct(
         private readonly DashboardService $dashboard,
         private readonly ProfitService $profit,
-    ) {
-    }
+    ) {}
 
     /**
      * Role-aware financial reports. Suppliers and sales staff have no access.

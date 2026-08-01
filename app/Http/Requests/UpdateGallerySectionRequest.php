@@ -2,6 +2,4 @@
 
 namespace App\Http\Requests;
 
-class UpdateGallerySectionRequest extends StoreGallerySectionRequest
-{
-}
+class UpdateGallerySectionRequest extends StoreGallerySectionRequest {}

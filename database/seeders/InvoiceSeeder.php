@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Enums\InvoiceStatus;
+use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Material;
-use App\Models\Payment;
 use App\Models\TaxRate;
 use App\Models\User;
 use App\Services\InvoiceService;
@@ -28,7 +28,7 @@ class InvoiceSeeder extends Seeder
         $customers = Customer::query()->limit(4)->get();
         $materials = Material::query()->limit(6)->get();
         $defaultTax = TaxRate::query()->default()->first() ?? TaxRate::factory()->create(['is_default' => true]);
-        $base = \App\Models\Currency::query()->where('is_base', true)->value('code') ?? 'SAR';
+        $base = Currency::query()->where('is_base', true)->value('code') ?? 'SAR';
 
         $scenarios = [
             // [status, payments count, days ago]
@@ -63,6 +63,7 @@ class InvoiceSeeder extends Seeder
 
             if ($scenario['status'] === InvoiceStatus::Cancelled->value) {
                 $service->cancel($invoice, $accountant);
+
                 continue;
             }
 

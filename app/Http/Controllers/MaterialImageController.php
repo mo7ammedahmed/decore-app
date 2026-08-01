@@ -6,16 +6,14 @@ use App\Http\Requests\StoreMaterialImageRequest;
 use App\Models\Material;
 use App\Services\AuditService;
 use App\Services\ImageUploadService;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 
 class MaterialImageController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private readonly ImageUploadService $images)
-    {
-    }
+    public function __construct(private readonly ImageUploadService $images) {}
 
     public function store(StoreMaterialImageRequest $request, Material $material): RedirectResponse
     {

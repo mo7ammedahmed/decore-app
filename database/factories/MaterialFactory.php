@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Classification;
+use App\Models\Material;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Material>
+ * @extends Factory<Material>
  */
 class MaterialFactory extends Factory
 {

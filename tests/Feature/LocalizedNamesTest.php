@@ -2,9 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InvoiceStatus;
 use App\Models\Classification;
+use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Material;
 use App\Models\Supplier;
+use App\Models\User;
+use Database\Seeders\TaxRateSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -111,15 +116,15 @@ class LocalizedNamesTest extends TestCase
 
     public function test_dashboard_top_selling_uses_localized_names(): void
     {
-        $this->seed(\Database\Seeders\TaxRateSeeder::class);
+        $this->seed(TaxRateSeeder::class);
 
-        $admin = \App\Models\User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create(['role' => 'admin']);
         $classification = Classification::factory()->create([
             'name_en' => 'Wood Alternatives',
             'name_ar' => 'بدائل الخشب',
         ]);
         $supplier = Supplier::factory()->create();
-        $customer = \App\Models\Customer::factory()->create();
+        $customer = Customer::factory()->create();
         $material = Material::factory()->create([
             'supplier_id' => $supplier->id,
             'classification_id' => $classification->id,
@@ -128,10 +133,10 @@ class LocalizedNamesTest extends TestCase
             'selling_price' => 100,
         ]);
 
-        \App\Models\Invoice::factory()->create([
+        Invoice::factory()->create([
             'customer_id' => $customer->id,
             'created_by' => $admin->id,
-            'status' => \App\Enums\InvoiceStatus::Completed,
+            'status' => InvoiceStatus::Completed,
             'issue_date' => now()->toDateString(),
         ])->items()->create([
             'material_id' => $material->id,

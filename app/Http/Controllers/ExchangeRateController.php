@@ -6,7 +6,6 @@ use App\Http\Requests\StoreExchangeRateRequest;
 use App\Models\Currency;
 use App\Models\ExchangeRate;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 

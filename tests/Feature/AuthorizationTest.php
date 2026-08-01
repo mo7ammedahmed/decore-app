@@ -11,6 +11,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use App\Services\InvoiceService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -228,7 +229,7 @@ class AuthorizationTest extends TestCase
 
         $this->actingAs($user)
             ->post("/materials/{$materialB->id}/image", [
-                'image' => \Illuminate\Http\UploadedFile::fake()->image('shot.png'),
+                'image' => UploadedFile::fake()->image('shot.png'),
             ])
             ->assertForbidden();
     }

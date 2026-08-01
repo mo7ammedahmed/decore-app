@@ -38,7 +38,9 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
 
     return (
         <aside
-            className={`fixed inset-y-0 start-0 z-40 flex w-64 flex-col transition-transform duration-300 lg:translate-x-0 ${
+            aria-label={t('nav.sidebar_label')}
+                aria-hidden={!open}
+                className={`fixed inset-y-0 start-0 z-40 flex w-64 flex-col transition-transform duration-300 lg:translate-x-0 ${
                 open
                     ? 'translate-x-0 rtl:translate-x-0'
                     : '-translate-x-full rtl:translate-x-full'

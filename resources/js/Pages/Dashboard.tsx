@@ -438,6 +438,33 @@ export default function Dashboard({ metrics, period, periodBounds, baseCurrency 
                 </div>
             )}
 
+            {/* Quick Management Dropdown */}
+            <GlassCard className="mt-6 p-6">
+                <div className="flex items-center justify-between">
+                    <h2 className="font-heading text-2xl italic text-white">{t('dash.quick_management')}</h2>
+                    <div className="flex items-center gap-2 text-sm text-white/50">
+                        {t('dash.manage_website_elements')}
+                        <select
+                            className="form-select w-36 ml-2"
+                            onChange={(e) => {
+                                const path = e.target.value;
+                                if (path) router.visit(path);
+                            }}
+                        >
+                            <option value="" disabled selected>{t('dash.select_action')}</option>
+                            <option value={route('site-content.index')}>{t('dash.site_content')}</option>
+                            <option value={route('integrations.index')}>{t('dash.integrations')}</option>
+                            <option value={route('settings.index')}>{t('dash.shop_settings')}</option>
+                            <option value={route('users.index')}>{t('dash.user_management')}</option>
+                            <option value={route('materials.index')}>{t('dash.materials_management')}</option>
+                        </select>
+                    </div>
+                </div>
+                <p className="mt-2 text-xs text-white/40">
+                    {t('dash.quick_management_desc')}
+                </p>
+            </GlassCard>
+
             {!isAdmin && !isFinancialRole && !isSales && !isSupplier && (
                 <GlassCard className="p-10">
                     <EmptyState title={t('dash.nothing_to_show')} description={t('dash.no_data_yet')} />

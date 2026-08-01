@@ -77,9 +77,9 @@ export default function InvoiceDocument({
     const initial = shop.name.charAt(0).toUpperCase();
 
     const logo = shop.logo_url ? (
-        <img src={shop.logo_url} alt={shop.name} className="h-12 w-12 rounded-lg object-cover" />
+        <img src={shop.logo_url} alt={`${shop.name} logo`} className="h-12 w-12 rounded-lg object-cover" />
     ) : (
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 font-serif text-xl font-bold text-white">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 font-serif text-xl font-bold text-white" aria-hidden="true">
             {initial}
         </span>
     );
@@ -90,9 +90,9 @@ export default function InvoiceDocument({
                 <header className="flex items-center justify-between gap-4 rounded-xl px-6 py-5 text-white" style={{ backgroundColor: accent }}>
                     <div className="flex items-center gap-3">
                         {shop.logo_url ? (
-                            <img src={shop.logo_url} alt={shop.name} className="h-12 w-12 rounded-lg object-cover" />
+                            <img src={shop.logo_url} alt={`${shop.name} logo`} className="h-12 w-12 rounded-lg object-cover" />
                         ) : (
-                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 font-sans text-xl font-bold">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 font-sans text-xl font-bold" aria-hidden="true">
                                 {initial}
                             </span>
                         )}
@@ -128,7 +128,13 @@ export default function InvoiceDocument({
         return (
             <header className="flex items-start justify-between border-b border-neutral-200 pb-6">
                 <div className="flex items-center gap-3">
-                    {logo}
+                    {shop.logo_url ? (
+                        <img src={shop.logo_url} alt={`${shop.name} logo`} />
+                    ) : (
+                        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 font-serif text-xl font-bold text-white" aria-hidden="true">
+                            {initial}
+                        </span>
+                    )}
                     <div>
                         <p className="font-serif text-3xl font-bold tracking-tight text-neutral-900">{shop.name}</p>
                         {shop.tagline && <p className="mt-1 text-sm text-neutral-500">{shop.tagline}</p>}

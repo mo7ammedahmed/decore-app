@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\Filesystem;
+
 return [
 
     /*
@@ -15,7 +17,7 @@ return [
 
     // Resolved through App\Support\Filesystem so the app falls back to the
     // local public disk when S3 is requested but AWS credentials are missing.
-    'default' => \App\Support\Filesystem::resolveDefaultDisk(
+    'default' => Filesystem::resolveDefaultDisk(
         env('FILESYSTEM_DISK'),
         env('AWS_ACCESS_KEY_ID'),
         env('AWS_SECRET_ACCESS_KEY'),

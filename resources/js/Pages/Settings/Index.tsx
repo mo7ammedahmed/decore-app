@@ -101,9 +101,9 @@ export default function Index({ settings }: { settings: ShopSettings }) {
                                     <p className="form-label">Logo</p>
                                     <div className="liquid-glass-strong flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl">
                                         {previewLogo ? (
-                                            <img src={previewLogo} alt="Shop logo" className="h-full w-full object-cover" />
+                                            <img src={previewLogo} alt="Shop logo preview" className="h-full w-full object-cover" />
                                         ) : (
-                                            <span className="font-heading text-3xl italic text-accent">
+                                            <span className="font-heading text-3xl italic text-accent" aria-hidden="true">
                                                 {(data.shop_name || 'D').charAt(0).toUpperCase()}
                                             </span>
                                         )}
@@ -118,7 +118,7 @@ export default function Index({ settings }: { settings: ShopSettings }) {
                                             onChange={onLogoChange}
                                         />
                                         <span className="liquid-glass rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/[0.06] hover:text-white">
-                                            {settings.logo_url || logoPreview ? 'Replace logo' : 'Upload logo'}
+                                            {settings.logo_url || logoPreview ? 'Replace shop logo' : 'Upload shop logo'}
                                         </span>
                                     </label>
                                     {(settings.logo_url || logoPreview) && !data.remove_logo && (
@@ -126,7 +126,7 @@ export default function Index({ settings }: { settings: ShopSettings }) {
                                             type="button"
                                             onClick={removeLogo}
                                             className="w-fit text-xs font-medium text-white/40 transition-colors hover:text-danger"
-                                        >
+                                            aria-label="Remove shop logo">
                                             Remove logo
                                         </button>
                                     )}

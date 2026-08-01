@@ -7,15 +7,12 @@ use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
 use App\Services\CurrencyService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CurrencyController extends Controller
 {
-    public function __construct(private readonly CurrencyService $currencies)
-    {
-    }
+    public function __construct(private readonly CurrencyService $currencies) {}
 
     public function index(): Response
     {

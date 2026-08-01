@@ -11,6 +11,8 @@ use App\Models\Material;
 use App\Models\ShopSetting;
 use App\Models\TaxRate;
 use App\Services\InvoiceService;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +21,7 @@ use Inertia\Response;
 
 class InvoiceController extends Controller
 {
-    public function __construct(private readonly InvoiceService $invoices)
-    {
-    }
+    public function __construct(private readonly InvoiceService $invoices) {}
 
     public function index(Request $request): Response
     {
@@ -287,9 +287,9 @@ class InvoiceController extends Controller
      * Materials available for invoice line items, scoped for sales staff so
      * supplier cost data is never exposed.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Material>
+     * @return Collection<int, Material>
      */
-    protected function materialOptions(\Illuminate\Contracts\Auth\Authenticatable $user)
+    protected function materialOptions(Authenticatable $user)
     {
         $query = Material::query()
             ->active()
