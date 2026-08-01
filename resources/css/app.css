@@ -1,0 +1,373 @@
+@import "tailwindcss";
+@import "./tokens/tokens.css";
+
+/* Explicit content sources — ensures utilities used only in TSX/blade
+ * (text-accent, rounded-full, flex, …) are always discovered, independent of
+ * Tailwind v4's automatic source detection. */
+@source "../js/**/*.{js,ts,jsx,tsx}";
+@source "../views/**/*.blade.php";
+
+@plugin "@tailwindcss/forms";
+
+/* ---------------------------------------------------------------------------
+ * Decore — Design tokens (three-layer architecture)
+ *
+ * Layer 1 · PRIMITIVES — raw values, generated from tokens/design-tokens.json
+ *           into tokens/tokens.css (--primitive-*). Do not edit by hand;
+ *           change the JSON and re-run generate-tokens.cjs.
+ * Layer 2 · SEMANTIC   — purpose aliases (--color-*, --radius-*, --shadow-*,
+ *           --duration-*, --spacing-*) in tokens/tokens.css.
+ * Layer 3 · COMPONENT  — --button-*, --input-*, --card-*, --badge-*, --table-*,
+ *           --dialog-*, --sidebar-* in tokens/tokens.css.
+ *
+ * This file bridges semantic tokens into the Tailwind v4 utility namespace
+ * with `@theme inline` (utilities keep the var() reference and resolve at
+ * runtime — opacity modifiers become color-mix() against primitives), then
+ * consumes tokens directly in the component classes below.
+ * Component specs: tokens/component-specs.md
+ * ------------------------------------------------------------------------- */
+
+@theme inline {
+    /* Typography */
+    --font-heading: var(--primitive-font-family-heading);
+    --font-body: var(--primitive-font-family-body);
+
+    /* Surfaces */
+    --color-ink: var(--primitive-color-black);
+    --color-glass: var(--primitive-color-white-a-01);
+
+    /* Text */
+    --color-primary-text: var(--primitive-color-white-a-90);
+    --color-secondary-text: var(--primitive-color-white-a-70);
+    --color-muted-text: var(--primitive-color-white-a-50);
+
+    /* Brand + status */
+    --color-accent: var(--primitive-color-brass-400);
+    --color-accent-soft: var(--primitive-color-brass-400-soft);
+    --color-danger: var(--primitive-color-danger-400);
+    --color-success: var(--primitive-color-success-400);
+    --color-warning: var(--primitive-color-warning-400);
+    --color-info: var(--primitive-color-info-400);
+
+    /* Radii */
+    --radius-card: var(--primitive-radius-20);
+    --radius-modal: var(--primitive-radius-24);
+}
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------- */
+
+html {
+    color-scheme: dark;
+}
+
+body {
+    @apply bg-black font-body text-primary-text antialiased;
+    /* Ambient cinematic glow — deliberate raw radial stops, not component tokens */
+    background-image:
+        radial-gradient(1200px 600px at 15% -10%, rgba(255, 255, 255, 0.055), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(212, 175, 122, 0.06), transparent 55%),
+        radial-gradient(1000px 700px at 50% 110%, rgba(255, 255, 255, 0.035), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: var(--color-primary-text);
+}
+
+::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    color: var(--primitive-color-white);
+}
+
+/* ---------------------------------------------------------------------------
+ * Arabic (RTL) typography
+ *
+ * Amiri is the Arabic serif counterpart to Instrument Serif; Noto Sans Arabic
+ * mirrors Barlow. Synthetic italics and wide letter-spacing damage connected
+ * Arabic script, so both are neutralised for Arabic. Letter-spacing is reset
+ * broadly because many UI labels rely on tracked uppercase styling that has
+ * no Arabic equivalent.
+ * ------------------------------------------------------------------------- */
+
+html[lang="ar"] body,
+html[lang="ar"] .font-body {
+    font-family: "Noto Sans Arabic", var(--font-body);
+}
+
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4,
+html[lang="ar"] .font-heading {
+    font-family: "Amiri", var(--font-heading);
+    font-style: normal;
+    letter-spacing: 0;
+}
+
+html[lang="ar"] * {
+    letter-spacing: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Liquid glass — soft surface (card / --card-bg)
+ * ------------------------------------------------------------------------- */
+
+.liquid-glass {
+    background: var(--color-glass);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: var(--shadow-glass);
+    position: relative;
+    overflow: hidden;
+}
+
+.liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+        180deg,
+        var(--primitive-color-white-a-45) 0%,
+        var(--primitive-color-white-a-15) 20%,
+        transparent 40%,
+        transparent 60%,
+        var(--primitive-color-white-a-15) 80%,
+        var(--primitive-color-white-a-45) 100%
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Liquid glass — strong (primary surfaces / dialogs)
+ * ------------------------------------------------------------------------- */
+
+.liquid-glass-strong {
+    background: var(--color-glass-strong);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    box-shadow: var(--shadow-glass-strong);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.liquid-glass-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+        180deg,
+        var(--primitive-color-white-a-50) 0%,
+        var(--primitive-color-white-a-20) 20%,
+        var(--primitive-color-white-a-04) 40%,
+        var(--primitive-color-white-a-04) 60%,
+        var(--primitive-color-white-a-20) 80%,
+        var(--primitive-color-white-a-50) 100%
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Graceful fallback for browsers without backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .liquid-glass,
+    .liquid-glass-strong {
+        background: rgba(20, 20, 22, 0.96);
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Forms (--input-* component tokens)
+ * ------------------------------------------------------------------------- */
+
+.form-input,
+.form-select,
+.form-textarea {
+    @apply w-full text-sm font-normal transition-colors duration-200;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--input-radius);
+    color: var(--input-fg);
+    padding: var(--input-padding-y) var(--input-padding-x);
+    box-shadow: none;
+}
+
+.form-input::placeholder,
+.form-select::placeholder,
+.form-textarea::placeholder {
+    color: var(--input-placeholder);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    background-color: var(--input-hover-bg);
+    border-color: var(--input-focus-border);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--input-focus-ring);
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    cursor: not-allowed;
+    opacity: var(--input-disabled-opacity);
+}
+
+.form-label {
+    @apply mb-1.5 block text-[13px] font-medium tracking-wide;
+    color: var(--color-secondary-text);
+}
+
+.field-error {
+    @apply mt-1.5 text-xs;
+    color: var(--color-danger);
+}
+
+.field-error-border {
+    border-color: color-mix(in srgb, var(--color-danger) 60%, transparent);
+}
+
+input[type="color"].form-input {
+    @apply h-11 p-1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Tables (--table-* component tokens)
+ * ------------------------------------------------------------------------- */
+
+.table-glass th {
+    @apply text-start text-[11px] font-semibold uppercase tracking-[0.14em];
+    color: var(--table-header-fg);
+    padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+}
+
+.table-glass td {
+    @apply text-sm;
+    color: var(--table-cell-fg);
+    padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+}
+
+.table-glass tbody tr {
+    border-top: 1px solid var(--table-row-border);
+    transition: background-color var(--duration-fast) ease-in-out;
+}
+
+.table-glass tbody tr:hover {
+    background-color: var(--table-row-hover);
+}
+
+/* ---------------------------------------------------------------------------
+ * Scrollbar
+ * ------------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primitive-color-white-a-12);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primitive-color-white-a-22);
+    background-clip: content-box;
+}
+
+/* ---------------------------------------------------------------------------
+ * Invoice print view
+ * NOTE: intentionally escapes the dark glass system — printed invoices render
+ * as a literal white "paper" document, so raw values are deliberate here and
+ * flagged by the token validator on purpose.
+ * ------------------------------------------------------------------------- */
+
+.print-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.print-page {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
+    color: #171717;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+@media print {
+    body {
+        background: #fff !important;
+    }
+
+    .print-toolbar {
+        display: none !important;
+    }
+
+    .print-page {
+        margin: 0;
+        max-width: none;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
