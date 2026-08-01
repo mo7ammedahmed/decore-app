@@ -41,13 +41,24 @@
     --color-secondary-text: var(--primitive-color-white-a-70);
     --color-muted-text: var(--primitive-color-white-a-50);
 
-    /* Brand + status */
-    --color-accent: var(--primitive-color-brass-400);
-    --color-accent-soft: var(--primitive-color-brass-400-soft);
+    /* Brand + status — the accent resolves through a runtime hook so the
+       public site's light/dark palettes (saved on Profile settings) can drive
+       every accent utility; the admin keeps the brass default. */
+    --color-accent: var(--color-accent-runtime, var(--primitive-color-brass-400));
+    --color-accent-soft: var(--color-accent-soft-runtime, var(--primitive-color-brass-400-soft));
     --color-danger: var(--primitive-color-danger-400);
     --color-success: var(--primitive-color-success-400);
     --color-warning: var(--primitive-color-warning-400);
     --color-info: var(--primitive-color-info-400);
+
+    /* Public site theme (light/dark) — PublicLayout writes --color-foreground,
+       --color-background, --color-surface-strong and --color-border on <html>
+       per the active appearance; these utilities resolve against them. */
+    --color-fg: var(--color-foreground);
+    --color-muted: var(--color-foreground-muted);
+    --color-canvas: var(--color-background);
+    --color-surface: var(--color-surface-strong);
+    --color-line: var(--color-border);
 
     /* Radii */
     --radius-card: var(--primitive-radius-20);
@@ -63,7 +74,10 @@ html {
 }
 
 body {
-    @apply bg-black font-body text-primary-text antialiased;
+    @apply font-body antialiased;
+    /* Themed by the public site's light/dark palettes (dark by default). */
+    color: var(--color-primary-text);
+    background-color: var(--color-background);
     /* Ambient cinematic glow — deliberate raw radial stops, not component tokens */
     background-image:
         radial-gradient(1200px 600px at 15% -10%, rgba(255, 255, 255, 0.055), transparent 60%),
@@ -200,6 +214,30 @@ html[lang="ar"] * {
     .liquid-glass-strong {
         background: rgba(20, 20, 22, 0.96);
     }
+}
+
+/* Glass effect can be turned off from Profile settings — surfaces become
+ * flat solid panels instead of blurred glass. */
+[data-glass="off"] .liquid-glass,
+[data-glass="off"] .liquid-glass-strong {
+    background: var(--color-surface-strong);
+    border: 1px solid var(--color-border);
+    background-blend-mode: normal;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+}
+
+/* Light appearance — frosted white glass needs a hairline outline to read
+ * against a light canvas. */
+[data-theme="light"] .liquid-glass,
+[data-theme="light"] .liquid-glass-strong {
+    border: 1px solid var(--color-border);
+}
+
+[data-glass="off"] .liquid-glass::before,
+[data-glass="off"] .liquid-glass-strong::before {
+    opacity: 0;
 }
 
 /* ---------------------------------------------------------------------------

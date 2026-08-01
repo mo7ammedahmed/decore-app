@@ -29,10 +29,10 @@ export default function LanguageSwitcher({ className = '' }: { className?: strin
                         type="button"
                         onClick={() => switchLocale(code)}
                         aria-pressed={active}
-                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
+                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
                             active
-                                ? 'liquid-glass-strong text-white'
-                                : 'text-white/45 hover:text-white'
+                                ? 'liquid-glass-strong text-fg'
+                                : 'text-fg/45 hover:text-fg'
                         }`}
                     >
                         {available[code]}

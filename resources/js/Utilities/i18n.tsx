@@ -35,6 +35,7 @@ const en = {
     // ---- Navigation (public) ----
     'nav.home': 'Home',
     'nav.catalog': 'Catalog',
+    'nav.gallery': 'Gallery',
     'nav.about': 'About',
     'nav.contact': 'Contact',
     'nav.language': 'Language',
@@ -57,6 +58,9 @@ const en = {
     'nav.audit_log': 'Audit Log',
     'nav.settings': 'Settings',
     'nav.site_content': 'Public site content',
+    'nav.public_profile': 'Public profile',
+    'nav.gallery_admin': 'Gallery',
+    'nav.integrations': 'Pixels & Integrations',
     'nav.materials_atelier': 'Materials Atelier',
     'nav.supplier_id': 'Supplier #{id}',
     'nav.profile_settings': 'Profile settings',
@@ -72,6 +76,10 @@ const en = {
 
     // ---- Public layout ----
     'public.tagline': 'Decoration materials atelier',
+
+    // ---- Appearance ----
+    'theme.switch_to_light': 'Switch to light mode',
+    'theme.switch_to_dark': 'Switch to dark mode',
 
     // ---- Landing ----
     'landing.hero_line1': 'The surfaces that',
@@ -202,6 +210,65 @@ const en = {
         'Suppliers manage their own materials and product imagery through a dedicated workspace — no phone calls or spreadsheets required. Email us to get started.',
     'contact.partner_cta': 'Email us',
 
+    // ---- Gallery ----
+    'gallery.eyebrow': 'The portfolio',
+    'gallery.title': 'Our work',
+    'gallery.sub':
+        'Finished projects, samples and installations — browsed by collection. New work is added as the shop grows.',
+    'gallery.all_sections': 'All collections',
+    'gallery.empty_title': 'No work yet',
+    'gallery.empty_desc': 'New gallery images will appear here soon.',
+    'gallery.admin_title': 'Gallery sections',
+    'gallery.admin_sub': 'Organize the public portfolio into sections, then upload the images for each one.',
+    'gallery.new_section': 'New section',
+    'gallery.edit_section': 'Edit section',
+    'gallery.edit_section_short': 'Edit',
+    'gallery.section_name_en': 'Section name (English)',
+    'gallery.section_name_ar': 'Section name (Arabic)',
+    'gallery.description_en': 'Description (English)',
+    'gallery.description_ar': 'Description (Arabic)',
+    'gallery.sort_order': 'Sort order',
+    'gallery.visible': 'Visible on the public site',
+    'gallery.images': '{count} images',
+    'gallery.upload_images': 'Upload images',
+    'gallery.upload_hint': 'JPEG, PNG or WebP — up to 8MB each. Upload one or several at once.',
+    'gallery.uploading': 'Uploading…',
+    'gallery.uploaded': 'Upload',
+    'gallery.replace': 'Replace',
+    'gallery.remove': 'Remove',
+    'gallery.remove_confirm': 'Remove this image permanently?',
+    'gallery.alt_text': 'Alt text',
+    'gallery.delete_section': 'Delete section',
+    'gallery.delete_section_confirm': 'Delete this section and all its images?',
+    'gallery.back_to_gallery': 'Back to gallery',
+    'gallery.lightbox_close': 'Close viewer',
+    'gallery.lightbox_previous': 'Previous image',
+    'gallery.lightbox_next': 'Next image',
+    'gallery.lightbox_counter': '{current} of {total}',
+    'gallery.lightbox_open': 'Open image',
+
+    // ---- Integrations ----
+    'integrations.title': 'Pixels & integrations',
+    'integrations.sub':
+        'Connect analytics and advertising tags to your public site. Managed installs render the official snippet; custom installs paste your own head/body code.',
+    'integrations.enabled': 'Enabled',
+    'integrations.enable': 'Enable',
+    'integrations.disable': 'Disable',
+    'integrations.managed': 'Managed install',
+    'integrations.custom': 'Custom code',
+    'integrations.managed_hint': 'Enter the tracking ID and Decore renders the official snippet.',
+    'integrations.custom_hint': 'Paste your own head code (and body code where supported).',
+    'integrations.head_code': 'Head code',
+    'integrations.body_code': 'Body code',
+    'integrations.save': 'Save settings',
+    'integrations.disconnect': 'Disconnect',
+    'integrations.disconnect_confirm': 'Disconnect this integration?',
+    'integrations.not_configured': 'Not configured',
+    'integrations.site_url': 'Site URL',
+    'integrations.docs': 'Docs',
+    'integrations.diagnostics': 'Diagnostics',
+    'integrations.placement': 'Placement: {placement}',
+
     // ---- Auth ----
     'auth.email': 'Email',
     'auth.password': 'Password',
@@ -293,6 +360,13 @@ const en = {
     'dash.outstanding_follow_ups': 'Outstanding follow-ups',
     'dash.nothing_to_show': 'Nothing to show yet',
     'dash.no_data_yet': 'Your dashboard metrics will appear here once data exists.',
+    'dash.visitor_analytics': 'Visitor analytics',
+    'dash.visitor_analytics_sub': 'Public site traffic over the selected period.',
+    'dash.visitors': 'Visitors',
+    'dash.sessions': 'Sessions',
+    'dash.page_views': 'Page views',
+    'dash.no_analytics': 'No visitor data yet',
+    'dash.no_analytics_desc': 'Visitor analytics appear here once guests browse the public site.',
 
     // ---- Profile ----
     'profile.title': 'Profile',
@@ -334,6 +408,7 @@ const ar: Record<TranslationKey, string> = {
     // ---- Navigation (public) ----
     'nav.home': 'الرئيسية',
     'nav.catalog': 'الكتالوج',
+    'nav.gallery': 'معرض الأعمال',
     'nav.about': 'من نحن',
     'nav.contact': 'تواصل معنا',
     'nav.language': 'اللغة',
@@ -356,6 +431,9 @@ const ar: Record<TranslationKey, string> = {
     'nav.audit_log': 'سجل التدقيق',
     'nav.settings': 'الإعدادات',
     'nav.site_content': 'محتوى الموقع العام',
+    'nav.public_profile': 'الملف الشخصي العام',
+    'nav.gallery_admin': 'معرض الأعمال',
+    'nav.integrations': 'البيكسلات والتكاملات',
     'nav.materials_atelier': 'استوديو المواد',
     'nav.supplier_id': 'مورد رقم {id}',
     'nav.profile_settings': 'إعدادات الملف الشخصي',
@@ -371,6 +449,10 @@ const ar: Record<TranslationKey, string> = {
 
     // ---- Public layout ----
     'public.tagline': 'استوديو مواد الديكور',
+
+    // ---- Appearance ----
+    'theme.switch_to_light': 'التبديل إلى الوضع الفاتح',
+    'theme.switch_to_dark': 'التبديل إلى الوضع الداكن',
 
     // ---- Landing ----
     'landing.hero_line1': 'الأسطح التي',
@@ -499,6 +581,65 @@ const ar: Record<TranslationKey, string> = {
         'يدير الموردون موادهم وصور منتجاتهم عبر مساحة عمل مخصصة — دون مكالمات أو جداول. راسلنا لتبدأ.',
     'contact.partner_cta': 'راسلنا',
 
+    // ---- Gallery ----
+    'gallery.eyebrow': 'المعرض',
+    'gallery.title': 'أعمالنا',
+    'gallery.sub':
+        'مشاريع وعينات وتركيبات منجزة — تصفّح حسب المجموعة. تُضاف أعمال جديدة مع نمو المتجر.',
+    'gallery.all_sections': 'كل المجموعات',
+    'gallery.empty_title': 'لا توجد أعمال بعد',
+    'gallery.empty_desc': 'ستظهر صور المعرض الجديدة هنا قريبًا.',
+    'gallery.admin_title': 'أقسام المعرض',
+    'gallery.admin_sub': 'نظّم معرض الأعمال العام إلى أقسام، ثم ارفع صور كل قسم.',
+    'gallery.new_section': 'قسم جديد',
+    'gallery.edit_section': 'تعديل القسم',
+    'gallery.edit_section_short': 'تعديل',
+    'gallery.section_name_en': 'اسم القسم (إنجليزي)',
+    'gallery.section_name_ar': 'اسم القسم (عربي)',
+    'gallery.description_en': 'الوصف (إنجليزي)',
+    'gallery.description_ar': 'الوصف (عربي)',
+    'gallery.sort_order': 'الترتيب',
+    'gallery.visible': 'ظاهر على الموقع العام',
+    'gallery.images': '{count} صور',
+    'gallery.upload_images': 'رفع الصور',
+    'gallery.upload_hint': 'JPEG أو PNG أو WebP — حتى 8 ميجابايت للصورة. يمكن رفع أكثر من صورة دفعة واحدة.',
+    'gallery.uploading': 'جارٍ الرفع…',
+    'gallery.uploaded': 'رفع',
+    'gallery.replace': 'استبدال',
+    'gallery.remove': 'إزالة',
+    'gallery.remove_confirm': 'هل تريد إزالة هذه الصورة نهائيًا؟',
+    'gallery.alt_text': 'النص البديل',
+    'gallery.delete_section': 'حذف القسم',
+    'gallery.delete_section_confirm': 'حذف هذا القسم وكل صوره؟',
+    'gallery.back_to_gallery': 'العودة إلى المعرض',
+    'gallery.lightbox_close': 'إغلاق العارض',
+    'gallery.lightbox_previous': 'الصورة السابقة',
+    'gallery.lightbox_next': 'الصورة التالية',
+    'gallery.lightbox_counter': '{current} من {total}',
+    'gallery.lightbox_open': 'فتح الصورة',
+
+    // ---- Integrations ----
+    'integrations.title': 'البيكسلات والتكاملات',
+    'integrations.sub':
+        'اربط أدوات التحليلات والإعلانات بموقعك العام. التركيب المُدار يعرض الكود الرسمي؛ التركيب المخصص يلصق كود الرأس والجسم الخاص بك.',
+    'integrations.enabled': 'مفعّل',
+    'integrations.enable': 'تفعيل',
+    'integrations.disable': 'تعطيل',
+    'integrations.managed': 'تركيب مُدار',
+    'integrations.custom': 'كود مخصص',
+    'integrations.managed_hint': 'أدخل معرف التتبع وسيعرض ديكور الكود الرسمي.',
+    'integrations.custom_hint': 'الصق كود الرأس الخاص بك (وكود الجسم حيثما كان مدعومًا).',
+    'integrations.head_code': 'كود الرأس',
+    'integrations.body_code': 'كود الجسم',
+    'integrations.save': 'حفظ الإعدادات',
+    'integrations.disconnect': 'قطع الاتصال',
+    'integrations.disconnect_confirm': 'هل تريد قطع الاتصال بهذا التكامل؟',
+    'integrations.not_configured': 'غير مكوّن',
+    'integrations.site_url': 'رابط الموقع',
+    'integrations.docs': 'التوثيق',
+    'integrations.diagnostics': 'التشخيص',
+    'integrations.placement': 'الموقع: {placement}',
+
     // ---- Auth ----
     'auth.email': 'البريد الإلكتروني',
     'auth.password': 'كلمة المرور',
@@ -587,6 +728,13 @@ const ar: Record<TranslationKey, string> = {
     'dash.outstanding_follow_ups': 'متابعات مستحقة',
     'dash.nothing_to_show': 'لا يوجد شيء لعرضه بعد',
     'dash.no_data_yet': 'ستظهر مقاييس لوحة التحكم هنا بمجرد توفر البيانات.',
+    'dash.visitor_analytics': 'تحليلات الزوار',
+    'dash.visitor_analytics_sub': 'حركة الموقع العام خلال الفترة المحددة.',
+    'dash.visitors': 'الزوار',
+    'dash.sessions': 'الجلسات',
+    'dash.page_views': 'مشاهدات الصفحات',
+    'dash.no_analytics': 'لا توجد بيانات زوار بعد',
+    'dash.no_analytics_desc': 'ستظهر تحليلات الزوار بمجرد تصفح الضيوف للموقع العام.',
 
     // ---- Profile ----
     'profile.title': 'الملف الشخصي',

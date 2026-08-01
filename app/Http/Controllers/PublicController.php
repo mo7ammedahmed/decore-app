@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classification;
+use App\Models\GallerySection;
 use App\Models\Material;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
@@ -128,5 +129,23 @@ class PublicController extends Controller
     public function contact(): Response
     {
         return Inertia::render('Public/Contact');
+    }
+
+    /**
+     * Public portfolio gallery — visible sections with their visible images.
+     * Guests see only published work, never drafts or hidden items.
+     */
+    public function gallery(): Response
+    {
+        $sections = GallerySection::query()
+            ->visible()
+            ->with(['images' => fn ($q) => $q->visible()->orderBy('sort_order')->orderBy('id')])
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        return Inertia::render('Public/Gallery', [
+            'sections' => $sections,
+        ]);
     }
 }

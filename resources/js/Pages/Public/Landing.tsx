@@ -127,7 +127,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                     />
                     <motion.div
                         {...ambient}
-                        className="absolute right-[-10%] top-1/3 h-80 w-80 rounded-full bg-white/[0.05] blur-[110px]"
+                        className="absolute right-[-10%] top-1/3 h-80 w-80 rounded-full bg-fg/[0.05] blur-[110px]"
                     />
                     <div className="absolute bottom-0 left-[-5%] h-72 w-72 rounded-full bg-accent/[0.05] blur-[120px]" />
                 </div>
@@ -138,9 +138,9 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         initial={fadeUp.initial}
                         animate={fadeUp.animate}
                         transition={{ ...fadeUpTransition, delay: 0.4 }}
-                        className="liquid-glass inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm text-white/85"
+                        className="liquid-glass inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm text-fg/85"
                     >
-                        <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-black">
+                        <span className="rounded-full bg-fg px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-canvas">
                             {t('landing.hero_badge_tag')}
                         </span>
                         <span className="font-light">{t('landing.hero_badge')}</span>
@@ -158,7 +158,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         initial={fadeUp.initial}
                         animate={fadeUp.animate}
                         transition={{ ...fadeUpTransition, delay: 0.9 }}
-                        className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-white/70 md:text-base"
+                        className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-fg/70 md:text-base"
                     >
                         {t('landing.hero_sub')}
                     </motion.p>
@@ -172,14 +172,14 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                     >
                         <Link
                             href={route('catalog')}
-                            className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                            className="liquid-glass-strong inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                         >
                             {t('landing.browse_catalog')}
                             <ArrowUpRightIcon className="h-4 w-4 rtl:-scale-x-100" />
                         </Link>
                         <Link
                             href={route('contact')}
-                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-light text-white/70 transition-colors duration-200 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                            className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-light text-fg/70 transition-colors duration-200 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                         >
                             <ChatIcon className="h-4 w-4" />
                             {t('nav.contact')}
@@ -203,10 +203,10 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                                     {icon}
                                 </span>
                                 <div className="min-w-0">
-                                    <dt className="truncate text-[11px] uppercase tracking-[0.14em] text-white/40">
+                                    <dt className="truncate text-[11px] uppercase tracking-[0.14em] text-fg/40">
                                         {t(labelKey)}
                                     </dt>
-                                    <dd className="mt-1 font-heading text-4xl italic leading-none tracking-[-1px] text-white">
+                                    <dd className="mt-1 font-heading text-4xl italic leading-none tracking-[-1px] text-fg">
                                         {stats[key]}
                                     </dd>
                                 </div>
@@ -223,7 +223,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         transition={{ ...fadeUpTransition, delay: 1.35 }}
                         className="relative z-10 flex flex-col items-center gap-4 px-4 pb-10"
                     >
-                        <span className="liquid-glass rounded-full px-4 py-1.5 text-xs text-white/60">
+                        <span className="liquid-glass rounded-full px-4 py-1.5 text-xs text-fg/60">
                             {t('landing.trust_label')}
                         </span>
                         <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 md:gap-x-16">
@@ -231,7 +231,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                                 <Link
                                     key={classification.id}
                                     href={route('catalog', { classification: classification.id })}
-                                    className="font-heading text-2xl italic tracking-tight text-white/45 transition-colors duration-300 hover:text-white md:text-3xl"
+                                    className="font-heading text-2xl italic tracking-tight text-fg/45 transition-colors duration-300 hover:text-fg md:text-3xl"
                                 >
                                     {classification.localized_name ?? classification.name_en}
                                 </Link>
@@ -244,7 +244,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
             {/* ================= Capabilities — // The atelier ================= */}
             <section className="relative overflow-hidden py-24 sm:py-28">
                 <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                    <div className="absolute left-1/2 top-0 h-96 w-[700px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-[120px]" />
+                    <div className="absolute left-1/2 top-0 h-96 w-[700px] -translate-x-1/2 rounded-full bg-fg/[0.04] blur-[120px]" />
                 </div>
 
                 <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
@@ -254,7 +254,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             whileInView={fadeUp.animate}
                             viewport={{ once: true }}
                             transition={fadeUpTransition}
-                            className="text-sm text-white/70"
+                            className="text-sm text-fg/70"
                         >
                             {t('landing.capabilities_eyebrow')}
                         </motion.p>
@@ -266,7 +266,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             whileInView={fadeUp.animate}
                             viewport={{ once: true }}
                             transition={fadeUpTransition}
-                            className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-white/55 md:text-base"
+                            className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-fg/55 md:text-base"
                         >
                             {t('landing.capabilities_sub')}
                         </motion.p>
@@ -289,7 +289,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                                     {classifications.slice(0, 4).map((classification) => (
                                         <span
                                             key={classification.id}
-                                            className="liquid-glass whitespace-nowrap rounded-full px-3 py-1 text-[11px] text-white/85"
+                                            className="liquid-glass whitespace-nowrap rounded-full px-3 py-1 text-[11px] text-fg/85"
                                         >
                                             {classification.localized_name ?? classification.name_en}
                                         </span>
@@ -300,7 +300,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
                                 {t('landing.cap1_title')}
                             </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-white/85">
+                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
                                 {t('landing.cap1_body')}
                             </p>
                         </motion.div>
@@ -329,7 +329,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
                                 {t('landing.cap2_title')}
                             </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-white/85">
+                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
                                 {t('landing.cap2_body')}
                             </p>
                         </motion.div>
@@ -358,7 +358,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             <h3 className="font-heading text-3xl italic leading-none tracking-[-1px] md:text-4xl">
                                 {t('landing.cap3_title')}
                             </h3>
-                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-white/85">
+                            <p className="mt-3 max-w-[32ch] text-sm font-light leading-snug text-fg/85">
                                 {t('landing.cap3_body')}
                             </p>
                         </motion.div>
@@ -378,7 +378,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         </div>
                         <Link
                             href={route('catalog')}
-                            className="shrink-0 rounded-full px-4 py-2 text-sm text-white/60 transition-colors hover:text-white"
+                            className="shrink-0 rounded-full px-4 py-2 text-sm text-fg/60 transition-colors hover:text-fg"
                         >
                             {t('common.view_all')} <span className="inline-block rtl:-scale-x-100">→</span>
                         </Link>
@@ -412,19 +412,19 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                                 <Link
                                     key={classification.id}
                                     href={route('catalog', { classification: classification.id })}
-                                    className="liquid-glass group flex items-center gap-4 rounded-card p-5 transition-all duration-300 hover:bg-white/[0.03]"
+                                    className="liquid-glass group flex items-center gap-4 rounded-card p-5 transition-all duration-300 hover:bg-fg/[0.03]"
                                 >
                                     <ImagePreview url={null} hex={hex} alt={classification.localized_name ?? classification.name_en} size="md" />
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="font-heading text-xl italic leading-snug text-white/90 group-hover:text-white">
+                                        <h3 className="font-heading text-xl italic leading-snug text-fg/90 group-hover:text-fg">
                                             {classification.localized_name ?? classification.name_en}
                                         </h3>
                                         {classification.description && (
-                                            <p className="mt-1 truncate text-xs text-white/40">
+                                            <p className="mt-1 truncate text-xs text-fg/40">
                                                 {classification.description}
                                             </p>
                                         )}
-                                        <p className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-white/35">
+                                        <p className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-fg/35">
                                             {t('landing.materials_count', { count: classification.materials_count })}
                                         </p>
                                     </div>
@@ -443,7 +443,7 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                             {t('landing.how_eyebrow')}
                         </p>
                         <h2 className="mt-3 text-4xl sm:text-5xl">{t('landing.how_title')}</h2>
-                        <p className="mt-4 text-white/50">
+                        <p className="mt-4 text-fg/50">
                             {t('landing.how_sub')}
                         </p>
                     </div>
@@ -456,8 +456,8 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         ].map((item) => (
                             <div key={item.step} className="text-center sm:text-start">
                                 <span className="font-heading text-5xl italic text-accent/60">{item.step}</span>
-                                <h3 className="mt-4 font-heading text-2xl italic text-white/90">{item.title}</h3>
-                                <p className="mt-2 text-sm leading-relaxed text-white/45">{item.body}</p>
+                                <h3 className="mt-4 font-heading text-2xl italic text-fg/90">{item.title}</h3>
+                                <p className="mt-2 text-sm leading-relaxed text-fg/45">{item.body}</p>
                             </div>
                         ))}
                     </div>
@@ -467,14 +467,14 @@ export default function Landing({ auth, stats, featured, classifications }: Land
             {/* ---- Final CTA ---- */}
             <section className="mx-auto max-w-6xl px-4 pb-24 text-center sm:px-6">
                 <h2 className="text-4xl sm:text-5xl">{t('landing.cta_title')}</h2>
-                <p className="mx-auto mt-4 max-w-md text-white/50">
+                <p className="mx-auto mt-4 max-w-md text-fg/50">
                     {user ? t('landing.cta_authed') : t('landing.cta_guest')}
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                     {user ? (
                         <Link
                             href={route('dashboard')}
-                            className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.07]"
+                            className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.07]"
                         >
                             {t('common.open_dashboard')}
                         </Link>
@@ -482,13 +482,13 @@ export default function Landing({ auth, stats, featured, classifications }: Land
                         <>
                             <Link
                                 href={route('contact')}
-                                className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.07]"
+                                className="liquid-glass-strong inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.07]"
                             >
                                 {t('nav.contact')}
                             </Link>
                             <Link
                                 href={route('login')}
-                                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-white/70 transition-colors hover:text-white"
+                                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-fg/70 transition-colors hover:text-fg"
                             >
                                 {t('common.sign_in')}
                             </Link>

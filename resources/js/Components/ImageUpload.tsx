@@ -8,10 +8,12 @@ interface ImageUploadProps {
     existingUrl?: string | null;
     altText?: string;
     disabled?: boolean;
+    /** Max file size in MB — defaults to 2MB, gallery uploads use 8MB. */
+    maxSizeMb?: number;
 }
 
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+const DEFAULT_MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
 export default function ImageUpload({
     value,
@@ -20,11 +22,13 @@ export default function ImageUpload({
     existingUrl,
     altText,
     disabled = false,
+    maxSizeMb = 2,
 }: ImageUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dragOver, setDragOver] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
+    const maxSize = maxSizeMb * 1024 * 1024;
 
     const acceptFile = (file: File | undefined | null) => {
         setLocalError(null);
@@ -36,8 +40,8 @@ export default function ImageUpload({
             return;
         }
 
-        if (file.size > MAX_SIZE) {
-            setLocalError('Image must be 2MB or smaller.');
+        if (file.size > maxSize) {
+            setLocalError(`Image must be ${maxSizeMb}MB or smaller.`);
             return;
         }
 
@@ -116,7 +120,7 @@ export default function ImageUpload({
                                 Drag &amp; drop an image here
                             </p>
                             <p className="mt-1 text-xs text-white/35">
-                                or click to browse · JPEG, PNG, WebP · max 2MB
+                                or click to browse · JPEG, PNG, WebP · max {maxSizeMb}MB
                             </p>
                         </div>
                     </div>

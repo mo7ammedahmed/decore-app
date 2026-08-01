@@ -9,7 +9,7 @@ export default function Pagination<T>({ paginator }: { paginator: Paginated<T> }
 
     return (
         <div className="mt-6 flex flex-col items-center justify-between gap-3 sm:flex-row">
-            <p className="text-xs text-white/40">
+            <p className="text-xs text-fg/40">
                 {t('pagination.showing', {
                     from: paginator.from ?? 0,
                     to: paginator.to ?? 0,
@@ -23,7 +23,7 @@ export default function Pagination<T>({ paginator }: { paginator: Paginated<T> }
                         return (
                             <span
                                 key={index}
-                                className="rounded-full px-3 py-1.5 text-xs text-white/25"
+                                className="rounded-full px-3 py-1.5 text-xs text-fg/25"
                                 aria-hidden="true"
                             >
                                 {link.label.replace(/&laquo;|&raquo;/g, '') || '…'}
@@ -38,8 +38,8 @@ export default function Pagination<T>({ paginator }: { paginator: Paginated<T> }
                             preserveScroll
                             className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-150 ${
                                 link.active
-                                    ? 'liquid-glass-strong text-white'
-                                    : 'text-white/55 hover:bg-white/[0.06] hover:text-white'
+                                    ? 'liquid-glass-strong text-fg'
+                                    : 'text-fg/55 hover:bg-fg/[0.06] hover:text-fg'
                             }`}
                             dangerouslySetInnerHTML={{ __html: link.label }}
                         />

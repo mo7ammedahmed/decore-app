@@ -23,7 +23,7 @@ export default function Contact({ shop }: ContactProps) {
                 >
                     <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">{t('contact.eyebrow')}</p>
                     <h1 className="mt-3 text-5xl leading-[1.05] sm:text-6xl">{t('contact.title')}</h1>
-                    <p className="mt-6 text-white/55">
+                    <p className="mt-6 text-fg/55">
                         {t('contact.sub')}
                     </p>
                 </motion.div>
@@ -58,10 +58,10 @@ export default function Contact({ shop }: ContactProps) {
                             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">
                                 {item.title}
                             </p>
-                            <p className="mt-3 text-sm text-white/45">{item.body}</p>
+                            <p className="mt-3 text-sm text-fg/45">{item.body}</p>
                             <Link
                                 href={item.href}
-                                className="mt-4 inline-block text-sm text-white/85 underline-offset-4 transition-colors hover:text-accent hover:underline"
+                                className="mt-4 inline-block text-sm text-fg/85 underline-offset-4 transition-colors hover:text-accent hover:underline"
                             >
                                 {item.value}
                             </Link>
@@ -76,12 +76,12 @@ export default function Contact({ shop }: ContactProps) {
                     className="liquid-glass-strong mt-12 rounded-modal p-8 sm:p-10"
                 >
                     <h2 className="text-3xl">{t('contact.partner_title')}</h2>
-                    <p className="mt-3 max-w-xl text-sm text-white/50">
+                    <p className="mt-3 max-w-xl text-sm text-fg/50">
                         {t('contact.partner_body')}
                     </p>
                     <a
                         href={`mailto:${contactEmail}`}
-                        className="liquid-glass-strong mt-6 inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/[0.07]"
+                        className="liquid-glass-strong mt-6 inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium text-fg transition-all duration-200 hover:bg-fg/[0.07]"
                     >
                         {t('contact.partner_cta')}
                     </a>

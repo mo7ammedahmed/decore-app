@@ -13,7 +13,14 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    // Resolved through App\Support\Filesystem so the app falls back to the
+    // local public disk when S3 is requested but AWS credentials are missing.
+    'default' => \App\Support\Filesystem::resolveDefaultDisk(
+        env('FILESYSTEM_DISK'),
+        env('AWS_ACCESS_KEY_ID'),
+        env('AWS_SECRET_ACCESS_KEY'),
+        env('AWS_BUCKET'),
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +58,7 @@ return [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),

@@ -15,12 +15,12 @@ export default function EmptyState({
     return (
         <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
             <div className="liquid-glass flex h-14 w-14 items-center justify-center rounded-full">
-                <svg className="h-6 w-6 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                <svg className="h-6 w-6 text-fg/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
                     <path d={ICONS[icon] ?? ICONS.inbox} />
                 </svg>
             </div>
-            <h3 className="mt-4 font-heading text-xl italic text-white/80">{title}</h3>
-            {description && <p className="mt-1.5 max-w-sm text-sm text-white/40">{description}</p>}
+            <h3 className="mt-4 font-heading text-xl italic text-fg/80">{title}</h3>
+            {description && <p className="mt-1.5 max-w-sm text-sm text-fg/40">{description}</p>}
             {children}
         </div>
     );

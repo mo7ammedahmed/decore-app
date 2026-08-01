@@ -31,7 +31,7 @@ class SettingsController extends Controller
         // Store the new file BEFORE deleting the old one so a storage failure
         // never destroys the existing logo.
         if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('settings', 'public');
+            $path = $request->file('logo')->store('settings', (string) config('filesystems.default'));
 
             if ($path === false) {
                 throw new \RuntimeException('Unable to store the shop logo.');

@@ -7,6 +7,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { LocaleProvider } from '@/Utilities/i18n';
 import type { ContentOverrides, Locale } from '@/Utilities/i18n';
+import { initializeVisitorAnalytics } from '@/Utilities/visitorAnalytics';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Decore';
 
@@ -34,3 +35,6 @@ createInertiaApp({
         color: '#d4af7a',
     },
 });
+
+// Public-site visitor analytics beacon (skips admin pages internally).
+initializeVisitorAnalytics();

@@ -1,23 +1,28 @@
 <?php
 
+use App\Http\Controllers\AnalyticsCollectorController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ClassificationController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExchangeRateController;
+use App\Http\Controllers\GalleryImageController;
+use App\Http\Controllers\GallerySectionController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialImageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SiteContentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaxRateController;
+use App\Http\Controllers\TrackingIntegrationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +32,15 @@ Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 Route::get('/catalog/{material:slug}', [PublicController::class, 'show'])->name('catalog.show');
 Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+Route::get('/gallery', [PublicController::class, 'gallery'])->name('gallery');
 
 // ---- Locale switching (public) ----
 Route::post('/locale/{locale}', [LocaleController::class, 'update'])->name('locale.update');
+
+// ---- Visitor analytics beacon (public, fire-and-forget) ----
+Route::post('/analytics/collect', AnalyticsCollectorController::class)
+    ->middleware('throttle:120,1')
+    ->name('analytics.collect');
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -87,12 +98,35 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
 
+    // ---- Portfolio gallery (admin only) ----
+    // The public page owns the /gallery URL, so the admin resource lives under
+    // /gallery-admin while keeping the `gallery.*` route names. Routes are
+    // declared explicitly so the {section} parameter binds GallerySection.
+    Route::middleware('role:admin')->group(function () {
+        Route::get('gallery-admin', [GallerySectionController::class, 'index'])->name('gallery.index');
+        Route::get('gallery-admin/create', [GallerySectionController::class, 'create'])->name('gallery.create');
+        Route::post('gallery-admin', [GallerySectionController::class, 'store'])->name('gallery.store');
+        Route::get('gallery-admin/{section}', [GallerySectionController::class, 'show'])->name('gallery.show');
+        Route::get('gallery-admin/{section}/edit', [GallerySectionController::class, 'edit'])->name('gallery.edit');
+        Route::put('gallery-admin/{section}', [GallerySectionController::class, 'update'])->name('gallery.update');
+        Route::delete('gallery-admin/{section}', [GallerySectionController::class, 'destroy'])->name('gallery.destroy');
+        Route::post('gallery-admin/{section}/images', [GalleryImageController::class, 'store'])->name('gallery.images.store');
+        Route::put('gallery-admin/images/{image}', [GalleryImageController::class, 'replace'])->name('gallery.images.replace');
+        Route::patch('gallery-admin/images/{image}', [GalleryImageController::class, 'update'])->name('gallery.images.update');
+        Route::delete('gallery-admin/images/{image}', [GallerySectionController::class, 'destroyImage'])->name('gallery.images.destroy');
+    });
+
     // ---- Shop settings: admin only ----
     Route::middleware('role:admin')->group(function () {
         Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
         Route::patch('settings', [SettingsController::class, 'update'])->name('settings.update');
+        Route::get('settings/profile', [ProfileSettingsController::class, 'edit'])->name('settings.profile.edit');
+        Route::patch('settings/profile', [ProfileSettingsController::class, 'update'])->name('settings.profile.update');
         Route::get('settings/site-content', [SiteContentController::class, 'index'])->name('site-content.index');
         Route::patch('settings/site-content', [SiteContentController::class, 'update'])->name('site-content.update');
+        Route::get('settings/integrations', [TrackingIntegrationController::class, 'index'])->name('integrations.index');
+        Route::put('settings/integrations/{platform}', [TrackingIntegrationController::class, 'update'])->name('integrations.update');
+        Route::delete('settings/integrations/{platform}', [TrackingIntegrationController::class, 'destroy'])->name('integrations.destroy');
     });
 });
 

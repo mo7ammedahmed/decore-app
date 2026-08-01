@@ -46,7 +46,7 @@ export default function SearchInput({
     return (
         <div className="relative">
             <svg
-                className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30"
+                className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg/30"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

@@ -6,6 +6,7 @@ import MoneyDisplay from '@/Components/MoneyDisplay';
 import GlassCard from '@/Components/GlassCard';
 import EmptyState from '@/Components/EmptyState';
 import MiniBarChart from '@/Components/MiniBarChart';
+import TrafficChart from '@/Components/TrafficChart';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { staggerContainer, staggerItem } from '@/Utilities/motion';
@@ -187,6 +188,43 @@ export default function Dashboard({ metrics, period, periodBounds, baseCurrency 
                     </GlassCard>
                 )}
             </div>
+
+            {/* Admin: visitor analytics */}
+            {isAdmin && metrics.analytics && (
+                <GlassCard className="mt-6 p-6">
+                    <div className="flex flex-wrap items-end justify-between gap-4">
+                        <div>
+                            <h2 className="font-heading text-2xl italic text-white">{t('dash.visitor_analytics')}</h2>
+                            <p className="mt-1 text-sm text-white/40">{t('dash.visitor_analytics_sub')}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="liquid-glass rounded-full px-4 py-1.5 text-sm">
+                                <span className="text-white/45">{t('dash.visitors')}: </span>
+                                <span className="font-medium tabular-nums text-white">{metrics.analytics.summary.visitors}</span>
+                            </span>
+                            <span className="liquid-glass rounded-full px-4 py-1.5 text-sm">
+                                <span className="text-white/45">{t('dash.sessions')}: </span>
+                                <span className="font-medium tabular-nums text-white">{metrics.analytics.summary.sessions}</span>
+                            </span>
+                            <span className="liquid-glass rounded-full px-4 py-1.5 text-sm">
+                                <span className="text-white/45">{t('dash.page_views')}: </span>
+                                <span className="font-medium tabular-nums text-white">{metrics.analytics.summary.page_views}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    {metrics.analytics.summary.page_views === 0 ? (
+                        <div className="mt-4">
+                            <EmptyState title={t('dash.no_analytics')} description={t('dash.no_analytics_desc')} icon="chart" />
+                        </div>
+                    ) : (
+                        <TrafficChart
+                            title={t('dash.visitor_analytics')}
+                            data={metrics.analytics.series.map((point) => ({ label: point.label, page_views: point.page_views }))}
+                        />
+                    )}
+                </GlassCard>
+            )}
 
             {/* Recent invoices */}
             {metrics.recent_invoices && metrics.recent_invoices.length > 0 && (

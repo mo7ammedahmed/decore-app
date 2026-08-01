@@ -35,7 +35,7 @@ export default function Catalog({ materials, classifications, filters }: Catalog
             <section className="mx-auto max-w-6xl px-4 pb-24 pt-14 sm:px-6">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">{t('catalog.eyebrow')}</p>
                 <h1 className="mt-3 text-5xl sm:text-6xl">{t('catalog.title')}</h1>
-                <p className="mt-4 max-w-xl text-white/50">
+                <p className="mt-4 max-w-xl text-fg/50">
                     {t('catalog.sub')}
                 </p>
 
@@ -47,9 +47,9 @@ export default function Catalog({ materials, classifications, filters }: Catalog
                         onChange={(e) => updateClassification(e.target.value)}
                         aria-label={t('catalog.filter_label')}
                     >
-                        <option value="" className="bg-neutral-900">{t('catalog.all_collections')}</option>
+                        <option value="" className="bg-canvas text-fg">{t('catalog.all_collections')}</option>
                         {classifications.map((c) => (
-                            <option key={c.id} value={c.id} className="bg-neutral-900">{c.localized_name ?? c.name_en}</option>
+                            <option key={c.id} value={c.id} className="bg-canvas text-fg">{c.localized_name ?? c.name_en}</option>
                         ))}
                     </select>
                 </div>
@@ -76,7 +76,7 @@ export default function Catalog({ materials, classifications, filters }: Catalog
 
                 <Pagination paginator={materials} />
 
-                <p className="mt-6 text-center text-xs text-white/30">
+                <p className="mt-6 text-center text-xs text-fg/30">
                     {t('catalog.prices_note')}
                 </p>
             </section>

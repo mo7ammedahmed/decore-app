@@ -34,7 +34,10 @@ export function navigationFor(permissions: Permissions | null): NavItem[] {
         { labelKey: 'nav.exchange_rates', route: 'exchange-rates.index', icon: 'swap', visible: permissions.exchangeRates },
         { labelKey: 'nav.reports', route: 'reports.index', icon: 'chart', visible: permissions.reports },
         { labelKey: 'nav.audit_log', route: 'audit-logs.index', icon: 'scroll', visible: permissions.auditLogs },
+        { labelKey: 'nav.gallery_admin', route: 'gallery.index', icon: 'image', visible: permissions.gallery },
+        { labelKey: 'nav.integrations', route: 'integrations.index', icon: 'radar', visible: permissions.integrations },
         { labelKey: 'nav.settings', route: 'settings.edit', icon: 'cog', visible: permissions.settings },
         { labelKey: 'nav.site_content', route: 'site-content.index', icon: 'type', visible: permissions.settings },
+        { labelKey: 'nav.public_profile', route: 'settings.profile.edit', icon: 'users2', visible: permissions.settings },
     ];
 }

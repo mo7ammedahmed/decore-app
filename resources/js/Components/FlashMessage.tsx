@@ -37,7 +37,7 @@ export default function FlashMessage() {
                         }`}
                     >
                         <span className="h-2 w-2 shrink-0 rounded-full bg-current opacity-70" />
-                        <span className="text-white/85">{message}</span>
+                        <span className="text-fg/85">{message}</span>
                     </motion.div>
                 )}
             </AnimatePresence>

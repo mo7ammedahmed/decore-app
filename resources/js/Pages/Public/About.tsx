@@ -37,10 +37,10 @@ export default function About({ stats }: AboutProps) {
                     <h1 className="mt-3 text-5xl leading-[1.05] sm:text-6xl">
                         {t('about.title')}
                     </h1>
-                    <p className="mt-6 text-white/55">
+                    <p className="mt-6 text-fg/55">
                         {t('about.p1')}
                     </p>
-                    <p className="mt-4 text-white/55">
+                    <p className="mt-4 text-fg/55">
                         {t('about.p2')}
                     </p>
                 </motion.div>
@@ -53,8 +53,8 @@ export default function About({ stats }: AboutProps) {
                 >
                     {STATS.map(({ key, labelKey }) => (
                         <motion.div key={labelKey} variants={staggerItem} className="liquid-glass rounded-card px-4 py-6">
-                            <dd className="font-heading text-4xl italic text-white">{stats[key]}</dd>
-                            <dt className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-white/40">{t(labelKey)}</dt>
+                            <dd className="font-heading text-4xl italic text-fg">{stats[key]}</dd>
+                            <dt className="mt-1.5 text-[11px] uppercase tracking-[0.14em] text-fg/40">{t(labelKey)}</dt>
                         </motion.div>
                     ))}
                 </motion.dl>
@@ -72,8 +72,8 @@ export default function About({ stats }: AboutProps) {
                         { titleKey: 'about.f4_title' as const, bodyKey: 'about.f4_body' as const },
                     ].map(({ titleKey, bodyKey }) => (
                         <div key={titleKey}>
-                            <h2 className="font-heading text-2xl italic text-white/90">{t(titleKey)}</h2>
-                            <p className="mt-2 text-sm leading-relaxed text-white/45">{t(bodyKey)}</p>
+                            <h2 className="font-heading text-2xl italic text-fg/90">{t(titleKey)}</h2>
+                            <p className="mt-2 text-sm leading-relaxed text-fg/45">{t(bodyKey)}</p>
                         </div>
                     ))}
                 </motion.div>

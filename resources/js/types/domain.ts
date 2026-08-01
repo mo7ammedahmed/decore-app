@@ -41,6 +41,8 @@ export interface Permissions {
     exchangeRates: boolean;
     reports: boolean;
     auditLogs: boolean;
+    gallery: boolean;
+    integrations: boolean;
     settings: boolean;
     manageCosts: boolean;
     supplierOnly: boolean;
@@ -69,6 +71,92 @@ export interface ShopSettings {
     invoice_thank_you: string | null;
 }
 
+/**
+ * Theme palette (dark + light) edited on the Profile settings page and
+ * applied to the visitor site (dark palette) and stored for future use.
+ */
+export interface ThemePalette {
+    dark_accent: string;
+    dark_background: string;
+    dark_surface: string;
+    dark_foreground: string;
+    dark_muted: string;
+    light_accent: string;
+    light_background: string;
+    light_surface: string;
+    light_foreground: string;
+    light_muted: string;
+}
+
+/**
+ * Public-facing identity + theme — shared with guest pages so the visitor
+ * site reflects what the admin saved on the Profile settings page.
+ */
+export interface ShopProfile {
+    name_en: string;
+    name_ar: string | null;
+    role_en: string | null;
+    role_ar: string | null;
+    short_pitch_en: string | null;
+    short_pitch_ar: string | null;
+    bio_en: string | null;
+    bio_ar: string | null;
+    location_en: string | null;
+    location_ar: string | null;
+    linkedin: string | null;
+    github: string | null;
+    whatsapp: string | null;
+    website: string | null;
+    resume_url: string | null;
+    email: string | null;
+    phone: string | null;
+    portrait_url: string | null;
+    is_published: boolean;
+    is_available: boolean;
+    palette: ThemePalette;
+    glass_effect_enabled: boolean;
+}
+
+/**
+ * Everything the Profile settings page (admin) needs.
+ */
+export interface ShopProfileSettings extends ShopProfile, ShopSettings {
+    name_ar: string | null;
+    role_en: string | null;
+    role_ar: string | null;
+    short_pitch_en: string | null;
+    short_pitch_ar: string | null;
+    bio_en: string | null;
+    bio_ar: string | null;
+    location_en: string | null;
+    location_ar: string | null;
+    linkedin: string | null;
+    github: string | null;
+    whatsapp: string | null;
+    website: string | null;
+    resume_url: string | null;
+    portrait_url: string | null;
+    is_published: boolean;
+    is_available: boolean;
+    contact_notification_email: string | null;
+    contact_notification_subject_template: string;
+    contact_notification_body_template: string;
+    contact_auto_reply_enabled: boolean;
+    contact_auto_reply_subject_template: string;
+    contact_auto_reply_body_template: string;
+    theme_dark_accent: string;
+    theme_dark_background: string;
+    theme_dark_surface: string;
+    theme_dark_foreground: string;
+    theme_dark_muted: string;
+    theme_light_accent: string;
+    theme_light_background: string;
+    theme_light_surface: string;
+    theme_light_foreground: string;
+    theme_light_muted: string;
+    glass_effect_enabled: boolean;
+}
+
 export interface Flash {
     success?: string;
     error?: string;
@@ -79,6 +167,7 @@ export interface PageProps {
     flash: Flash;
     permissions: Permissions | null;
     shop?: ShopSettings | null;
+    profile?: ShopProfile | null;
     /** Admin-editable overrides for visitor-facing text (empty => code default). */
     site_content?: Record<string, { en?: string | null; ar?: string | null }>;
 }
@@ -350,6 +439,58 @@ export interface SupplierCostRecord {
     recorded_by: number | null;
 }
 
+export interface GallerySection {
+    id: number;
+    name_en: string;
+    name_ar?: string | null;
+    /** Locale-aware display name (Arabic when the active locale is ar). */
+    localized_name?: string;
+    description_en?: string | null;
+    description_ar?: string | null;
+    is_visible: boolean;
+    sort_order: number;
+    images_count?: number;
+    images?: GalleryImage[];
+}
+
+export interface GalleryImage {
+    id: number;
+    section_id: number;
+    disk: string;
+    path: string;
+    image_url?: string | null;
+    original_name?: string | null;
+    mime_type?: string | null;
+    size?: number | null;
+    alt_text?: string | null;
+    is_visible: boolean;
+    sort_order: number;
+}
+
+export interface TrackingPlatformInfo {
+    key: string;
+    label: string;
+    category: string;
+    description: string;
+    placeholder: string;
+    id_label: string;
+    placement: string;
+    documentation_url: string;
+    diagnostics_url: string;
+    diagnostics_label: string;
+    brand_color: string;
+    monogram: string;
+    has_body_fallback: boolean;
+    head_code_marker: string;
+    body_code_marker: string | null;
+    tracking_id: string;
+    installation_method: 'managed' | 'custom';
+    head_code: string;
+    body_code: string;
+    is_enabled: boolean;
+    is_configured: boolean;
+}
+
 export interface AuditLog {
     id: number;
     user_id: number | null;
@@ -418,6 +559,23 @@ export interface LowStockMaterial extends Material {
     minimum_stock_level: number;
 }
 
+/** Public-site visitor analytics (admin dashboard only). */
+export interface VisitorAnalytics {
+    summary: {
+        visitors: number;
+        sessions: number;
+        page_views: number;
+    };
+    /** One point per day (or per month for long ranges). */
+    series: {
+        date: string;
+        label: string;
+        visitors: number;
+        sessions: number;
+        page_views: number;
+    }[];
+}
+
 export interface DashboardMetrics {
     counts?: CountSummary;
     financial?: MetricFinancial;
@@ -439,4 +597,6 @@ export interface DashboardMetrics {
     active_materials?: number;
     missing_images?: number;
     recent_materials?: Material[];
+    /** Public-site visitor analytics — admin only. */
+    analytics?: VisitorAnalytics;
 }

@@ -15,8 +15,10 @@ use Carbon\CarbonInterface;
 
 class DashboardService
 {
-    public function __construct(private readonly ProfitService $profit)
-    {
+    public function __construct(
+        private readonly ProfitService $profit,
+        private readonly VisitorAnalyticsService $analytics,
+    ) {
     }
 
     /**
@@ -120,6 +122,8 @@ class DashboardService
             'revenue_by_month' => $this->revenueByMonth($bounds),
             'revenue_by_classification' => $this->revenueByClassification($bounds),
             'revenue_by_supplier' => $this->revenueBySupplier($bounds),
+            // Public-site visitor analytics — admin sees the full audience.
+            'analytics' => $this->analytics->forPeriod($bounds),
         ];
     }
 

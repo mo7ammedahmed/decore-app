@@ -6,6 +6,7 @@ use App\Models\Classification;
 use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\ExchangeRate;
+use App\Models\GallerySection;
 use App\Models\Invoice;
 use App\Models\Material;
 use App\Models\Payment;
@@ -13,6 +14,7 @@ use App\Models\ShopSetting;
 use App\Models\SiteContent;
 use App\Models\Supplier;
 use App\Models\TaxRate;
+use App\Models\TrackingIntegration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -49,8 +51,22 @@ class HandleInertiaRequests extends Middleware
             'availableLocales' => config('app.available_locales'),
             // Brand identity for headers, footers and public pages — editable by admins.
             'shop' => ShopSetting::instance()->publicFields(),
+            // Public-facing identity + theme palette — editable on the Profile settings page.
+            'profile' => ShopSetting::instance()->publicProfileFields(),
             // Admin-editable overrides for visitor-facing text (empty => code default).
             'site_content' => SiteContent::overrides(),
+            // Enabled analytics/pixels rendered by the tracking blade components.
+            'tracking_integrations' => TrackingIntegration::query()
+                ->where('is_enabled', true)
+                ->get(['platform', 'tracking_id', 'installation_method', 'head_code', 'body_code'])
+                ->map(fn (TrackingIntegration $row) => [
+                    'platform' => $row->platform->value,
+                    'tracking_id' => $row->tracking_id,
+                    'installation_method' => $row->installation_method->value,
+                    'head_code' => $row->head_code,
+                    'body_code' => $row->body_code,
+                ])
+                ->all(),
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,
@@ -81,6 +97,8 @@ class HandleInertiaRequests extends Middleware
                 'exchangeRates' => $user->can('viewAny', ExchangeRate::class),
                 'reports' => in_array($user->role->value, ['admin', 'accountant'], true),
                 'auditLogs' => in_array($user->role->value, ['admin', 'accountant'], true),
+                'gallery' => $user->can('viewAny', GallerySection::class),
+                'integrations' => $user->can('viewAny', TrackingIntegration::class),
                 'settings' => $user->can('viewAny', ShopSetting::class),
                 'manageCosts' => $user->role->canManageCosts(),
                 'supplierOnly' => $user->isSupplier(),

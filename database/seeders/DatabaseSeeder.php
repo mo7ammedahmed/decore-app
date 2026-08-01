@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             ShopSettingsSeeder::class,
             SiteContentSeeder::class,
+            GallerySectionSeeder::class,
         ]);
     }
 }

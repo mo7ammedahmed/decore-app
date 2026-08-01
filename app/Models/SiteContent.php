@@ -116,6 +116,13 @@ class SiteContent extends Model
         'contact.partner_title',
         'contact.partner_body',
         'contact.partner_cta',
+        // ---- Gallery ----
+        'gallery.eyebrow',
+        'gallery.title',
+        'gallery.sub',
+        'gallery.all_sections',
+        'gallery.empty_title',
+        'gallery.empty_desc',
         // ---- Taglines ----
         'public.tagline',
         'guest.tagline',
