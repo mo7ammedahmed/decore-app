@@ -170,6 +170,9 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                         type="button"
                         onClick={onClose}
                         aria-label={t('gallery.lightbox_close')}
+                        /* Inline position: .liquid-glass-strong sets position:relative in
+                           unlayered CSS, which overrides the `absolute` utility (@layer). */
+                        style={{ position: 'absolute' }}
                         className="absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                     >
                         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
@@ -183,6 +186,7 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                             type="button"
                             onClick={previous}
                             aria-label={t('gallery.lightbox_previous')}
+                            style={{ position: 'absolute' }}
                             className="absolute start-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:start-5"
                         >
                             <svg className="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
@@ -197,6 +201,7 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                             type="button"
                             onClick={next}
                             aria-label={t('gallery.lightbox_next')}
+                            style={{ position: 'absolute' }}
                             className="absolute end-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:end-5"
                         >
                             <svg className="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">

@@ -3,6 +3,7 @@ import { PropsWithChildren, useLayoutEffect, useState } from 'react';
 import FlashMessage from '@/Components/FlashMessage';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
 import AppearanceToggle from '@/Components/AppearanceToggle';
+import FloatingContactButtons from '@/Components/FloatingContactButtons';
 import { useI18n } from '@/Utilities/i18n';
 import type { TranslationKey } from '@/Utilities/i18n';
 import { useAppearance } from '@/Utilities/appearance';
@@ -336,6 +337,7 @@ export default function PublicLayout({ children, title }: PropsWithChildren<{ ti
             </footer>
 
             <FlashMessage />
+            <FloatingContactButtons profile={profile} />
         </div>
     );
 }

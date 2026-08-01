@@ -210,7 +210,7 @@ export default function Profile({ settings }: { settings: ShopProfileSettings })
                                 <FormField label="Email" error={errors.email} htmlFor="email">
                                     <TextInput id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} />
                                 </FormField>
-                                <FormField label="Mobile" error={errors.phone} htmlFor="phone">
+                                <FormField label="Mobile" error={errors.phone} htmlFor="phone" hint="Shown as a floating call button across the public site.">
                                     <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder="+966 5x xxx xxxx" />
                                 </FormField>
                                 <FormField label="Location - English" error={errors.location_en} htmlFor="location_en">
@@ -228,7 +228,7 @@ export default function Profile({ settings }: { settings: ShopProfileSettings })
                                 <FormField label="GitHub" error={errors.github} htmlFor="github">
                                     <TextInput id="github" type="url" value={data.github} onChange={(e) => setData('github', e.target.value)} placeholder="https://github.com/…" />
                                 </FormField>
-                                <FormField label="WhatsApp" error={errors.whatsapp} htmlFor="whatsapp">
+                                <FormField label="WhatsApp" error={errors.whatsapp} htmlFor="whatsapp" hint="Shown as a floating WhatsApp button across the public site.">
                                     <TextInput id="whatsapp" type="url" value={data.whatsapp} onChange={(e) => setData('whatsapp', e.target.value)} placeholder="https://wa.me/…" />
                                 </FormField>
                                 <FormField label="Resume URL" error={errors.resume_url} htmlFor="resume_url" className="sm:col-span-2">
@@ -297,64 +297,71 @@ export default function Profile({ settings }: { settings: ShopProfileSettings })
                         {/* ---- Portfolio palettes ---- */}
                         <GlassCard className="p-6">
                             <h2 className="font-heading text-xl italic text-white">Portfolio palettes</h2>
-                            <p className="mt-1 text-xs text-white/40">Colours used by the public site. The dark palette drives the visitor site; light is stored for future light-mode support.</p>
+                            <p className="mt-1 text-xs text-white/40">Publish the colours used by the public site in both light and dark mode — each with a native colour picker and its hex value.</p>
 
                             <label className="mt-5 flex items-center gap-3">
                                 <Checkbox checked={data.glass_effect_enabled} onChange={(e) => setData('glass_effect_enabled', e.target.checked)} />
                                 <span className="text-sm text-white/80">Enable the glass surface effect across the public site</span>
                             </label>
 
-                            {(['dark', 'light'] as const).map((mode) => (
-                                <div key={mode} className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                                    <p className="text-sm font-semibold text-white/85">
-                                        {mode === 'dark' ? 'Dark mode' : 'Light mode'}
-                                    </p>
-                                    <div className="mt-4 grid grid-cols-2 gap-4">
-                                        {COLOR_FIELDS.filter((f) => f.key.startsWith(`theme_${mode}_`)).map((f) => (
-                                            <label key={f.key} className="block">
-                                                <span className="text-[11px] uppercase tracking-[0.12em] text-white/40">{f.label}</span>
-                                                <span className="mt-1.5 flex items-center gap-2">
-                                                    <span
-                                                        className="inline-block h-7 w-7 shrink-0 rounded-full border border-white/20"
-                                                        style={{ backgroundColor: data[f.key] }}
-                                                    />
-                                                    <TextInput
-                                                        value={data[f.key]}
-                                                        onChange={(e) => setData(f.key, e.target.value)}
-                                                        className="font-mono text-xs"
-                                                        aria-label={`${f.label} (${mode})`}
-                                                    />
-                                                </span>
-                                            </label>
-                                        ))}
-                                    </div>
+                            {(['dark', 'light'] as const).map((mode) => {
+                                const isDark = mode === 'dark';
+                                const background = isDark ? data.theme_dark_background : data.theme_light_background;
+                                const surface = isDark ? data.theme_dark_surface : data.theme_light_surface;
+                                const foreground = isDark ? data.theme_dark_foreground : data.theme_light_foreground;
+                                const muted = isDark ? data.theme_dark_muted : data.theme_light_muted;
+                                const accent = isDark ? data.theme_dark_accent : data.theme_light_accent;
 
-                                    {/* Live palette preview */}
-                                    <div
-                                        className="mt-5 overflow-hidden rounded-xl border border-white/10 p-4"
-                                        style={{
-                                            backgroundColor: mode === 'dark' ? data.theme_dark_background : data.theme_light_background,
-                                            color: mode === 'dark' ? data.theme_dark_foreground : data.theme_light_foreground,
-                                        }}
-                                    >
-                                        <p className="text-[10px] uppercase tracking-[0.2em]" style={{ color: mode === 'dark' ? data.theme_dark_muted : data.theme_light_muted }}>
-                                            {mode === 'dark' ? 'Dark preview' : 'Light preview'}
-                                        </p>
-                                        <p className="mt-2 text-sm">
-                                            Your shop, your atmosphere.
-                                        </p>
-                                        <span
-                                            className="mt-3 inline-block rounded-full px-3 py-1 text-xs font-medium"
-                                            style={{
-                                                backgroundColor: mode === 'dark' ? data.theme_dark_accent : data.theme_light_accent,
-                                                color: mode === 'dark' ? data.theme_dark_background : data.theme_light_background,
-                                            }}
-                                        >
-                                            {data.shop_name || 'Decore'}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
+                                return (
+                                    <fieldset key={mode} className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                                        <legend className="sr-only">{isDark ? 'Dark' : 'Light'} mode palette</legend>
+
+                                        <div className="flex items-start gap-3 border-b border-white/10 pb-4">
+                                            <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${isDark ? 'border-white/15 bg-[#090909] text-white' : 'border-white/15 bg-white text-black'}`}>
+                                                {isDark ? <MoonIcon /> : <SunIcon />}
+                                            </span>
+                                            <div>
+                                                <h3 className="font-heading text-xl italic text-white">{isDark ? 'Dark mode' : 'Light mode'}</h3>
+                                                <p className="mt-1 text-sm leading-6 text-white/40">
+                                                    Colors used when a visitor chooses the {isDark ? 'dark' : 'light'} appearance.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                                            {COLOR_FIELDS.filter((f) => f.key.startsWith(`theme_${mode}_`)).map((f) => (
+                                                <div key={f.key} className="block">
+                                                    <span className="text-[11px] uppercase tracking-[0.12em] text-white/40">{f.label}</span>
+                                                    <ThemeColorControl
+                                                        value={data[f.key]}
+                                                        onChange={(hex) => setData(f.key, hex)}
+                                                        ariaLabel={`${f.label} (${mode})`}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Live palette preview */}
+                                        <div className="mt-5 rounded-xl border border-white/10 p-4" style={{ backgroundColor: background, color: foreground }}>
+                                            <div className="flex min-h-28 items-end justify-between gap-5 rounded-lg p-4" style={{ backgroundColor: surface }}>
+                                                <div>
+                                                    <p className="text-[10px] uppercase tracking-[0.2em]" style={{ color: muted }}>
+                                                        {isDark ? 'DARK PREVIEW' : 'LIGHT PREVIEW'}
+                                                    </p>
+                                                    <p className="mt-2 text-base font-semibold">Your shop, your atmosphere.</p>
+                                                    <span
+                                                        className="mt-3 inline-block rounded-full px-3 py-1 text-xs font-medium"
+                                                        style={{ backgroundColor: accent, color: background }}
+                                                    >
+                                                        {data.shop_name || 'Decore'}
+                                                    </span>
+                                                </div>
+                                                <span className="h-9 w-9 shrink-0 rounded-full" style={{ backgroundColor: accent }} />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                );
+                            })}
                             {COLOR_FIELDS.filter((f) => ['theme_dark_accent', 'theme_light_accent'].includes(f.key)).map((f) =>
                                 errors[f.key] ? <p key={f.key} className="field-error">{errors[f.key]}</p> : null,
                             )}
@@ -373,5 +380,57 @@ export default function Profile({ settings }: { settings: ShopProfileSettings })
                 <GlassButton href={route('dashboard')} variant="secondary">Back to dashboard</GlassButton>
             </div>
         </AuthenticatedLayout>
+    );
+}
+
+/* ---------------------------------------------------------------------------
+ * Theme colour control — native picker + hex field (portfolio-2 reference)
+ * ------------------------------------------------------------------------- */
+
+function ThemeColorControl({
+    value,
+    onChange,
+    ariaLabel,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+    ariaLabel: string;
+}) {
+    return (
+        <div className="mt-1.5 flex items-center gap-2">
+            <input
+                aria-label={`${ariaLabel} colour picker`}
+                type="color"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                className="h-10 w-14 shrink-0 cursor-pointer rounded-md border border-white/15 bg-white/[0.04] p-1"
+            />
+            <input
+                aria-label={`${ariaLabel} hex value`}
+                type="text"
+                value={value}
+                maxLength={7}
+                spellCheck={false}
+                onChange={(event) => onChange(event.target.value)}
+                className="form-input w-full font-mono text-xs uppercase"
+            />
+        </div>
+    );
+}
+
+function MoonIcon() {
+    return (
+        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" />
+        </svg>
+    );
+}
+
+function SunIcon() {
+    return (
+        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4l1.4-1.4" />
+        </svg>
     );
 }

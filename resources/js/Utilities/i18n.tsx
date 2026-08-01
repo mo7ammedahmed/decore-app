@@ -81,6 +81,10 @@ const en = {
     'theme.switch_to_light': 'Switch to light mode',
     'theme.switch_to_dark': 'Switch to dark mode',
 
+    // ---- Floating contact buttons ----
+    'fab.call': 'Call us',
+    'fab.whatsapp': 'Chat on WhatsApp',
+
     // ---- Landing ----
     'landing.hero_line1': 'The surfaces that',
     'landing.hero_accent': 'define',
@@ -453,6 +457,10 @@ const ar: Record<TranslationKey, string> = {
     // ---- Appearance ----
     'theme.switch_to_light': 'التبديل إلى الوضع الفاتح',
     'theme.switch_to_dark': 'التبديل إلى الوضع الداكن',
+
+    // ---- Floating contact buttons ----
+    'fab.call': 'اتصل بنا',
+    'fab.whatsapp': 'تواصل عبر واتساب',
 
     // ---- Landing ----
     'landing.hero_line1': 'الأسطح التي',
