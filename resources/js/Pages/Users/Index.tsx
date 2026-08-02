@@ -7,6 +7,7 @@ import StatusBadge from '@/Components/StatusBadge';
 import EmptyState from '@/Components/EmptyState';
 import Pagination from '@/Components/Pagination';
 import GlassButton from '@/Components/GlassButton';
+import { roleKey, useI18n } from '@/Utilities/i18n';
 import { Head, Link, router } from '@inertiajs/react';
 import type { Paginated, User } from '@/types/domain';
 
@@ -23,41 +24,49 @@ const ROLE_TONES: Record<string, string> = {
     supplier: 'bg-warning/15 text-warning',
 };
 
-export default function Index({ users, filters, roleOptions }: UsersIndexProps) {
+export default function Index({ users, filters }: UsersIndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title="Users" />
+            <Head title={t('users.title')} />
 
-            <PageHeader title="Users" description="Manage accounts, roles and activation.">
-                <GlassButton href={route('users.create')}>New user</GlassButton>
+            <PageHeader title={t('users.title')} description={t('users.sub')}>
+                <GlassButton href={route('users.create')}>{t('users.new')}</GlassButton>
             </PageHeader>
 
             <GlassCard className="p-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <SearchInput filters={filters} placeholder="Search users…" />
+                    <SearchInput filters={filters} placeholder={t('users.search_placeholder')} />
                     <SelectInput
                         className="sm:w-48"
                         value={filters.role ?? ''}
                         onChange={(e) =>
                             router.get(route('users.index'), { ...filters, role: e.target.value || undefined }, { preserveState: true })
                         }
-                        options={{ '': 'All roles', ...roleOptions }}
+                        options={{
+                            '': t('users.all_roles'),
+                            admin: t('role.admin'),
+                            accountant: t('role.accountant'),
+                            sales_staff: t('role.sales'),
+                            supplier: t('role.supplier'),
+                        }}
                     />
                 </div>
 
                 {users.total === 0 ? (
-                    <EmptyState title="No users found" description="Try adjusting your filters or create a new user." />
+                    <EmptyState title={t('users.empty_title')} description={t('users.empty_desc')} />
                 ) : (
                     <div className="mt-5 overflow-x-auto">
                         <table className="table-glass w-full min-w-[640px]">
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Contact</th>
-                                    <th>Role</th>
-                                    <th>Supplier</th>
-                                    <th>Status</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t('users.col_user')}</th>
+                                    <th>{t('users.col_contact')}</th>
+                                    <th>{t('users.col_role')}</th>
+                                    <th>{t('users.col_supplier')}</th>
+                                    <th>{t('common.status')}</th>
+                                    <th className="text-right">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,7 +83,7 @@ export default function Index({ users, filters, roleOptions }: UsersIndexProps) 
                                         </td>
                                         <td>
                                             <StatusBadge
-                                                label={roleOptions[user.role] ?? user.role}
+                                                label={t(roleKey(user.role))}
                                                 tone={ROLE_TONES[user.role] ?? 'bg-white/[0.06] text-white/60'}
                                                 dot={false}
                                             />
@@ -82,7 +91,7 @@ export default function Index({ users, filters, roleOptions }: UsersIndexProps) 
                                         <td>{user.supplier?.name ?? '—'}</td>
                                         <td>
                                             <StatusBadge
-                                                label={user.is_active ? 'Active' : 'Disabled'}
+                                                label={user.is_active ? t('common.active') : t('common.disabled')}
                                                 tone={user.is_active ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'}
                                             />
                                         </td>
@@ -91,7 +100,7 @@ export default function Index({ users, filters, roleOptions }: UsersIndexProps) 
                                                 href={route('users.edit', user.id)}
                                                 className="text-sm text-white/60 transition-colors hover:text-accent"
                                             >
-                                                Edit
+                                                {t('common.edit')}
                                             </Link>
                                         </td>
                                     </tr>

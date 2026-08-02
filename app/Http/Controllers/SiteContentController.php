@@ -70,7 +70,7 @@ class SiteContentController extends Controller
         }
 
         if ($changed === []) {
-            return back()->with('success', 'Public site content saved.');
+            return back()->with('success', 'site_content.saved');
         }
 
         // Multi-row upsert — keep it atomic so a failure never leaves the
@@ -85,7 +85,7 @@ class SiteContentController extends Controller
             'keys' => array_keys($changed),
         ], $request->user()->id);
 
-        return back()->with('success', 'Public site content saved.');
+        return back()->with('success', 'site_content.saved');
     }
 
     private function normalize(?string $value): ?string

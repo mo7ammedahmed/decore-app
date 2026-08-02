@@ -133,6 +133,41 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | App-Specific Validation Messages
+    |--------------------------------------------------------------------------
+    |
+    | Messages for the rules declared in the application's Form Requests.
+    | They are referenced via trans('validation.app.*') so they resolve in the
+    | active locale (SetLocale middleware) — same mechanism as the defaults.
+    |
+    */
+
+    'app' => [
+        'image_invalid' => 'الملف المرفوع ليس صورة صالحة.',
+        'image_mimes' => 'يُقبل فقط صور JPEG وPNG وWebP.',
+        'image_max_2mb' => 'يجب ألا يتجاوز حجم الصور 2 ميجابايت.',
+        'gallery_image_max_7mb' => 'يجب ألا يتجاوز حجم صور المعرض 7 ميجابايت.',
+        'images_required' => 'اختر صورة واحدة على الأقل للرفع.',
+        'currencies_differ' => 'يجب أن تختلف العملة الأساسية عن عملة العرض.',
+        'rate_positive' => 'يجب أن يكون سعر الصرف أكبر من صفر.',
+        'items_required' => 'أضف بندًا واحدًا على الأقل.',
+        'quantity_positive' => 'يجب أن تكون الكمية أكبر من صفر.',
+        'unit_price_non_negative' => 'لا يمكن أن يكون سعر الوحدة سالبًا.',
+        'unit_cost_non_negative' => 'لا يمكن أن تكون تكلفة الوحدة سالبة.',
+        'customer_name_required' => 'اسم العميل مطلوب عند إضافة عميل جديد.',
+        'payment_amount_positive' => 'يجب أن تكون مبالغ الدفع أكبر من صفر.',
+        'supplier_required_for_supplier' => 'يجب اختيار مورد لحسابات الموردين.',
+        'portrait_image' => 'يجب أن تكون الصورة الشخصية ملف صورة (JPEG أو PNG أو WebP).',
+        'portrait_max_4mb' => 'يجب ألا تزيد الصورة الشخصية عن 4 ميجابايت.',
+        'logo_image' => 'يجب أن يكون الشعار ملف صورة (JPEG أو PNG أو WebP).',
+        'logo_max_2mb' => 'يجب ألا يزيد الشعار عن 2 ميجابايت.',
+        'hex_accent' => 'يجب أن يكون اللون المميز قيمة سداسية صالحة، مثل #8a6d3b.',
+        'content_required' => 'لم يتم إرسال أي محتوى.',
+        'material_missing_supplier_classification' => 'المادة تفتقر إلى مورد أو تصنيف.',
+    ],
+
     'attributes' => [
         'name' => 'الاسم',
         'email' => 'البريد الإلكتروني',
@@ -196,6 +231,10 @@ return [
         'title' => 'العنوان',
         'start_date' => 'تاريخ البداية',
         'end_date' => 'تاريخ النهاية',
+        'shop_name' => 'اسم المتجر',
+        'theme_dark_accent' => 'لون التمييز الداكن',
+        'theme_dark_background' => 'الخلفية الداكنة',
+        'theme_light_accent' => 'لون التمييز الفاتح',
     ],
 
 ];

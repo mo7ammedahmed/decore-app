@@ -45,7 +45,7 @@ class TaxRateController extends Controller
 
         return redirect()
             ->route('taxes.edit', $taxRate)
-            ->with('success', 'Tax rate created successfully.');
+            ->with('success', 'tax.created');
     }
 
     public function edit(TaxRate $taxRate): Response
@@ -68,8 +68,8 @@ class TaxRateController extends Controller
         });
 
         return redirect()
-            ->route('taxes.edit', $taxRate)
-            ->with('success', 'Tax rate updated successfully.');
+            ->route('taxes.index')
+            ->with('success', 'tax.updated');
     }
 
     public function destroy(TaxRate $taxRate): RedirectResponse
@@ -77,13 +77,13 @@ class TaxRateController extends Controller
         $this->authorize('delete', $taxRate);
 
         if ($taxRate->is_default) {
-            return back()->with('error', 'The default tax rate cannot be deleted.');
+            return back()->with('error', 'tax.delete_default_forbidden');
         }
 
         $taxRate->delete();
 
         return redirect()
             ->route('taxes.index')
-            ->with('success', 'Tax rate deleted.');
+            ->with('success', 'tax.deleted');
     }
 }

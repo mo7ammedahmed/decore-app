@@ -64,17 +64,11 @@ class ShopSetting extends Model
 
     public const INVOICE_TEMPLATES = ['classic', 'modern', 'minimal'];
 
-    public const DEFAULT_NOTIFICATION_SUBJECT = 'New enquiry: {subject}';
-
-    public const DEFAULT_NOTIFICATION_BODY = "You received a new enquiry.\n\nName: {name}\nEmail: {email}\nSubject: {subject}\n\n{message}";
-
-    public const DEFAULT_AUTO_REPLY_SUBJECT = 'Thanks for your message about {subject}';
-
-    public const DEFAULT_AUTO_REPLY_BODY = "Hi {name},\n\nThanks for reaching out. I received your message and will get back to you soon.\n\nBest,\n{shop_name}";
-
     /**
      * Defaults make `instance()` usable before the row has been seeded — the
      * app falls back to these values instead of nulling the brand everywhere.
+     * Email templates are deliberately left null so the localized defaults in
+     * lang/shop.php apply until the admin overrides them.
      */
     protected $attributes = [
         'shop_name' => 'Decore',
@@ -82,11 +76,7 @@ class ShopSetting extends Model
         'invoice_template' => 'classic',
         'invoice_accent' => '#8a6d3b',
         'invoice_thank_you' => 'Thank you for your business',
-        'contact_notification_subject_template' => self::DEFAULT_NOTIFICATION_SUBJECT,
-        'contact_notification_body_template' => self::DEFAULT_NOTIFICATION_BODY,
         'contact_auto_reply_enabled' => true,
-        'contact_auto_reply_subject_template' => self::DEFAULT_AUTO_REPLY_SUBJECT,
-        'contact_auto_reply_body_template' => self::DEFAULT_AUTO_REPLY_BODY,
         'is_published' => true,
         'is_available' => true,
         'theme_dark_accent' => '#8a6d3b',
@@ -184,21 +174,22 @@ class ShopSetting extends Model
     private function notificationTemplates(): array
     {
         return [
-            'subject' => $this->contact_notification_subject_template ?: self::DEFAULT_NOTIFICATION_SUBJECT,
-            'body' => $this->contact_notification_body_template ?: self::DEFAULT_NOTIFICATION_BODY,
+            'subject' => $this->contact_notification_subject_template ?: __('shop.notification_subject'),
+            'body' => $this->contact_notification_body_template ?: __('shop.notification_body'),
         ];
     }
 
     /**
-     * Auto-reply template values, falling back to the built-in defaults.
+     * Auto-reply template values, falling back to the localized defaults
+     * (lang/shop.php) so a fresh shop shows defaults in the active locale.
      *
      * @return array{subject: string, body: string}
      */
     private function autoReplyTemplates(): array
     {
         return [
-            'subject' => $this->contact_auto_reply_subject_template ?: self::DEFAULT_AUTO_REPLY_SUBJECT,
-            'body' => $this->contact_auto_reply_body_template ?: self::DEFAULT_AUTO_REPLY_BODY,
+            'subject' => $this->contact_auto_reply_subject_template ?: __('shop.auto_reply_subject'),
+            'body' => $this->contact_auto_reply_body_template ?: __('shop.auto_reply_body'),
         ];
     }
 

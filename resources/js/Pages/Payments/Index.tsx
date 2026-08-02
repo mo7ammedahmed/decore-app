@@ -4,6 +4,7 @@ import GlassCard from '@/Components/GlassCard';
 import GlassButton from '@/Components/GlassButton';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import EmptyState from '@/Components/EmptyState';
+import { paymentMethodKey, useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { Invoice, Payment } from '@/types/domain';
 import { formatDateTime } from '@/Utilities/format';
@@ -13,30 +14,24 @@ interface IndexProps {
     payments: Payment[];
 }
 
-const METHOD_LABELS: Record<string, string> = {
-    cash: 'Cash',
-    bank_transfer: 'Bank transfer',
-    card: 'Card',
-    cheque: 'Cheque',
-    other: 'Other',
-};
-
 export default function Index({ invoice, payments }: IndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title={`Payments — ${invoice.invoice_number}`} />
+            <Head title={t('payments.title', { number: invoice.invoice_number })} />
 
             <PageHeader
                 title={invoice.invoice_number}
-                description="Payment history for this invoice"
+                description={t('payments.sub')}
             >
-                <GlassButton href={route('invoices.show', invoice.id)} variant="secondary">Back to invoice</GlassButton>
-                <GlassButton href={route('payments.create', invoice.id)}>Record payment</GlassButton>
+                <GlassButton href={route('invoices.show', invoice.id)} variant="secondary">{t('invoices.back_to_invoice')}</GlassButton>
+                <GlassButton href={route('payments.create', invoice.id)}>{t('payments.record')}</GlassButton>
             </PageHeader>
 
             <GlassCard className="p-6">
                 {payments.length === 0 ? (
-                    <EmptyState title="No payments recorded" description="Record the first payment to update the invoice balance." />
+                    <EmptyState title={t('payments.empty_title')} description={t('payments.empty_desc')} />
                 ) : (
                     <div className="space-y-3">
                         {payments.map((payment) => (
@@ -48,15 +43,15 @@ export default function Index({ invoice, payments }: IndexProps) {
                                     <p className="text-sm font-medium text-white/90">
                                         {payment.payment_number}
                                         {payment.reversed_at && (
-                                            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-danger">Reversed</span>
+                                            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-danger">{t('invoices.reversed')}</span>
                                         )}
                                     </p>
                                     <p className="mt-0.5 text-xs text-white/40">
-                                        {METHOD_LABELS[payment.payment_method] ?? payment.payment_method} ·{' '}
-                                        {formatDateTime(payment.paid_at)} · by {payment.recorder?.name ?? '—'}
+                                        {t(paymentMethodKey(payment.payment_method))} ·{' '}
+                                        {formatDateTime(payment.paid_at)} · {t('invoices.by', { name: payment.recorder?.name ?? '—' })}
                                     </p>
                                     {payment.reference && (
-                                        <p className="mt-0.5 text-xs text-white/35">Ref: {payment.reference}</p>
+                                        <p className="mt-0.5 text-xs text-white/35">{t('invoices.ref', { reference: payment.reference })}</p>
                                     )}
                                     {payment.notes && (
                                         <p className="mt-0.5 text-xs text-white/35">{payment.notes}</p>
@@ -68,11 +63,11 @@ export default function Index({ invoice, payments }: IndexProps) {
                                     </p>
                                     {payment.currency_code !== invoice.base_currency_code && !payment.reversed_at && (
                                         <p className="mt-0.5 text-xs text-white/35">
-                                            Base: <MoneyDisplay value={payment.base_amount} currency={invoice.base_currency_code} />
+                                            {t('payments.base')} <MoneyDisplay value={payment.base_amount} currency={invoice.base_currency_code} />
                                         </p>
                                     )}
                                     {payment.reversed_at && (
-                                        <p className="mt-0.5 text-xs text-danger/70">Reversed {formatDateTime(payment.reversed_at)}</p>
+                                        <p className="mt-0.5 text-xs text-danger/70">{t('payments.reversed_at', { date: formatDateTime(payment.reversed_at) })}</p>
                                     )}
                                 </div>
                             </div>
@@ -82,10 +77,10 @@ export default function Index({ invoice, payments }: IndexProps) {
 
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.06] pt-5 text-sm">
                     <span className="text-white/50">
-                        Balance due: <MoneyDisplay value={invoice.balance_due} currency={invoice.base_currency_code} tone={Number(invoice.balance_due) > 0 ? 'default' : 'success'} />
+                        {t('payments.balance_due')} <MoneyDisplay value={invoice.balance_due} currency={invoice.base_currency_code} tone={Number(invoice.balance_due) > 0 ? 'default' : 'success'} />
                     </span>
                     <Link href={route('invoices.show', invoice.id)} className="text-accent transition-colors hover:text-white">
-                        View full invoice →
+                        {t('payments.view_full_invoice')}
                     </Link>
                 </div>
             </GlassCard>

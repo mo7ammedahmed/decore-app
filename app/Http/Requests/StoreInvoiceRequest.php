@@ -67,7 +67,7 @@ class StoreInvoiceRequest extends FormRequest
                     }
 
                     if ($material->supplier_id === null || $material->classification_id === null) {
-                        $validator->errors()->add("items.{$index}.material_id", 'The material is missing its supplier or classification.');
+                        $validator->errors()->add("items.{$index}.material_id", trans('validation.app.material_missing_supplier_classification'));
                     }
                 }
             },
@@ -96,11 +96,11 @@ class StoreInvoiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'items.required' => 'Add at least one line item.',
-            'items.*.quantity.gt' => 'Quantity must be greater than zero.',
-            'items.*.unit_price.min' => 'Unit price cannot be negative.',
-            'items.*.unit_cost.min' => 'Unit cost cannot be negative.',
-            'customer.name.required_with' => 'Customer name is required when adding a new customer.',
+            'items.required' => trans('validation.app.items_required'),
+            'items.*.quantity.gt' => trans('validation.app.quantity_positive'),
+            'items.*.unit_price.min' => trans('validation.app.unit_price_non_negative'),
+            'items.*.unit_cost.min' => trans('validation.app.unit_cost_non_negative'),
+            'customer.name.required_with' => trans('validation.app.customer_name_required'),
         ];
     }
 }

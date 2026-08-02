@@ -53,7 +53,7 @@ class CustomerController extends Controller
 
         return redirect()
             ->route('customers.show', $customer)
-            ->with('success', 'Customer created successfully.');
+            ->with('success', 'customer.created');
     }
 
     public function show(Customer $customer): Response
@@ -85,7 +85,7 @@ class CustomerController extends Controller
 
         return redirect()
             ->route('customers.show', $customer)
-            ->with('success', 'Customer updated successfully.');
+            ->with('success', 'customer.updated');
     }
 
     public function destroy(Customer $customer): RedirectResponse
@@ -93,13 +93,13 @@ class CustomerController extends Controller
         $this->authorize('delete', $customer);
 
         if (Invoice::query()->where('customer_id', $customer->id)->exists()) {
-            return back()->with('error', 'This customer cannot be deleted because they have invoices.');
+            return back()->with('error', 'customer.delete_has_invoices');
         }
 
         $customer->delete();
 
         return redirect()
             ->route('customers.index')
-            ->with('success', 'Customer archived.');
+            ->with('success', 'customer.archived');
     }
 }

@@ -22,9 +22,9 @@ class StoreClassificationImageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image.image' => 'The uploaded file is not a valid image.',
-            'image.mimes' => 'Only JPEG, PNG and WebP images are accepted.',
-            'image.max' => 'Images must be 2MB or smaller.',
+            'image.image' => trans('validation.app.image_invalid'),
+            'image.mimes' => trans('validation.app.image_mimes'),
+            'image.max' => trans('validation.app.image_max_2mb'),
         ];
     }
 }

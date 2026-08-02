@@ -28,7 +28,7 @@ class GalleryImageService
         $path = $file->store('gallery/'.$section->id, $disk);
 
         if ($path === false) {
-            throw new \RuntimeException('Unable to store the gallery image.');
+            throw new \RuntimeException(__('errors.gallery_image_store_failed'));
         }
 
         return GalleryImage::query()->create([
@@ -55,7 +55,7 @@ class GalleryImageService
         $path = $file->store('gallery/'.$image->section_id, $disk);
 
         if ($path === false) {
-            throw new \RuntimeException('Unable to store the replacement image.');
+            throw new \RuntimeException(__('errors.gallery_image_replace_failed'));
         }
 
         $previousPath = $image->path;

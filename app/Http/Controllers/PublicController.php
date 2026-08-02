@@ -9,6 +9,7 @@ use App\Models\Material;
 use App\Models\ShopSetting;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -52,7 +53,7 @@ class PublicController extends Controller
      * image. The admin-chosen collection image wins; otherwise it falls back
      * to the newest active material photo (or none). Never leaks cost data.
      *
-     * @return \Illuminate\Support\Collection<int, Classification>
+     * @return Collection<int, Classification>
      */
     private function publicClassifications(bool $withCovers = true)
     {

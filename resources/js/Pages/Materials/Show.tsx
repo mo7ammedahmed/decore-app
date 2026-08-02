@@ -3,7 +3,6 @@ import PageHeader from '@/Components/PageHeader';
 import GlassCard from '@/Components/GlassCard';
 import GlassButton from '@/Components/GlassButton';
 import StatusBadge from '@/Components/StatusBadge';
-import EmptyState from '@/Components/EmptyState';
 import ImagePreview from '@/Components/ImagePreview';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import ConfirmDialog from '@/Components/ConfirmDialog';
@@ -11,10 +10,9 @@ import ImageUpload from '@/Components/ImageUpload';
 import FormField from '@/Components/FormField';
 import TextInput from '@/Components/TextInput';
 import PrimaryButton from '@/Components/PrimaryButton';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { staggerContainer } from '@/Utilities/motion';
-import { unitLabel, formatDate } from '@/Utilities/format';
+import { unitKey, useI18n } from '@/Utilities/i18n';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { formatDate } from '@/Utilities/format';
 import { useState } from 'react';
 import type { Material, SupplierCostRecord } from '@/types/domain';
 
@@ -25,6 +23,7 @@ interface ShowProps {
 }
 
 export default function Show({ material, currency, canManageCosts = false }: ShowProps) {
+    const { t } = useI18n();
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [confirmingImageRemove, setConfirmingImageRemove] = useState(false);
     const deleteForm = useForm({});
@@ -38,20 +37,20 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
         material.stock_quantity <= material.minimum_stock_level;
 
     const details: [string, React.ReactNode][] = [
-        ['SKU', material.sku],
-        ['Supplier', material.supplier?.name ?? '—'],
-        ['Classification', material.classification?.localized_name ?? material.classification?.name_en ?? '—'],
-        ['Unit', unitLabel(material.unit)],
-        ['Currency', material.currency_code],
+        [t('common.sku'), material.sku],
+        [t('common.supplier'), material.supplier?.name ?? '—'],
+        [t('materials.classification'), material.classification?.localized_name ?? material.classification?.name_en ?? '—'],
+        [t('common.unit'), t(unitKey(material.unit))],
+        [t('common.currency'), material.currency_code],
         [
-            'Stock',
+            t('common.stock'),
             <span key="stock" className={lowStock ? 'text-danger' : 'text-white/80'}>
                 {material.stock_quantity ?? '—'}
-                {material.minimum_stock_level !== null && ` / min ${material.minimum_stock_level}`}
-                {lowStock && <span className="ml-1 text-xs">low</span>}
+                {material.minimum_stock_level !== null && ` / ${t('materials.min', { n: material.minimum_stock_level })}`}
+                {lowStock && <span className="ml-1 text-xs">{t('materials.low')}</span>}
             </span>,
         ],
-        ['Created', formatDate(material.created_at ?? null)],
+        [t('common.created'), formatDate(material.created_at ?? null)],
     ];
 
     return (
@@ -61,13 +60,13 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
             <PageHeader title={material.localized_name ?? material.name_en} description={material.description ?? material.sku}>
                 {canManage && (
                     <>
-                        <GlassButton href={route('materials.edit', material.id)} variant="secondary">Edit material</GlassButton>
+                        <GlassButton href={route('materials.edit', material.id)} variant="secondary">{t('materials.edit_title')}</GlassButton>
                         <GlassButton
                             onClick={() => setConfirmingDelete(true)}
                             variant="danger"
                             as="button"
                         >
-                            Archive
+                            {t('common.archive')}
                         </GlassButton>
                     </>
                 )}
@@ -76,9 +75,9 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
             <div className="grid gap-6 lg:grid-cols-3">
                 <GlassCard className="p-6 lg:col-span-1">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-heading text-xl italic text-white">Details</h2>
+                        <h2 className="font-heading text-xl italic text-white">{t('common.details')}</h2>
                         <StatusBadge
-                            label={material.is_active ? 'Active' : 'Archived'}
+                            label={material.is_active ? t('common.active') : t('common.archived')}
                             tone={material.is_active ? 'bg-success/15 text-success' : 'bg-white/[0.06] text-white/45'}
                         />
                     </div>
@@ -95,13 +94,13 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
                     <div className="mt-6 grid grid-cols-2 gap-4 border-t border-white/[0.06] pt-5 text-center">
                         <div>
                             <MoneyDisplay value={material.selling_price} currency={currency} tone="accent" className="font-heading text-2xl italic" />
-                            <p className="text-[11px] uppercase tracking-widest text-white/35">Price</p>
+                            <p className="text-[11px] uppercase tracking-widest text-white/35">{t('common.price')}</p>
                         </div>
                         <div>
                             <p className="font-heading text-2xl italic text-accent">
-                                {material.image_url ? 'Yes' : 'No'}
+                                {material.image_url ? t('common.yes') : t('common.no')}
                             </p>
-                            <p className="text-[11px] uppercase tracking-widest text-white/35">Image</p>
+                            <p className="text-[11px] uppercase tracking-widest text-white/35">{t('common.image')}</p>
                         </div>
                     </div>
                 </GlassCard>
@@ -109,19 +108,19 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
                 <div className="space-y-6 lg:col-span-2">
                     <GlassCard className="p-6">
                         <div className="flex items-center justify-between gap-3">
-                            <h2 className="font-heading text-xl italic text-white">Product image</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('materials.product_image')}</h2>
                             {canManage && material.image_url && (
                                 <GlassButton
                                     onClick={() => setConfirmingImageRemove(true)}
                                     variant="danger"
                                     as="button"
                                 >
-                                    Remove image
+                                    {t('common.remove_image')}
                                 </GlassButton>
                             )}
                         </div>
                         <p className="mt-2 text-sm text-white/40">
-                            One image per material — used across the catalog, public pages and dashboards.
+                            {t('materials.product_image_sub')}
                         </p>
 
                         <div className="mt-5">
@@ -139,17 +138,17 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
 
                     {canManageCosts && (
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Cost history</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('materials.cost_history')}</h2>
                             {!material.costRecords || material.costRecords.length === 0 ? (
-                                <p className="mt-4 text-sm text-white/40">No cost history recorded.</p>
+                                <p className="mt-4 text-sm text-white/40">{t('materials.no_cost_history')}</p>
                             ) : (
                                 <table className="table-glass mt-4 w-full text-sm">
                                     <thead>
                                         <tr>
-                                            <th>Effective from</th>
-                                            <th>Cost</th>
-                                            <th>Currency</th>
-                                            <th className="text-right">Base cost</th>
+                                            <th>{t('materials.col_effective_from')}</th>
+                                            <th>{t('materials.col_cost')}</th>
+                                            <th>{t('common.currency')}</th>
+                                            <th className="text-right">{t('materials.col_base_cost')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -177,9 +176,9 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
                 open={confirmingDelete}
                 onClose={() => setConfirmingDelete(false)}
                 onConfirm={() => deleteForm.delete(route('materials.destroy', material.id))}
-                title="Archive this material?"
-                message="Archiving is reversible. It will be hidden from new invoices, and kept on historical records."
-                confirmLabel="Archive material"
+                title={t('materials.archive_confirm_title')}
+                message={t('materials.archive_confirm_message')}
+                confirmLabel={t('materials.archive_confirm_label')}
                 processing={deleteForm.processing}
             />
 
@@ -187,9 +186,9 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
                 open={confirmingImageRemove}
                 onClose={() => setConfirmingImageRemove(false)}
                 onConfirm={() => imageRemoveForm.delete(route('materials.image.destroy', material.id))}
-                title="Remove this image?"
-                message="The stored image file will be deleted and the material will fall back to the placeholder."
-                confirmLabel="Remove image"
+                title={t('materials.remove_image_confirm_title')}
+                message={t('materials.remove_image_confirm_message')}
+                confirmLabel={t('materials.remove_image_confirm_label')}
                 processing={imageRemoveForm.processing}
             />
         </AuthenticatedLayout>
@@ -200,6 +199,7 @@ export default function Show({ material, currency, canManageCosts = false }: Sho
  * Inline upload/replace form for the material's product image.
  */
 function MaterialImageForm({ material }: { material: Material }) {
+    const { t } = useI18n();
     const isReplacement = Boolean(material.image_url);
     const { data, setData, post, put, processing, errors } = useForm<{
         image: File | null;
@@ -221,10 +221,10 @@ function MaterialImageForm({ material }: { material: Material }) {
     return (
         <form onSubmit={submit} className="mt-6 space-y-5 border-t border-white/[0.06] pt-6">
             <FormField
-                label={isReplacement ? 'Replace image' : 'Upload image'}
+                label={isReplacement ? t('common.replace_image') : t('common.upload_image')}
                 required
                 error={errors.image}
-                hint="JPEG, PNG or WebP · max 2MB · square crops look best."
+                hint={t('materials.image_hint')}
             >
                 <ImageUpload
                     value={data.image}
@@ -235,18 +235,18 @@ function MaterialImageForm({ material }: { material: Material }) {
                 />
             </FormField>
 
-            <FormField label="Alt text" error={errors.alt_text} htmlFor="alt_text">
+            <FormField label={t('common.alt_text')} error={errors.alt_text} htmlFor="alt_text">
                 <TextInput
                     id="alt_text"
                     value={data.alt_text}
                     onChange={(e) => setData('alt_text', e.target.value)}
-                    placeholder="Describe the product, e.g. 'Matte beige wood-effect panel'"
+                    placeholder={t('materials.alt_placeholder')}
                 />
             </FormField>
 
             <div className="flex items-center justify-end gap-3">
                 <PrimaryButton disabled={processing || !data.image}>
-                    {processing ? 'Uploading…' : isReplacement ? 'Replace image' : 'Upload image'}
+                    {processing ? t('common.uploading') : isReplacement ? t('common.replace_image') : t('common.upload_image')}
                 </PrimaryButton>
             </div>
         </form>

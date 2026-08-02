@@ -19,7 +19,11 @@ class MaterialImageController extends Controller
     {
         $this->authorize('manageImage', $material);
 
-        $this->images->store($request->file('image'), $material, $request->input('alt_text'));
+        try {
+            $this->images->store($request->file('image'), $material, $request->input('alt_text'));
+        } catch (\RuntimeException) {
+            return back()->with('error', 'material.image_store_failed');
+        }
 
         AuditService::log('material.image_uploaded', $material, null, [
             'path' => $material->image_path,
@@ -27,7 +31,7 @@ class MaterialImageController extends Controller
 
         return redirect()
             ->route('materials.show', $material)
-            ->with('success', 'Image uploaded successfully.');
+            ->with('success', 'material.image_uploaded');
     }
 
     /**
@@ -37,7 +41,11 @@ class MaterialImageController extends Controller
     {
         $this->authorize('manageImage', $material);
 
-        $this->images->store($request->file('image'), $material, $request->input('alt_text'));
+        try {
+            $this->images->store($request->file('image'), $material, $request->input('alt_text'));
+        } catch (\RuntimeException) {
+            return back()->with('error', 'material.image_store_failed');
+        }
 
         AuditService::log('material.image_replaced', $material, ['replaced' => true], [
             'path' => $material->image_path,
@@ -45,7 +53,7 @@ class MaterialImageController extends Controller
 
         return redirect()
             ->route('materials.show', $material)
-            ->with('success', 'Image replaced successfully.');
+            ->with('success', 'material.image_replaced');
     }
 
     public function destroy(Material $material): RedirectResponse
@@ -53,7 +61,7 @@ class MaterialImageController extends Controller
         $this->authorize('manageImage', $material);
 
         if ($material->image_path === null) {
-            return back()->with('error', 'This material has no image to remove.');
+            return back()->with('error', 'material.image_none_to_remove');
         }
 
         // Capture the path before the service clears the row, so the audit
@@ -64,6 +72,6 @@ class MaterialImageController extends Controller
 
         AuditService::log('material.image_deleted', $material, ['path' => $removedPath], null);
 
-        return back()->with('success', 'Image removed successfully.');
+        return back()->with('success', 'material.image_removed');
     }
 }

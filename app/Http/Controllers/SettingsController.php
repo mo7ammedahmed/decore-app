@@ -51,19 +51,24 @@ class SettingsController extends Controller
 
         // Logo handling: a new file replaces the old one, remove_logo clears it.
         // Store the new file BEFORE deleting the old one so a storage failure
-        // never destroys the existing logo.
-        if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('settings', (string) config('filesystems.default'));
+        // never destroys the existing logo. Storage failures surface as a
+        // localized error toast instead of a 500.
+        try {
+            if ($request->hasFile('logo')) {
+                $path = $request->file('logo')->store('settings', (string) config('filesystems.default'));
 
-            if ($path === false) {
-                throw new \RuntimeException('Unable to store the shop logo.');
+                if ($path === false) {
+                    throw new \RuntimeException(__('errors.logo_store_failed'));
+                }
+
+                $settings->deleteStoredLogo();
+                $data['logo_path'] = $path;
+            } elseif ($request->boolean('remove_logo')) {
+                $settings->deleteStoredLogo();
+                $data['logo_path'] = null;
             }
-
-            $settings->deleteStoredLogo();
-            $data['logo_path'] = $path;
-        } elseif ($request->boolean('remove_logo')) {
-            $settings->deleteStoredLogo();
-            $data['logo_path'] = null;
+        } catch (\RuntimeException) {
+            return back()->with('error', 'settings.logo_store_failed');
         }
 
         unset($data['logo'], $data['remove_logo']);
@@ -75,6 +80,6 @@ class SettingsController extends Controller
             'invoice_template' => $settings->invoice_template,
         ], $request->user()->id);
 
-        return back()->with('success', 'Shop settings saved.');
+        return back()->with('success', 'settings.saved');
     }
 }

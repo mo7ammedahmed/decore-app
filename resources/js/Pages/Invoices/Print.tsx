@@ -1,3 +1,4 @@
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import InvoiceDocument from '@/Components/InvoiceDocument';
 import type { InvoiceTemplate } from '@/types/domain';
@@ -28,16 +29,18 @@ interface PrintProps {
  * admin's shop settings (name, logo, contact details, template style, accent).
  */
 export default function Print({ invoice, baseCurrency, settings }: PrintProps) {
+    const { t } = useI18n();
+
     return (
         <>
-            <Head title={`Print ${invoice.invoice_number}`} />
+            <Head title={t('invoices.print_title', { number: invoice.invoice_number })} />
 
             <div className="print-toolbar">
                 <Link href={route('invoices.show', invoice.id)} className="rounded-full bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20">
-                    ← Back
+                    {t('common.back')}
                 </Link>
                 <button onClick={() => window.print()} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 hover:bg-white/80">
-                    Print / Save PDF
+                    {t('invoices.print_save')}
                 </button>
             </div>
 

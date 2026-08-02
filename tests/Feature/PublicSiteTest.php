@@ -46,7 +46,7 @@ class PublicSiteTest extends TestCase
             'is_visible' => true,
         ]);
 
-        $this->actingAs(\App\Models\User::factory()->admin()->create())
+        $this->actingAs(User::factory()->admin()->create())
             ->post("/gallery-admin/{$section->id}/images", [
                 'image' => UploadedFile::fake()->image('lobby.png', 1200, 800),
                 'alt_text' => 'Marble lobby installation',
@@ -437,5 +437,3 @@ class PublicSiteTest extends TestCase
             ->where('journey_steps', []));
     }
 }
-
-

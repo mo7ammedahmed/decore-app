@@ -12,7 +12,7 @@ class AuditLogController extends Controller
     public function index(Request $request): Response
     {
         if (! in_array($request->user()->role->value, ['admin', 'accountant'], true)) {
-            abort(403, 'You do not have permission to view audit logs.');
+            abort(403, __('errors.audit_forbidden'));
         }
 
         $logs = AuditLog::query()

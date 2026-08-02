@@ -4,6 +4,7 @@ import GlassCard from '@/Components/GlassCard';
 import StatusBadge from '@/Components/StatusBadge';
 import EmptyState from '@/Components/EmptyState';
 import GlassButton from '@/Components/GlassButton';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { Classification, Paginated } from '@/types/domain';
 
@@ -13,29 +14,31 @@ interface IndexProps {
     canManage: boolean;
 }
 
-export default function Index({ classifications, filters, canManage }: IndexProps) {
+export default function Index({ classifications, canManage }: IndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title="Classifications" />
+            <Head title={t('classifications.title')} />
 
-            <PageHeader title="Classifications" description="Material categories used across the catalogue.">
-                {canManage && <GlassButton href={route('classifications.create')}>New classification</GlassButton>}
+            <PageHeader title={t('classifications.title')} description={t('classifications.sub')}>
+                {canManage && <GlassButton href={route('classifications.create')}>{t('classifications.new')}</GlassButton>}
             </PageHeader>
 
             <GlassCard className="p-6">
                 {classifications.total === 0 ? (
-                    <EmptyState title="No classifications yet" description="Create categories like Wood Alternatives or Flooring." />
+                    <EmptyState title={t('classifications.empty_title')} description={t('classifications.empty_desc')} />
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="table-glass w-full min-w-[560px]">
                             <thead>
                                 <tr>
-                                    <th>Classification</th>
-                                    <th>Slug</th>
-                                    <th>Materials</th>
-                                    <th>Order</th>
-                                    <th>Status</th>
-                                    {canManage && <th className="text-right">Actions</th>}
+                                    <th>{t('classifications.col_classification')}</th>
+                                    <th>{t('classifications.col_slug')}</th>
+                                    <th>{t('common.materials')}</th>
+                                    <th>{t('classifications.col_order')}</th>
+                                    <th>{t('common.status')}</th>
+                                    {canManage && <th className="text-right">{t('common.actions')}</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,14 +61,14 @@ export default function Index({ classifications, filters, canManage }: IndexProp
                                         <td>{classification.sort_order}</td>
                                         <td>
                                             <StatusBadge
-                                                label={classification.is_active ? 'Active' : 'Inactive'}
+                                                label={classification.is_active ? t('common.active') : t('common.inactive')}
                                                 tone={classification.is_active ? 'bg-success/15 text-success' : 'bg-white/[0.06] text-white/45'}
                                             />
                                         </td>
                                         {canManage && (
                                             <td className="text-right">
                                                 <Link href={route('classifications.edit', classification.id)} className="text-sm text-white/60 transition-colors hover:text-accent">
-                                                    Edit
+                                                    {t('common.edit')}
                                                 </Link>
                                             </td>
                                         )}

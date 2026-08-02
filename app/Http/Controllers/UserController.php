@@ -66,7 +66,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.show', $user)
-            ->with('success', 'User created successfully.');
+            ->with('success', 'user.created');
     }
 
     public function show(User $user): Response
@@ -115,7 +115,7 @@ class UserController extends Controller
 
         return redirect()
             ->route('users.show', $user)
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'user.updated');
     }
 
     /**
@@ -126,13 +126,13 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         if ($user->id === $request->user()?->id) {
-            return back()->with('error', 'You cannot deactivate your own account.');
+            return back()->with('error', 'user.cannot_deactivate_self');
         }
 
         $user->update(['is_active' => ! $user->is_active]);
 
         AuditService::log('user.active_toggled', $user, ['is_active' => ! $user->is_active], ['is_active' => $user->is_active]);
 
-        return back()->with('success', 'Account status updated.');
+        return back()->with('success', 'user.status_updated');
     }
 }

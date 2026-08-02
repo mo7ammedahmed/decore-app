@@ -24,8 +24,8 @@ class StoreExchangeRateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'quote_currency_code.different' => 'The base and quote currencies must differ.',
-            'rate.gt' => 'The exchange rate must be greater than zero.',
+            'quote_currency_code.different' => trans('validation.app.currencies_differ'),
+            'rate.gt' => trans('validation.app.rate_positive'),
         ];
     }
 }

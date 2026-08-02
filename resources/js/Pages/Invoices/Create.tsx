@@ -10,6 +10,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import InvoiceItemsEditor, { computeItemTotals } from '@/Components/InvoiceItemsEditor';
 import InvoiceSummary from '@/Components/InvoiceSummary';
 import InlineCustomerFields, { blankCustomer, type NewCustomer } from '@/Components/InlineCustomerFields';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { DiscountType, Material } from '@/types/domain';
@@ -24,6 +25,7 @@ interface CreateProps {
 }
 
 export default function Create({ customers, currencies, materials, taxRates, permissions, canCreateCustomer }: CreateProps) {
+    const { t } = useI18n();
     const canManageCosts = permissions?.manageCosts ?? false;
     const [addingCustomer, setAddingCustomer] = useState(false);
 
@@ -43,7 +45,7 @@ export default function Create({ customers, currencies, materials, taxRates, per
                 unit_price: materials[0] ? materials[0].selling_price : '',
                 unit_cost: '',
                 discount_amount: '0',
-                tax_rate: String(taxRates.find((t) => t.is_default)?.rate ?? 0),
+                tax_rate: String(taxRates.find((tt) => tt.is_default)?.rate ?? 0),
                 description: materials[0]?.localized_name ?? materials[0]?.name_en ?? '',
             },
         ],
@@ -63,9 +65,9 @@ export default function Create({ customers, currencies, materials, taxRates, per
 
     return (
         <AuthenticatedLayout>
-            <Head title="New invoice" />
+            <Head title={t('invoices.create_title')} />
 
-            <PageHeader title="New invoice" description="Totals are previewed live; the server recalculates and is authoritative." />
+            <PageHeader title={t('invoices.create_title')} description={t('invoices.create_sub')} />
 
             <form onSubmit={submit}>
                 <div className="grid gap-6 lg:grid-cols-3">
@@ -84,13 +86,13 @@ export default function Create({ customers, currencies, materials, taxRates, per
                                         }}
                                     />
                                 ) : (
-                                    <FormField label="Customer" required error={errors.customer_id} htmlFor="customer_id">
+                                    <FormField label={t('invoices.customer')} required error={errors.customer_id} htmlFor="customer_id">
                                         <SelectInput
                                             id="customer_id"
                                             options={customers.map((c) => ({ value: c.id, label: c.name }))}
                                             value={data.customer_id}
                                             onChange={(e) => setData('customer_id', e.target.value)}
-                                            placeholder="Select customer…"
+                                            placeholder={t('invoices.select_customer')}
                                         />
                                         {canCreateCustomer && (
                                             <button
@@ -102,12 +104,12 @@ export default function Create({ customers, currencies, materials, taxRates, per
                                                 }}
                                                 className="mt-2 text-xs font-medium text-white/50 transition-colors hover:text-accent"
                                             >
-                                                ＋ New customer
+                                                {t('invoices.new_customer_link')}
                                             </button>
                                         )}
                                     </FormField>
                                 )}
-                                <FormField label="Currency" required error={errors.currency_code} htmlFor="currency_code">
+                                <FormField label={t('common.currency')} required error={errors.currency_code} htmlFor="currency_code">
                                     <SelectInput
                                         id="currency_code"
                                         options={currencies.map((c) => ({ value: c.code, label: `${c.code} — ${c.name}` }))}
@@ -115,14 +117,14 @@ export default function Create({ customers, currencies, materials, taxRates, per
                                         onChange={(e) => setData('currency_code', e.target.value)}
                                     />
                                 </FormField>
-                                <FormField label="Issue date" required error={errors.issue_date} htmlFor="issue_date">
+                                <FormField label={t('common.issue_date')} required error={errors.issue_date} htmlFor="issue_date">
                                     <DateInput
                                         id="issue_date"
                                         value={data.issue_date}
                                         onChange={(e) => setData('issue_date', e.target.value)}
                                     />
                                 </FormField>
-                                <FormField label="Due date" error={errors.due_date} htmlFor="due_date">
+                                <FormField label={t('common.due_date')} error={errors.due_date} htmlFor="due_date">
                                     <DateInput
                                         id="due_date"
                                         value={data.due_date}
@@ -133,7 +135,7 @@ export default function Create({ customers, currencies, materials, taxRates, per
                         </GlassCard>
 
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Line items</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('invoices.line_items')}</h2>
                             <div className="mt-5">
                                 <InvoiceItemsEditor
                                     items={data.items}
@@ -147,7 +149,7 @@ export default function Create({ customers, currencies, materials, taxRates, per
                         </GlassCard>
 
                         <GlassCard className="p-6">
-                            <FormField label="Notes" error={errors.notes} htmlFor="notes">
+                            <FormField label={t('common.notes')} error={errors.notes} htmlFor="notes">
                                 <Textarea id="notes" value={data.notes} onChange={(e) => setData('notes', e.target.value)} />
                             </FormField>
                         </GlassCard>
@@ -165,10 +167,10 @@ export default function Create({ customers, currencies, materials, taxRates, per
 
                         <GlassCard className="p-6">
                             <PrimaryButton className="w-full" disabled={processing}>
-                                {processing ? 'Creating draft…' : 'Create draft invoice'}
+                                {processing ? t('invoices.creating_draft') : t('invoices.create_draft')}
                             </PrimaryButton>
                             <p className="mt-3 text-xs leading-relaxed text-white/40">
-                                Drafts can be edited freely until issued. Once issued, values are locked for auditing.
+                                {t('invoices.draft_hint')}
                             </p>
                         </GlassCard>
                     </div>
@@ -180,7 +182,7 @@ export default function Create({ customers, currencies, materials, taxRates, per
             </form>
 
             <div className="mt-6">
-                <GlassButton href={route('invoices.index')} variant="secondary">Cancel</GlassButton>
+                <GlassButton href={route('invoices.index')} variant="secondary">{t('common.cancel')}</GlassButton>
             </div>
         </AuthenticatedLayout>
     );

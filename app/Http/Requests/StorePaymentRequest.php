@@ -27,7 +27,7 @@ class StorePaymentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount.gt' => 'Payment amounts must be greater than zero.',
+            'amount.gt' => trans('validation.app.payment_amount_positive'),
         ];
     }
 }

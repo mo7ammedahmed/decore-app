@@ -53,7 +53,7 @@ class GallerySectionController extends Controller
 
         return redirect()
             ->route('gallery.show', $section)
-            ->with('success', 'Gallery section created.');
+            ->with('success', 'gallery.section_created');
     }
 
     public function show(GallerySection $section): Response
@@ -86,7 +86,7 @@ class GallerySectionController extends Controller
             'name_en' => $section->name_en,
         ], $request->user()->id);
 
-        return back()->with('success', 'Gallery section updated.');
+        return back()->with('success', 'gallery.section_updated');
     }
 
     /**
@@ -109,7 +109,7 @@ class GallerySectionController extends Controller
 
         return redirect()
             ->route('gallery.index')
-            ->with('success', 'Gallery section deleted.');
+            ->with('success', 'gallery.section_deleted');
     }
 
     /**
@@ -121,6 +121,6 @@ class GallerySectionController extends Controller
 
         $image->delete();
 
-        return back()->with('success', 'Image removed.');
+        return back()->with('success', 'gallery.image_removed');
     }
 }

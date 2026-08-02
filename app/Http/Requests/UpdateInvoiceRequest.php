@@ -72,9 +72,9 @@ class UpdateInvoiceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'items.required' => 'Add at least one line item.',
-            'items.*.quantity.gt' => 'Quantity must be greater than zero.',
-            'customer.name.required_with' => 'Customer name is required when adding a new customer.',
+            'items.required' => trans('validation.app.items_required'),
+            'items.*.quantity.gt' => trans('validation.app.quantity_positive'),
+            'customer.name.required_with' => trans('validation.app.customer_name_required'),
         ];
     }
 }

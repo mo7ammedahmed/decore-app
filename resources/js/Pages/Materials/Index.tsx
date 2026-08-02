@@ -6,6 +6,7 @@ import EmptyState from '@/Components/EmptyState';
 import Pagination from '@/Components/Pagination';
 import MaterialCard from '@/Components/MaterialCard';
 import GlassButton from '@/Components/GlassButton';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { staggerContainer } from '@/Utilities/motion';
@@ -34,6 +35,8 @@ export default function Index({
     unitOptions,
     canManage,
 }: IndexProps) {
+    const { t } = useI18n();
+
     const updateFilter = (key: string, value: string) => {
         router.get(
             route('materials.index'),
@@ -47,21 +50,21 @@ export default function Index({
 
     return (
         <AuthenticatedLayout>
-            <Head title="Materials" />
+            <Head title={t('materials.title')} />
 
-            <PageHeader title="Materials" description="The catalog of everything you source and sell.">
-                {canManage && <GlassButton href={route('materials.create')}>New material</GlassButton>}
+            <PageHeader title={t('materials.title')} description={t('materials.sub')}>
+                {canManage && <GlassButton href={route('materials.create')}>{t('materials.new')}</GlassButton>}
             </PageHeader>
 
             <GlassCard className="p-6">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-                    <SearchInput filters={filters} placeholder="Search by name or SKU…" />
+                    <SearchInput filters={filters} placeholder={t('materials.search_placeholder')} />
                     <select
                         className={filterControl}
                         value={filters.classification ?? ''}
                         onChange={(e) => updateFilter('classification', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">All classifications</option>
+                        <option value="" className="bg-neutral-900">{t('materials.all_classifications')}</option>
                         {classifications.map((c) => (
                             <option key={c.id} value={c.id} className="bg-neutral-900">{c.localized_name ?? c.name_en}</option>
                         ))}
@@ -71,7 +74,7 @@ export default function Index({
                         value={filters.supplier ?? ''}
                         onChange={(e) => updateFilter('supplier', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">All suppliers</option>
+                        <option value="" className="bg-neutral-900">{t('materials.all_suppliers')}</option>
                         {suppliers.map((s) => (
                             <option key={s.id} value={s.id} className="bg-neutral-900">{s.name}</option>
                         ))}
@@ -81,9 +84,9 @@ export default function Index({
                         value={filters.status ?? ''}
                         onChange={(e) => updateFilter('status', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">Any status</option>
-                        <option value="active" className="bg-neutral-900">Active</option>
-                        <option value="inactive" className="bg-neutral-900">Archived</option>
+                        <option value="" className="bg-neutral-900">{t('materials.any_status')}</option>
+                        <option value="active" className="bg-neutral-900">{t('common.active')}</option>
+                        <option value="inactive" className="bg-neutral-900">{t('common.archived')}</option>
                     </select>
                     <label className="flex cursor-pointer items-center gap-2 text-sm text-white/55">
                         <input
@@ -92,15 +95,15 @@ export default function Index({
                             checked={filters.low_stock === '1'}
                             onChange={(e) => updateFilter('low_stock', e.target.checked ? '1' : '')}
                         />
-                        Low stock
+                        {t('materials.low_stock')}
                     </label>
                 </div>
 
                 {materials.total === 0 ? (
                     <div className="mt-6">
                         <EmptyState
-                            title="No materials found"
-                            description="Try adjusting your filters, or create a new material."
+                            title={t('materials.empty_title')}
+                            description={t('materials.empty_desc')}
                         />
                     </div>
                 ) : (
@@ -120,9 +123,9 @@ export default function Index({
             </GlassCard>
 
             <p className="mt-4 text-center text-xs text-white/30">
-                Selling prices are shown without tax · Units: {Object.values(unitOptions).join(', ')} ·{' '}
+                {t('materials.footer', { units: Object.values(unitOptions).join(', ') })} ·{' '}
                 <Link href={route('materials.index', { low_stock: '1' })} className="text-white/45 underline-offset-2 hover:text-accent hover:underline">
-                    View low-stock only
+                    {t('materials.view_low_stock')}
                 </Link>
             </p>
         </AuthenticatedLayout>

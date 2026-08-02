@@ -2,6 +2,7 @@ import Modal from '@/Components/Modal';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import DangerButton from '@/Components/DangerButton';
+import { useI18n } from '@/Utilities/i18n';
 import { useId } from 'react';
 
 interface ConfirmDialogProps {
@@ -21,13 +22,15 @@ export default function ConfirmDialog({
     onConfirm,
     title,
     message,
-    confirmLabel = 'Confirm',
+    confirmLabel,
     danger = true,
     processing = false,
 }: ConfirmDialogProps) {
+    const { t } = useI18n();
     // Unique ids so the dialog is announced with its title and description.
     const titleId = useId();
     const messageId = useId();
+    const resolvedConfirmLabel = confirmLabel ?? t('common.confirm');
 
     return (
         <Modal
@@ -47,15 +50,15 @@ export default function ConfirmDialog({
 
                 <div className="mt-7 flex items-center justify-end gap-3">
                     <SecondaryButton onClick={onClose} disabled={processing}>
-                        Cancel
+                        {t('common.cancel')}
                     </SecondaryButton>
                     {danger ? (
                         <DangerButton onClick={onConfirm} disabled={processing}>
-                            {processing ? 'Working…' : confirmLabel}
+                            {processing ? t('common.working') : resolvedConfirmLabel}
                         </DangerButton>
                     ) : (
                         <PrimaryButton onClick={onConfirm} disabled={processing}>
-                            {processing ? 'Working…' : confirmLabel}
+                            {processing ? t('common.working') : resolvedConfirmLabel}
                         </PrimaryButton>
                     )}
                 </div>

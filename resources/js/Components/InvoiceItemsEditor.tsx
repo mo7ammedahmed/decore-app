@@ -1,5 +1,6 @@
 import type { Material } from '@/types/domain';
 import { money } from '@/Utilities/format';
+import { useI18n } from '@/Utilities/i18n';
 
 export interface EditableItem {
     material_id: string;
@@ -65,6 +66,8 @@ export default function InvoiceItemsEditor({
     errors,
     onChange,
 }: InvoiceItemsEditorProps) {
+    const { t } = useI18n();
+
     const update = (index: number, patch: Partial<EditableItem>) => {
         const next = items.map((item, i) => (i === index ? { ...item, ...patch } : item));
         onChange(next);
@@ -106,21 +109,24 @@ export default function InvoiceItemsEditor({
     const errorFor = (index: number, field: string): string | undefined =>
         errors?.[`items.${index}.${field}`];
 
+    const thClass =
+        'px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40';
+
     return (
         <div>
             <div className="overflow-x-auto rounded-card">
                 <table className="w-full min-w-[640px] text-sm">
                     <thead>
                         <tr className="border-b border-white/[0.08]">
-                            <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Material</th>
-                            <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Qty</th>
-                            <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Unit Price</th>
+                            <th className={thClass}>{t('invoice_items.material')}</th>
+                            <th className={thClass}>{t('invoice_items.qty')}</th>
+                            <th className={thClass}>{t('invoice_items.unit_price')}</th>
                             {canManageCosts && (
-                                <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Unit Cost</th>
+                                <th className={thClass}>{t('invoice_items.unit_cost')}</th>
                             )}
-                            <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Discount</th>
-                            <th className="px-3 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Tax %</th>
-                            <th className="px-3 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">Line Total</th>
+                            <th className={thClass}>{t('invoice_items.discount')}</th>
+                            <th className={thClass}>{t('invoice_items.tax_percent')}</th>
+                            <th className={`${thClass} text-right`}>{t('invoice_items.line_total')}</th>
                             <th className="w-10" />
                         </tr>
                     </thead>
@@ -140,7 +146,7 @@ export default function InvoiceItemsEditor({
                                             value={item.material_id}
                                             onChange={(e) => selectMaterial(index, e.target.value)}
                                         >
-                                            <option value="" className="bg-neutral-900">Select material…</option>
+                                            <option value="" className="bg-neutral-900">{t('invoice_items.select_material')}</option>
                                             {materials.map((m) => (
                                                 <option key={m.id} value={m.id} className="bg-neutral-900">
                                                     {m.localized_name ?? m.name_en}
@@ -211,9 +217,9 @@ export default function InvoiceItemsEditor({
                                             value={item.tax_rate}
                                             onChange={(e) => update(index, { tax_rate: e.target.value })}
                                         >
-                                            {taxRates.map((t) => (
-                                                <option key={t.id} value={t.rate} className="bg-neutral-900">
-                                                    {t.name} ({t.rate}%)
+                                            {taxRates.map((r) => (
+                                                <option key={r.id} value={r.rate} className="bg-neutral-900">
+                                                    {r.name} ({r.rate}%)
                                                 </option>
                                             ))}
                                         </select>
@@ -230,7 +236,7 @@ export default function InvoiceItemsEditor({
                                             onClick={() => removeRow(index)}
                                             disabled={items.length === 1}
                                             className="rounded-full p-1.5 text-white/35 transition-colors hover:bg-danger/10 hover:text-danger disabled:opacity-30"
-                                            aria-label={`Remove line ${index + 1}`}
+                                            aria-label={t('invoice_items.remove_line', { index: index + 1 })}
                                         >
                                             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
                                                 <path d="M6 6l12 12M18 6L6 18" />
@@ -253,7 +259,7 @@ export default function InvoiceItemsEditor({
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
                         <path d="M12 5v14M5 12h14" />
                     </svg>
-                    Add line item
+                    {t('invoice_items.add_line')}
                 </button>
                 {typeof errors?.items === 'string' && (
                     <p className="field-error">{errors.items}</p>

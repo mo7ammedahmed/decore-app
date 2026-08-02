@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/react';
+import { useI18n } from '@/Utilities/i18n';
 import { useEffect, useState } from 'react';
 
 interface SearchInputProps {
@@ -8,10 +9,12 @@ interface SearchInputProps {
 }
 
 export default function SearchInput({
-    placeholder = 'Search…',
+    placeholder,
     queryKey = 'search',
     filters,
 }: SearchInputProps) {
+    const { t } = useI18n();
+    const resolvedPlaceholder = placeholder ?? t('search.placeholder');
     const [value, setValue] = useState<string>((filters[queryKey] as string) ?? '');
 
     useEffect(() => {
@@ -66,16 +69,16 @@ export default function SearchInput({
                 type="search"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder={placeholder}
-                aria-label={placeholder}
+                placeholder={resolvedPlaceholder}
+                aria-label={resolvedPlaceholder}
                 className="form-input w-full ps-10 pe-9 sm:w-64"
             />
             {value !== '' && (
                 <button
                     type="button"
                     onClick={clear}
-                    aria-label="Clear search"
-                    title="Clear search"
+                    aria-label={t('search.clear')}
+                    title={t('search.clear')}
                     className="absolute end-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-fg/40 transition-colors hover:bg-fg/[0.06] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                 >
                     <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">

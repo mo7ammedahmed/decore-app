@@ -42,7 +42,7 @@ class CurrencyController extends Controller
 
         return redirect()
             ->route('currencies.index')
-            ->with('success', 'Currency created successfully.');
+            ->with('success', 'currency.created');
     }
 
     public function edit(Currency $currency): Response
@@ -64,6 +64,6 @@ class CurrencyController extends Controller
 
         return redirect()
             ->route('currencies.index')
-            ->with('success', 'Currency updated successfully.');
+            ->with('success', 'currency.updated');
     }
 }

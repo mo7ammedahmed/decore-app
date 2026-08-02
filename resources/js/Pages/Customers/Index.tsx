@@ -5,6 +5,7 @@ import SearchInput from '@/Components/SearchInput';
 import EmptyState from '@/Components/EmptyState';
 import Pagination from '@/Components/Pagination';
 import GlassButton from '@/Components/GlassButton';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { Customer, Paginated } from '@/types/domain';
 
@@ -15,30 +16,32 @@ interface IndexProps {
 }
 
 export default function Index({ customers, filters, canManage }: IndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title="Customers" />
+            <Head title={t('customers.title')} />
 
-            <PageHeader title="Customers" description="Everyone you sell to.">
-                {canManage && <GlassButton href={route('customers.create')}>New customer</GlassButton>}
+            <PageHeader title={t('customers.title')} description={t('customers.sub')}>
+                {canManage && <GlassButton href={route('customers.create')}>{t('customers.new')}</GlassButton>}
             </PageHeader>
 
             <GlassCard className="p-6">
-                <SearchInput filters={filters} placeholder="Search customers…" />
+                <SearchInput filters={filters} placeholder={t('customers.search_placeholder')} />
 
                 {customers.total === 0 ? (
-                    <EmptyState title="No customers found" description="Try adjusting your search or create a new customer." />
+                    <EmptyState title={t('customers.empty_title')} description={t('customers.empty_desc')} />
                 ) : (
                     <div className="mt-5 overflow-x-auto">
                         <table className="table-glass w-full min-w-[640px]">
                             <thead>
                                 <tr>
-                                    <th>Customer</th>
-                                    <th>Company</th>
-                                    <th>Contact</th>
-                                    <th>City</th>
-                                    <th>Invoices</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t('customers.col_customer')}</th>
+                                    <th>{t('common.company')}</th>
+                                    <th>{t('common.contact')}</th>
+                                    <th>{t('common.city')}</th>
+                                    <th>{t('customers.col_invoices')}</th>
+                                    <th className="text-right">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,7 +61,7 @@ export default function Index({ customers, filters, canManage }: IndexProps) {
                                         <td>{customer.invoices_count ?? 0}</td>
                                         <td className="text-right">
                                             <Link href={route('customers.show', customer.id)} className="text-sm text-white/60 transition-colors hover:text-accent">
-                                                View
+                                                {t('common.view')}
                                             </Link>
                                         </td>
                                     </tr>

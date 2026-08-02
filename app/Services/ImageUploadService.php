@@ -20,7 +20,7 @@ class ImageUploadService
         $path = $file->store($model->getTable().'/'.$model->id, $disk);
 
         if ($path === false) {
-            throw new \RuntimeException('Unable to store the uploaded image.');
+            throw new \RuntimeException(__('errors.image_store_failed'));
         }
 
         // Remove the previous stored file before overwriting the row, so a

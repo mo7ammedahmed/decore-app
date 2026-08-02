@@ -5,6 +5,7 @@ import Pagination from '@/Components/Pagination';
 import EmptyState from '@/Components/EmptyState';
 import SelectInput from '@/Components/SelectInput';
 import DateInput from '@/Components/DateInput';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import type { AuditLog, Paginated } from '@/types/domain';
@@ -17,6 +18,7 @@ interface IndexProps {
 }
 
 export default function Index({ logs, filters, actions }: IndexProps) {
+    const { t } = useI18n();
     const [from, setFrom] = useState(filters.from ?? '');
     const [to, setTo] = useState(filters.to ?? '');
 
@@ -38,11 +40,11 @@ export default function Index({ logs, filters, actions }: IndexProps) {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Audit log" />
+            <Head title={t('audit_logs.title')} />
 
             <PageHeader
-                title="Audit log"
-                description="A trail of sensitive operations — role changes, costs, invoices, payments, images."
+                title={t('audit_logs.title')}
+                description={t('audit_logs.sub')}
             />
 
             <GlassCard className="p-6">
@@ -51,36 +53,36 @@ export default function Index({ logs, filters, actions }: IndexProps) {
                         options={actions.map((a) => ({ value: a, label: actionLabel(a) }))}
                         value={filters.action ?? ''}
                         onChange={(e) => updateAction(e.target.value)}
-                        placeholder="All actions"
+                        placeholder={t('audit_logs.all_actions')}
                         className="sm:w-72"
-                        aria-label="Filter by action"
+                        aria-label={t('audit_logs.filter_action')}
                     />
                     <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                         <DateInput
                             className="min-w-0 flex-1 sm:w-40 sm:flex-none"
                             value={from}
                             onChange={(e) => setFrom(e.target.value)}
-                            aria-label="From date"
+                            aria-label={t('invoices.from_date')}
                         />
                         <span className="shrink-0 text-white/30">→</span>
                         <DateInput
                             className="min-w-0 flex-1 sm:w-40 sm:flex-none"
                             value={to}
                             onChange={(e) => setTo(e.target.value)}
-                            aria-label="To date"
+                            aria-label={t('invoices.to_date')}
                         />
                         <button
                             onClick={applyFilters}
                             className="shrink-0 rounded-full bg-accent/15 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/25"
                         >
-                            Apply
+                            {t('audit_logs.apply')}
                         </button>
                     </div>
                 </div>
 
                 {logs.total === 0 ? (
                     <div className="mt-6">
-                        <EmptyState title="No log entries" description="Sensitive actions will appear here as they happen." />
+                        <EmptyState title={t('audit_logs.empty_title')} description={t('audit_logs.empty_desc')} />
                     </div>
                 ) : (
                     <div className="mt-5 space-y-3">
@@ -92,7 +94,7 @@ export default function Index({ logs, filters, actions }: IndexProps) {
                                 <div className="min-w-0">
                                     <p className="text-sm font-medium text-white/90">{actionLabel(log.action)}</p>
                                     <p className="mt-0.5 text-xs text-white/40">
-                                        {log.user?.name ?? 'System'} · {formatDateTime(log.created_at)}
+                                        {log.user?.name ?? t('audit_logs.system')} · {formatDateTime(log.created_at)}
                                         {log.ip_address && ` · ${log.ip_address}`}
                                     </p>
                                 </div>

@@ -21,32 +21,54 @@ class GalleryImageController extends Controller
     {
         $this->authorize('update', $section);
 
-        $image = $this->images->store(
-            $request->file('image'),
-            $section,
-            $request->input('alt_text'),
-            $request->boolean('is_visible', true),
-            (int) $request->input('sort_order', 0),
-        );
+        $files = $request->file('images') ?? collect([$request->file('image')])->filter()->all();
 
-        AuditService::log('gallery_image.uploaded', $image, null, [
-            'path' => $image->path,
-        ], $request->user()->id);
+        // Explicit sort_order wins; otherwise append after the current max so
+        // new uploads never collide with existing image ordering. `?? -1` keeps
+        // the first batch starting at 0 on a fresh section (max() is null).
+        $baseSort = $request->has('sort_order')
+            ? (int) $request->input('sort_order')
+            : ((int) ($section->images()->max('sort_order') ?? -1)) + 1;
+        $count = 0;
 
-        return back()->with('success', 'Image uploaded.');
+        try {
+            foreach ($files as $index => $file) {
+                $image = $this->images->store(
+                    $file,
+                    $section,
+                    $request->input('alt_text'),
+                    $request->boolean('is_visible', true),
+                    $baseSort + $index,
+                );
+
+                AuditService::log('gallery_image.uploaded', $image, null, [
+                    'path' => $image->path,
+                ], $request->user()->id);
+
+                $count++;
+            }
+        } catch (\RuntimeException) {
+            return back()->with('error', 'gallery.image_store_failed');
+        }
+
+        return back()->with('success', $count === 1 ? 'gallery.image_uploaded' : 'gallery.images_uploaded');
     }
 
     public function replace(StoreGalleryImageRequest $request, GalleryImage $image): RedirectResponse
     {
         $this->authorize('update', $image->section);
 
-        $this->images->replace($request->file('image'), $image);
+        try {
+            $this->images->replace($request->file('image'), $image);
+        } catch (\RuntimeException) {
+            return back()->with('error', 'gallery.image_store_failed');
+        }
 
         AuditService::log('gallery_image.replaced', $image, ['replaced' => true], [
             'path' => $image->path,
         ], $request->user()->id);
 
-        return back()->with('success', 'Image replaced.');
+        return back()->with('success', 'gallery.image_replaced');
     }
 
     public function update(UpdateGalleryImageRequest $request, GalleryImage $image): RedirectResponse
@@ -71,6 +93,6 @@ class GalleryImageController extends Controller
             'sort_order' => $image->sort_order,
         ], $request->user()->id);
 
-        return back()->with('success', 'Image updated.');
+        return back()->with('success', 'gallery.image_updated');
     }
 }

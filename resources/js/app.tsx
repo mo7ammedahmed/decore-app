@@ -1,7 +1,7 @@
 import '../css/app.css';
 import './bootstrap';
 
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, router } from '@inertiajs/react';
 import { MotionConfig } from 'framer-motion';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
@@ -38,3 +38,15 @@ createInertiaApp({
 
 // Public-site visitor analytics beacon (skips admin pages internally).
 initializeVisitorAnalytics();
+
+// Safety net: if a stale CSRF token ever reaches the client as a raw 419
+// (e.g. the server exception handler couldn't run), bounce to the login page
+// instead of a dead-end "Page Expired" modal. The server normally redirects
+// with a bilingual flash message; this only catches the residual cases.
+router.on('invalid', (event) => {
+    const status = event.detail.response?.status;
+    if (status === 419) {
+        event.preventDefault();
+        window.location.assign('/login');
+    }
+});

@@ -1,3 +1,4 @@
+import { useI18n } from '@/Utilities/i18n';
 import { useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 
@@ -8,7 +9,7 @@ interface ImageUploadProps {
     existingUrl?: string | null;
     altText?: string;
     disabled?: boolean;
-    /** Max file size in MB — defaults to 2MB, gallery uploads use 8MB. */
+    /** Max file size in MB — defaults to 2MB (gallery uploads use their own multi-file form). */
     maxSizeMb?: number;
 }
 
@@ -24,6 +25,7 @@ export default function ImageUpload({
     disabled = false,
     maxSizeMb = 2,
 }: ImageUploadProps) {
+    const { t } = useI18n();
     const inputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [dragOver, setDragOver] = useState(false);
@@ -36,12 +38,12 @@ export default function ImageUpload({
         if (!file) return;
 
         if (!ACCEPTED.includes(file.type)) {
-            setLocalError('Only JPEG, PNG and WebP images are accepted.');
+            setLocalError(t('image_upload.type_error'));
             return;
         }
 
         if (file.size > maxSize) {
-            setLocalError(`Image must be ${maxSizeMb}MB or smaller.`);
+            setLocalError(t('image_upload.size_error', { mb: maxSizeMb }));
             return;
         }
 
@@ -69,7 +71,7 @@ export default function ImageUpload({
             <div
                 role="button"
                 tabIndex={0}
-                aria-label={existingUrl || preview ? 'Replace image' : 'Upload image'}
+                aria-label={existingUrl || preview ? t('common.replace_image') : t('common.upload_image')}
                 onClick={() => !disabled && inputRef.current?.click()}
                 onKeyDown={(e) => {
                     if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
@@ -100,11 +102,11 @@ export default function ImageUpload({
                     <div className="flex flex-col items-center gap-3">
                         <img
                             src={preview ?? existingUrl ?? undefined}
-                            alt={altText ?? 'Preview'}
+                            alt={altText ?? t('image_upload.preview')}
                             className="max-h-40 rounded-xl object-contain shadow-lg"
                         />
                         <p className="text-xs text-white/45 group-hover:text-white/70">
-                            Click or drop a file to replace
+                            {t('image_upload.click_replace')}
                         </p>
                     </div>
                 ) : (
@@ -117,10 +119,10 @@ export default function ImageUpload({
                         </div>
                         <div>
                             <p className="text-sm font-medium text-white/75">
-                                Drag &amp; drop an image here
+                                {t('image_upload.drop')}
                             </p>
                             <p className="mt-1 text-xs text-white/35">
-                                or click to browse · JPEG, PNG, WebP · max {maxSizeMb}MB
+                                {t('image_upload.browse', { mb: maxSizeMb })}
                             </p>
                         </div>
                     </div>
@@ -133,7 +135,7 @@ export default function ImageUpload({
                     onClick={clear}
                     className="mt-2 text-xs font-medium text-danger/80 transition-colors hover:text-danger"
                 >
-                    Remove image
+                    {t('common.remove_image')}
                 </button>
             )}
 

@@ -100,6 +100,26 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
                 </nav>
 
                 <div className="space-y-3 border-t border-white/[0.06] px-6 py-4">
+                    <a
+                        href={route('landing')}
+                        className="flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/[0.04] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                    >
+                        <svg
+                            className="h-[18px] w-[18px] shrink-0 opacity-80"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={1.6}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                            <path d="M15 3h6v6" />
+                            <path d="M10 14L21 3" />
+                        </svg>
+                        {t('nav.view_site')}
+                    </a>
                     {/* The top bar hides the switcher below sm — this drawer is the mobile home for it. */}
                     <div className="lg:hidden">
                         <LanguageSwitcher />

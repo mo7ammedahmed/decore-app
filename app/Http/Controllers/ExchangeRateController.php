@@ -43,7 +43,7 @@ class ExchangeRateController extends Controller
 
         return redirect()
             ->route('exchange-rates.index')
-            ->with('success', 'Exchange rate saved.');
+            ->with('success', 'exchange_rate.saved');
     }
 
     public function destroy(ExchangeRate $exchangeRate): RedirectResponse
@@ -54,6 +54,6 @@ class ExchangeRateController extends Controller
 
         return redirect()
             ->route('exchange-rates.index')
-            ->with('success', 'Exchange rate deleted.');
+            ->with('success', 'exchange_rate.deleted');
     }
 }

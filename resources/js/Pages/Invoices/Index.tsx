@@ -8,9 +8,10 @@ import StatusBadge from '@/Components/StatusBadge';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import GlassButton from '@/Components/GlassButton';
 import DateInput from '@/Components/DateInput';
+import { invoiceStatusKey, paymentStatusKey, useI18n } from '@/Utilities/i18n';
 import { Head, Link, router } from '@inertiajs/react';
 import type { Invoice, Paginated } from '@/types/domain';
-import { INVOICE_STATUS_LABELS, PAYMENT_STATUS_LABELS, formatDate, invoiceTone, paymentTone } from '@/Utilities/format';
+import { formatDate, invoiceTone, paymentTone } from '@/Utilities/format';
 
 interface IndexProps {
     invoices: Paginated<Invoice>;
@@ -27,6 +28,8 @@ interface IndexProps {
 }
 
 export default function Index({ invoices, filters, customers, canManage }: IndexProps) {
+    const { t } = useI18n();
+
     const updateFilter = (key: string, value: string) => {
         router.get(
             route('invoices.index'),
@@ -37,23 +40,23 @@ export default function Index({ invoices, filters, customers, canManage }: Index
 
     return (
         <AuthenticatedLayout>
-            <Head title="Invoices" />
+            <Head title={t('invoices.title')} />
 
-            <PageHeader title="Invoices" description="Drafts, issued documents, and completed sales.">
-                {canManage && <GlassButton href={route('invoices.create')}>New invoice</GlassButton>}
+            <PageHeader title={t('invoices.title')} description={t('invoices.sub')}>
+                {canManage && <GlassButton href={route('invoices.create')}>{t('invoices.new')}</GlassButton>}
             </PageHeader>
 
             <GlassCard className="p-6">
                 <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
-                    <SearchInput filters={filters} placeholder="Search by invoice number…" />
+                    <SearchInput filters={filters} placeholder={t('invoices.search_placeholder')} />
                     <select
                         className="form-select w-full sm:w-auto"
                         value={filters.status ?? ''}
                         onChange={(e) => updateFilter('status', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">Any status</option>
-                        {Object.entries(INVOICE_STATUS_LABELS).map(([value, label]) => (
-                            <option key={value} value={value} className="bg-neutral-900">{label}</option>
+                        <option value="" className="bg-neutral-900">{t('invoices.any_status')}</option>
+                        {(['draft', 'issued', 'cancelled', 'completed'] as const).map((value) => (
+                            <option key={value} value={value} className="bg-neutral-900">{t(invoiceStatusKey(value))}</option>
                         ))}
                     </select>
                     <select
@@ -61,9 +64,9 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                         value={filters.payment_status ?? ''}
                         onChange={(e) => updateFilter('payment_status', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">Any payment</option>
-                        {Object.entries(PAYMENT_STATUS_LABELS).map(([value, label]) => (
-                            <option key={value} value={value} className="bg-neutral-900">{label}</option>
+                        <option value="" className="bg-neutral-900">{t('invoices.any_payment')}</option>
+                        {(['unpaid', 'partial', 'paid', 'overpaid'] as const).map((value) => (
+                            <option key={value} value={value} className="bg-neutral-900">{t(paymentStatusKey(value))}</option>
                         ))}
                     </select>
                     <select
@@ -71,7 +74,7 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                         value={filters.customer ?? ''}
                         onChange={(e) => updateFilter('customer', e.target.value)}
                     >
-                        <option value="" className="bg-neutral-900">All customers</option>
+                        <option value="" className="bg-neutral-900">{t('invoices.all_customers')}</option>
                         {customers.map((c) => (
                             <option key={c.id} value={c.id} className="bg-neutral-900">{c.name}</option>
                         ))}
@@ -81,14 +84,14 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                             className="min-w-0 flex-1 sm:w-40 sm:flex-none"
                             value={filters.from ?? ''}
                             onChange={(e) => updateFilter('from', e.target.value)}
-                            aria-label="From date"
+                            aria-label={t('invoices.from_date')}
                         />
                         <span className="shrink-0 text-white/30">→</span>
                         <DateInput
                             className="min-w-0 flex-1 sm:w-40 sm:flex-none"
                             value={filters.to ?? ''}
                             onChange={(e) => updateFilter('to', e.target.value)}
-                            aria-label="To date"
+                            aria-label={t('invoices.to_date')}
                         />
                     </div>
                 </div>
@@ -96,8 +99,8 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                 {invoices.total === 0 ? (
                     <div className="mt-6">
                         <EmptyState
-                            title="No invoices found"
-                            description="Try adjusting your filters, or create a new invoice draft."
+                            title={t('invoices.empty_title')}
+                            description={t('invoices.empty_desc')}
                         />
                     </div>
                 ) : (
@@ -105,14 +108,14 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                         <table className="table-glass w-full min-w-[760px]">
                             <thead>
                                 <tr>
-                                    <th>Number</th>
-                                    <th>Customer</th>
-                                    <th>Issue date</th>
-                                    <th>Status</th>
-                                    <th>Payment</th>
-                                    <th className="text-right">Total</th>
-                                    <th className="text-right">Balance</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t('common.number')}</th>
+                                    <th>{t('invoices.col_customer')}</th>
+                                    <th>{t('common.issue_date')}</th>
+                                    <th>{t('common.status')}</th>
+                                    <th>{t('invoices.col_payment')}</th>
+                                    <th className="text-right">{t('common.total')}</th>
+                                    <th className="text-right">{t('invoices.col_balance')}</th>
+                                    <th className="text-right">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,10 +129,10 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                                         <td>{invoice.customer?.name ?? '—'}</td>
                                         <td>{formatDate(invoice.issue_date)}</td>
                                         <td>
-                                            <StatusBadge label={INVOICE_STATUS_LABELS[invoice.status]} tone={invoiceTone(invoice.status)} />
+                                            <StatusBadge label={t(invoiceStatusKey(invoice.status))} tone={invoiceTone(invoice.status)} />
                                         </td>
                                         <td>
-                                            <StatusBadge label={PAYMENT_STATUS_LABELS[invoice.payment_status]} tone={paymentTone(invoice.payment_status)} />
+                                            <StatusBadge label={t(paymentStatusKey(invoice.payment_status))} tone={paymentTone(invoice.payment_status)} />
                                         </td>
                                         <td className="text-right">
                                             <MoneyDisplay value={invoice.total} currency={invoice.currency_code} />
@@ -143,7 +146,7 @@ export default function Index({ invoices, filters, customers, canManage }: Index
                                         </td>
                                         <td className="text-right">
                                             <Link href={route('invoices.show', invoice.id)} className="text-sm text-white/60 transition-colors hover:text-accent">
-                                                View
+                                                {t('common.view')}
                                             </Link>
                                         </td>
                                     </tr>

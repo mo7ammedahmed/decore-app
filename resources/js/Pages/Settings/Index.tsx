@@ -4,20 +4,14 @@ import GlassCard from '@/Components/GlassCard';
 import GlassButton from '@/Components/GlassButton';
 import FormField from '@/Components/FormField';
 import TextInput from '@/Components/TextInput';
-import Textarea from '@/Components/Textarea';
 import PrimaryButton from '@/Components/PrimaryButton';
 import InvoiceDocument, { type InvoiceDocumentInvoice } from '@/Components/InvoiceDocument';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { BilingualCard, InvoiceTemplate, ShopSettings } from '@/types/domain';
 
 const ACCENTS = ['#8a6d3b', '#0f766e', '#1d4ed8', '#7c3aed', '#be123c', '#334155'];
-
-const TEMPLATES: { id: InvoiceTemplate; name: string; description: string }[] = [
-    { id: 'classic', name: 'Classic', description: 'Serif brand, neutral paper look' },
-    { id: 'modern', name: 'Modern', description: 'Accent header band, bold totals' },
-    { id: 'minimal', name: 'Minimal', description: 'Quiet and clean, centred brand' },
-];
 
 const MOCK_INVOICE: InvoiceDocumentInvoice = {
     invoice_number: 'INV-2026-000123',
@@ -40,15 +34,6 @@ const MOCK_INVOICE: InvoiceDocumentInvoice = {
     base_currency_code: 'SAR',
 };
 
-const LANDING_SECTIONS: { key: string; title: string; hint: string }[] = [
-    { key: 'collections', title: 'Shop by collection', hint: 'The category tiles' },
-    { key: 'featured', title: 'Featured finishes', hint: 'The curated material cards' },
-    { key: 'inspiration', title: 'Project inspiration', hint: 'The editorial image mosaic' },
-    { key: 'why', title: 'Why Decore', hint: 'The six benefit cards' },
-    { key: 'journey', title: 'Customer journey', hint: 'The four-step process' },
-    { key: 'cta', title: 'Final call to action', hint: 'The closing image banner' },
-];
-
 export default function Index({
     settings,
     materials,
@@ -58,6 +43,7 @@ export default function Index({
     materials: { id: number; name_en: string; name_ar: string | null; sku: string }[];
     gallery_images: { id: number; image_url: string | null; alt_text: string | null; section_name: string }[];
 }) {
+    const { t } = useI18n();
     const { data, setData, patch, processing, errors } = useForm({
         shop_name: settings.shop_name,
         tagline: settings.tagline ?? '',
@@ -104,13 +90,28 @@ export default function Index({
     const previewLogo = logoPreview ?? (data.remove_logo ? null : settings.logo_url);
     const accent = data.invoice_accent || '#8a6d3b';
 
+    const LANDING_SECTIONS: { key: string; title: string; hint: string }[] = [
+        { key: 'collections', title: t('settings.sec_collections'), hint: t('settings.sec_collections_hint') },
+        { key: 'featured', title: t('settings.sec_featured'), hint: t('settings.sec_featured_hint') },
+        { key: 'inspiration', title: t('settings.sec_inspiration'), hint: t('settings.sec_inspiration_hint') },
+        { key: 'why', title: t('settings.sec_why'), hint: t('settings.sec_why_hint') },
+        { key: 'journey', title: t('settings.sec_journey'), hint: t('settings.sec_journey_hint') },
+        { key: 'cta', title: t('settings.sec_cta'), hint: t('settings.sec_cta_hint') },
+    ];
+
+    const TEMPLATES: { id: InvoiceTemplate; name: string; description: string }[] = [
+        { id: 'classic', name: t('settings.tpl_classic'), description: t('settings.tpl_classic_desc') },
+        { id: 'modern', name: t('settings.tpl_modern'), description: t('settings.tpl_modern_desc') },
+        { id: 'minimal', name: t('settings.tpl_minimal'), description: t('settings.tpl_minimal_desc') },
+    ];
+
     return (
         <AuthenticatedLayout>
-            <Head title="Shop settings" />
+            <Head title={t('settings.title')} />
 
             <PageHeader
-                title="Shop settings"
-                description="Your brand identity and the printable invoice template — every page and printed invoice reflects these details."
+                title={t('settings.title')}
+                description={t('settings.sub')}
             />
 
             <form onSubmit={submit}>
@@ -118,13 +119,13 @@ export default function Index({
                     <div className="space-y-6 lg:col-span-2">
                         {/* ---- Shop identity ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Shop identity</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.shop_identity')}</h2>
                             <div className="mt-5 flex flex-col gap-6 sm:flex-row">
                                 <div className="shrink-0">
-                                    <p className="form-label">Logo</p>
+                                    <p className="form-label">{t('settings.logo')}</p>
                                     <div className="liquid-glass-strong flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl">
                                         {previewLogo ? (
-                                            <img src={previewLogo} alt="Shop logo preview" className="h-full w-full object-cover" />
+                                            <img src={previewLogo} alt={t('settings.logo')} className="h-full w-full object-cover" />
                                         ) : (
                                             <span className="font-heading text-3xl italic text-accent" aria-hidden="true">
                                                 {(data.shop_name || 'D').charAt(0).toUpperCase()}
@@ -141,7 +142,7 @@ export default function Index({
                                             onChange={onLogoChange}
                                         />
                                         <span className="liquid-glass rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/[0.06] hover:text-white">
-                                            {settings.logo_url || logoPreview ? 'Replace shop logo' : 'Upload shop logo'}
+                                            {settings.logo_url || logoPreview ? t('settings.replace_logo') : t('settings.upload_logo')}
                                         </span>
                                     </label>
                                     {(settings.logo_url || logoPreview) && !data.remove_logo && (
@@ -149,20 +150,20 @@ export default function Index({
                                             type="button"
                                             onClick={removeLogo}
                                             className="w-fit text-xs font-medium text-white/40 transition-colors hover:text-danger"
-                                            aria-label="Remove shop logo">
-                                            Remove logo
+                                            aria-label={t('settings.remove_logo_aria')}>
+                                            {t('settings.remove_logo')}
                                         </button>
                                     )}
                                     {errors.logo && <p className="field-error">{errors.logo}</p>}
-                                    <p className="text-xs text-white/35">JPEG, PNG or WebP · up to 2 MB</p>
+                                    <p className="text-xs text-white/35">{t('settings.logo_hint')}</p>
                                 </div>
                             </div>
 
                             <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                                <FormField label="Shop name" required error={errors.shop_name} htmlFor="shop_name">
+                                <FormField label={t('settings.shop_name')} required error={errors.shop_name} htmlFor="shop_name">
                                     <TextInput id="shop_name" value={data.shop_name} onChange={(e) => setData('shop_name', e.target.value)} />
                                 </FormField>
-                                <FormField label="Tagline" error={errors.tagline} htmlFor="tagline">
+                                <FormField label={t('settings.tagline')} error={errors.tagline} htmlFor="tagline">
                                     <TextInput id="tagline" value={data.tagline} onChange={(e) => setData('tagline', e.target.value)} placeholder="Decoration materials atelier" />
                                 </FormField>
                             </div>
@@ -170,22 +171,22 @@ export default function Index({
 
                         {/* ---- Contact details ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Contact details</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.contact_details')}</h2>
                             <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                                <FormField label="Phone" error={errors.phone} htmlFor="phone">
-                                    <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder="05xxxxxxxx" />
+                                <FormField label={t('common.phone')} error={errors.phone} htmlFor="phone">
+                                    <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder={t('common.phone_placeholder')} />
                                 </FormField>
-                                <FormField label="Email" error={errors.email} htmlFor="email">
+                                <FormField label={t('common.email')} error={errors.email} htmlFor="email">
                                     <TextInput id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} />
                                 </FormField>
-                                <FormField label="Address" error={errors.address} htmlFor="address">
+                                <FormField label={t('common.address')} error={errors.address} htmlFor="address">
                                     <TextInput id="address" value={data.address} onChange={(e) => setData('address', e.target.value)} />
                                 </FormField>
                                 <div className="grid grid-cols-2 gap-5">
-                                    <FormField label="City" error={errors.city} htmlFor="city">
+                                    <FormField label={t('common.city')} error={errors.city} htmlFor="city">
                                         <TextInput id="city" value={data.city} onChange={(e) => setData('city', e.target.value)} />
                                     </FormField>
-                                    <FormField label="Country code" error={errors.country_code} htmlFor="country_code">
+                                    <FormField label={t('settings.country_code')} error={errors.country_code} htmlFor="country_code">
                                         <TextInput id="country_code" value={data.country_code} onChange={(e) => setData('country_code', e.target.value.toUpperCase())} maxLength={2} placeholder="SA" />
                                     </FormField>
                                 </div>
@@ -194,13 +195,13 @@ export default function Index({
 
                         {/* ---- Legal / tax ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Legal & tax</h2>
-                            <p className="mt-1 text-xs text-white/40">Shown on printed invoices.</p>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.legal_tax')}</h2>
+                            <p className="mt-1 text-xs text-white/40">{t('settings.legal_tax_sub')}</p>
                             <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                                <FormField label="Tax number (VAT)" error={errors.tax_number} htmlFor="tax_number">
+                                <FormField label={t('settings.tax_number_vat')} error={errors.tax_number} htmlFor="tax_number">
                                     <TextInput id="tax_number" value={data.tax_number} onChange={(e) => setData('tax_number', e.target.value)} />
                                 </FormField>
-                                <FormField label="Commercial registration" error={errors.commercial_registration} htmlFor="commercial_registration">
+                                <FormField label={t('common.commercial_registration')} error={errors.commercial_registration} htmlFor="commercial_registration">
                                     <TextInput id="commercial_registration" value={data.commercial_registration} onChange={(e) => setData('commercial_registration', e.target.value)} />
                                 </FormField>
                             </div>
@@ -208,10 +209,10 @@ export default function Index({
 
                         {/* ---- Landing page structure ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Landing page</h2>
-                            <p className="mt-1 text-xs text-white/40">Choose which sections visitors see and which finishes are featured.</p>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.landing_page')}</h2>
+                            <p className="mt-1 text-xs text-white/40">{t('settings.landing_sub')}</p>
 
-                            <p className="form-label mt-6">Sections</p>
+                            <p className="form-label mt-6">{t('settings.sections')}</p>
                             <div className="mt-3 grid gap-3 sm:grid-cols-2">
                                 {LANDING_SECTIONS.map(({ key, title, hint }) => (
                                     <label
@@ -242,10 +243,10 @@ export default function Index({
                             </div>
                             {errors.landing_sections && <p className="field-error">{errors.landing_sections}</p>}
 
-                            <p className="form-label mt-6">Featured finishes</p>
-                            <p className="text-xs text-white/40">Pick the materials shown in the featured section. Empty = newest active finishes automatically.</p>
+                            <p className="form-label mt-6">{t('settings.featured_finishes')}</p>
+                            <p className="text-xs text-white/40">{t('settings.featured_sub')}</p>
                             {materials.length === 0 ? (
-                                <p className="mt-3 text-sm text-white/40">No active materials yet.</p>
+                                <p className="mt-3 text-sm text-white/40">{t('settings.no_materials')}</p>
                             ) : (
                                 <div className="mt-3 grid max-h-64 gap-1 overflow-y-auto rounded-xl border border-white/10 bg-white/[0.02] p-3 sm:grid-cols-2">
                                     {materials.map((material) => {
@@ -279,35 +280,35 @@ export default function Index({
                             )}
                             {errors.featured_material_ids && <p className="field-error">{errors.featured_material_ids}</p>}
 
-                            <p className="form-label mt-8">Why Decore — cards</p>
-                            <p className="text-xs text-white/40">The benefit cards under the "Why Decore" heading. Add, reorder or remove cards; empty = the built-in six cards.</p>
+                            <p className="form-label mt-8">{t('settings.why_cards')}</p>
+                            <p className="text-xs text-white/40">{t('settings.why_cards_sub')}</p>
                             <BilingualListEditor
                                 items={data.why_cards}
                                 onChange={(items) => setData('why_cards', items)}
-                                itemNoun="card"
+                                itemNoun={t('settings.editor_noun_card')}
                                 error={errors.why_cards}
                             />
 
-                            <p className="form-label mt-8">Customer journey — steps</p>
-                            <p className="text-xs text-white/40">The numbered process steps. Add, reorder or remove steps; empty = the built-in four steps.</p>
+                            <p className="form-label mt-8">{t('settings.journey_steps')}</p>
+                            <p className="text-xs text-white/40">{t('settings.journey_steps_sub')}</p>
                             <BilingualListEditor
                                 items={data.journey_steps}
                                 onChange={(items) => setData('journey_steps', items)}
-                                itemNoun="step"
+                                itemNoun={t('settings.editor_noun_step')}
                                 error={errors.journey_steps}
                             />
 
                             <div className="mt-6 grid gap-6 sm:grid-cols-2">
                                 <div>
-                                    <label htmlFor="hero_image" className="form-label">Hero image</label>
-                                    <p className="text-xs text-white/40">The large landing hero photo. Empty = newest published image.</p>
+                                    <label htmlFor="hero_image" className="form-label">{t('settings.hero_image')}</label>
+                                    <p className="text-xs text-white/40">{t('settings.hero_image_sub')}</p>
                                     <select
                                         id="hero_image"
                                         className="form-input mt-2 w-full"
                                         value={data.hero_image_id ?? ''}
                                         onChange={(e) => setData('hero_image_id', e.target.value === '' ? null : Number(e.target.value))}
                                     >
-                                        <option value="">Automatic (newest image)</option>
+                                        <option value="">{t('settings.hero_automatic')}</option>
                                         {gallery_images.map((image) => (
                                             <option key={image.id} value={image.id}>
                                                 {image.alt_text ? `${image.alt_text} · ${image.section_name}` : image.section_name}
@@ -317,15 +318,15 @@ export default function Index({
                                     {errors.hero_image_id && <p className="field-error">{errors.hero_image_id}</p>}
                                 </div>
                                 <div>
-                                    <label htmlFor="cta_image" className="form-label">Final CTA background</label>
-                                    <p className="text-xs text-white/40">The closing banner photo. Empty = automatic.</p>
+                                    <label htmlFor="cta_image" className="form-label">{t('settings.cta_image')}</label>
+                                    <p className="text-xs text-white/40">{t('settings.cta_image_sub')}</p>
                                     <select
                                         id="cta_image"
                                         className="form-input mt-2 w-full"
                                         value={data.cta_image_id ?? ''}
                                         onChange={(e) => setData('cta_image_id', e.target.value === '' ? null : Number(e.target.value))}
                                     >
-                                        <option value="">Automatic</option>
+                                        <option value="">{t('settings.automatic')}</option>
                                         {gallery_images.map((image) => (
                                             <option key={image.id} value={image.id}>
                                                 {image.alt_text ? `${image.alt_text} · ${image.section_name}` : image.section_name}
@@ -341,7 +342,7 @@ export default function Index({
                     <div className="space-y-6">
                         {/* ---- Invoice template ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Invoice template</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.invoice_template')}</h2>
                             <div className="mt-5 space-y-3">
                                 {TEMPLATES.map((tpl) => {
                                     const selected = data.invoice_template === tpl.id;
@@ -365,13 +366,13 @@ export default function Index({
                                 {errors.invoice_template && <p className="field-error">{errors.invoice_template}</p>}
                             </div>
 
-                            <p className="form-label mt-6">Accent colour</p>
+                            <p className="form-label mt-6">{t('settings.accent_colour')}</p>
                             <div className="flex flex-wrap items-center gap-2.5">
                                 {ACCENTS.map((color) => (
                                     <button
                                         key={color}
                                         type="button"
-                                        aria-label={`Accent ${color}`}
+                                        aria-label={t('settings.accent_aria', { color })}
                                         onClick={() => setData('invoice_accent', color)}
                                         className={`h-9 w-9 rounded-full border-2 transition-transform duration-150 hover:scale-110 ${
                                             accent.toLowerCase() === color ? 'border-white' : 'border-white/15'
@@ -379,7 +380,7 @@ export default function Index({
                                         style={{ backgroundColor: color }}
                                     />
                                 ))}
-                                <label className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-white/25 transition-colors hover:border-white/50" aria-label="Custom accent">
+                                <label className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-white/25 transition-colors hover:border-white/50" aria-label={t('settings.custom_accent_aria')}>
                                     <input
                                         type="color"
                                         value={accent}
@@ -394,20 +395,20 @@ export default function Index({
 
                         {/* ---- Invoice notes ---- */}
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Invoice notes</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('settings.invoice_notes')}</h2>
                             <div className="mt-5 space-y-5">
-                                <FormField label="Footer note" error={errors.invoice_footer_note} htmlFor="invoice_footer_note">
-                                    <TextInput id="invoice_footer_note" value={data.invoice_footer_note} onChange={(e) => setData('invoice_footer_note', e.target.value)} placeholder="Payment within 30 days…" />
+                                <FormField label={t('settings.footer_note')} error={errors.invoice_footer_note} htmlFor="invoice_footer_note">
+                                    <TextInput id="invoice_footer_note" value={data.invoice_footer_note} onChange={(e) => setData('invoice_footer_note', e.target.value)} placeholder={t('settings.footer_note_placeholder')} />
                                 </FormField>
-                                <FormField label="Thank-you message" error={errors.invoice_thank_you} htmlFor="invoice_thank_you">
-                                    <TextInput id="invoice_thank_you" value={data.invoice_thank_you} onChange={(e) => setData('invoice_thank_you', e.target.value)} placeholder="Thank you for your business" />
+                                <FormField label={t('settings.thank_you')} error={errors.invoice_thank_you} htmlFor="invoice_thank_you">
+                                    <TextInput id="invoice_thank_you" value={data.invoice_thank_you} onChange={(e) => setData('invoice_thank_you', e.target.value)} placeholder={t('settings.thank_you_placeholder')} />
                                 </FormField>
                             </div>
                         </GlassCard>
 
                         <GlassCard className="p-6">
                             <PrimaryButton className="w-full" disabled={processing}>
-                                {processing ? 'Saving…' : 'Save shop settings'}
+                                {processing ? t('common.saving') : t('settings.save')}
                             </PrimaryButton>
                         </GlassCard>
                     </div>
@@ -415,8 +416,8 @@ export default function Index({
 
                 {/* ---- Live invoice preview ---- */}
                 <GlassCard className="mt-6 p-6">
-                    <h2 className="font-heading text-xl italic text-white">Invoice preview</h2>
-                    <p className="mt-1 text-xs text-white/40">This is exactly how printed invoices will look.</p>
+                    <h2 className="font-heading text-xl italic text-white">{t('settings.invoice_preview')}</h2>
+                    <p className="mt-1 text-xs text-white/40">{t('settings.invoice_preview_sub')}</p>
                     <div className="mt-5 overflow-hidden rounded-2xl bg-neutral-100 p-4 sm:p-8">
                         <div className="mx-auto max-w-[680px] rounded-lg bg-white p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:p-10">
                             <InvoiceDocument
@@ -443,7 +444,7 @@ export default function Index({
             </form>
 
             <div className="mt-6">
-                <GlassButton href={route('dashboard')} variant="secondary">Back to dashboard</GlassButton>
+                <GlassButton href={route('dashboard')} variant="secondary">{t('common.back_to_dashboard')}</GlassButton>
             </div>
         </AuthenticatedLayout>
     );
@@ -465,6 +466,8 @@ function BilingualListEditor({
     itemNoun: string;
     error?: string;
 }) {
+    const { t } = useI18n();
+
     const update = (index: number, patch: Partial<BilingualCard>) => {
         onChange(items.map((item, i) => (i === index ? { ...item, ...patch } : item)));
     };
@@ -485,7 +488,7 @@ function BilingualListEditor({
         <div className="mt-3 space-y-3">
             {items.length === 0 && (
                 <p className="rounded-xl border border-dashed border-white/15 px-4 py-3 text-sm text-white/35">
-                    No custom {itemNoun}s — the built-in defaults are shown on the site.
+                    {t('settings.editor_none', { noun: itemNoun })}
                 </p>
             )}
 
@@ -493,14 +496,14 @@ function BilingualListEditor({
                 <div key={index} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
                     <div className="flex items-center justify-between gap-3">
                         <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
-                            {itemNoun} {index + 1}
+                            {t('settings.editor_noun_label', { noun: itemNoun, index: index + 1 })}
                         </p>
                         <div className="flex items-center gap-1.5">
                             <button
                                 type="button"
                                 onClick={() => move(index, -1)}
                                 disabled={index === 0}
-                                aria-label={`Move ${itemNoun} up`}
+                                aria-label={t('settings.editor_move_up', { noun: itemNoun })}
                                 className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:text-white disabled:opacity-30"
                             >
                                 ↑
@@ -509,7 +512,7 @@ function BilingualListEditor({
                                 type="button"
                                 onClick={() => move(index, 1)}
                                 disabled={index === items.length - 1}
-                                aria-label={`Move ${itemNoun} down`}
+                                aria-label={t('settings.editor_move_down', { noun: itemNoun })}
                                 className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:text-white disabled:opacity-30"
                             >
                                 ↓
@@ -517,7 +520,7 @@ function BilingualListEditor({
                             <button
                                 type="button"
                                 onClick={() => remove(index)}
-                                aria-label={`Remove ${itemNoun}`}
+                                aria-label={t('settings.editor_remove', { noun: itemNoun })}
                                 className="flex h-7 w-7 items-center justify-center rounded-lg border border-danger/30 text-danger/70 transition-colors hover:border-danger/60 hover:text-danger"
                             >
                                 ✕
@@ -527,7 +530,7 @@ function BilingualListEditor({
 
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                         <div>
-                            <label className="form-label">Title — EN</label>
+                            <label className="form-label">{t('settings.editor_title_en')}</label>
                             <input
                                 dir="ltr"
                                 className="form-input"
@@ -536,7 +539,7 @@ function BilingualListEditor({
                             />
                         </div>
                         <div>
-                            <label className="form-label">Title — AR</label>
+                            <label className="form-label">{t('settings.editor_title_ar')}</label>
                             <input
                                 dir="rtl"
                                 className="form-input"
@@ -545,7 +548,7 @@ function BilingualListEditor({
                             />
                         </div>
                         <div>
-                            <label className="form-label">Body — EN</label>
+                            <label className="form-label">{t('settings.editor_body_en')}</label>
                             <textarea
                                 dir="ltr"
                                 className="form-input min-h-20"
@@ -554,7 +557,7 @@ function BilingualListEditor({
                             />
                         </div>
                         <div>
-                            <label className="form-label">Body — AR</label>
+                            <label className="form-label">{t('settings.editor_body_ar')}</label>
                             <textarea
                                 dir="rtl"
                                 className="form-input min-h-20"
@@ -571,7 +574,7 @@ function BilingualListEditor({
                 onClick={() => onChange([...items, { title_en: '', title_ar: '', body_en: '', body_ar: '' }])}
                 className="rounded-xl border border-dashed border-accent/40 px-4 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent/10"
             >
-                + Add {itemNoun}
+                {t('settings.editor_add', { noun: itemNoun })}
             </button>
 
             {error && <p className="field-error">{error}</p>}

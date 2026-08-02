@@ -1,9 +1,12 @@
 import { usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useI18n } from '@/Utilities/i18n';
+import type { TranslationKey } from '@/Utilities/i18n';
 
 export default function FlashMessage() {
     const { flash } = usePage().props;
+    const { t } = useI18n();
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [kind, setKind] = useState<'success' | 'error'>('success');
@@ -12,6 +15,8 @@ export default function FlashMessage() {
         const next = flash?.success ?? flash?.error ?? null;
 
         if (next) {
+            // Keep the raw value; translate at render time so the toast stays
+            // in sync with the active locale without re-arming the timer.
             setMessage(next);
             setKind(flash?.success ? 'success' : 'error');
             setVisible(true);
@@ -37,7 +42,12 @@ export default function FlashMessage() {
                         }`}
                     >
                         <span className="h-2 w-2 shrink-0 rounded-full bg-current opacity-70" />
-                        <span className="text-fg/85">{message}</span>
+                        <span className="text-fg/85">
+                            {/* Flashes may be translation keys ('tax.deleted') or legacy
+                                raw strings — translate() falls back to the raw value
+                                when the key is unknown, so both render correctly. */}
+                            {message ? t(message as TranslationKey) : ''}
+                        </span>
                     </motion.div>
                 )}
             </AnimatePresence>

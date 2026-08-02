@@ -4,6 +4,7 @@ import GlassCard from '@/Components/GlassCard';
 import GlassButton from '@/Components/GlassButton';
 import StatusBadge from '@/Components/StatusBadge';
 import ConfirmDialog from '@/Components/ConfirmDialog';
+import { roleKey, useI18n } from '@/Utilities/i18n';
 import { Head, router } from '@inertiajs/react';
 import type { Invoice, User } from '@/types/domain';
 import { formatDate, money } from '@/Utilities/format';
@@ -21,7 +22,8 @@ const ROLE_TONES: Record<string, string> = {
     supplier: 'bg-warning/15 text-warning',
 };
 
-export default function Show({ user, roleOptions }: ShowProps) {
+export default function Show({ user }: ShowProps) {
+    const { t } = useI18n();
     const [confirmToggle, setConfirmToggle] = useState(false);
 
     const toggleActive = () => {
@@ -30,24 +32,24 @@ export default function Show({ user, roleOptions }: ShowProps) {
     };
 
     const details: [string, string][] = [
-        ['Name', user.name],
-        ['Email', user.email],
-        ['Phone', user.phone ?? '—'],
-        ['Role', roleOptions[user.role] ?? user.role],
-        ['Supplier', user.supplier?.name ?? '—'],
-        ['Joined', user.created_at ? formatDate(user.created_at) : '—'],
+        [t('common.name'), user.name],
+        [t('common.email'), user.email],
+        [t('common.phone'), user.phone ?? '—'],
+        [t('users.col_role'), t(roleKey(user.role))],
+        [t('users.col_supplier'), user.supplier?.name ?? '—'],
+        [t('users.joined'), user.created_at ? formatDate(user.created_at) : '—'],
     ];
 
     return (
         <AuthenticatedLayout>
             <Head title={user.name} />
 
-            <PageHeader title={user.name} description="Account details and activity.">
+            <PageHeader title={user.name} description={t('users.show_sub')}>
                 <GlassButton href={route('users.edit', user.id)} variant="secondary">
-                    Edit user
+                    {t('users.edit_user')}
                 </GlassButton>
                 <GlassButton variant={user.is_active ? 'danger' : 'primary'} onClick={() => setConfirmToggle(true)}>
-                    {user.is_active ? 'Disable account' : 'Activate account'}
+                    {user.is_active ? t('users.disable_account') : t('users.activate_account')}
                 </GlassButton>
             </PageHeader>
 
@@ -60,7 +62,7 @@ export default function Show({ user, roleOptions }: ShowProps) {
                         <div>
                             <h2 className="font-heading text-xl italic text-white">{user.name}</h2>
                             <StatusBadge
-                                label={user.is_active ? 'Active' : 'Disabled'}
+                                label={user.is_active ? t('common.active') : t('common.disabled')}
                                 tone={user.is_active ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'}
                             />
                         </div>
@@ -77,16 +79,16 @@ export default function Show({ user, roleOptions }: ShowProps) {
                 </GlassCard>
 
                 <GlassCard className="p-6 lg:col-span-2">
-                    <h2 className="font-heading text-xl italic text-white">Recent invoices</h2>
+                    <h2 className="font-heading text-xl italic text-white">{t('users.recent_invoices')}</h2>
                     {user.invoices && user.invoices.length > 0 ? (
                         <div className="mt-4 overflow-x-auto">
                             <table className="table-glass w-full min-w-[420px]">
                                 <thead>
                                     <tr>
-                                        <th>Number</th>
-                                        <th>Issue date</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
+                                        <th>{t('common.number')}</th>
+                                        <th>{t('common.issue_date')}</th>
+                                        <th>{t('common.total')}</th>
+                                        <th>{t('common.status')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -102,7 +104,7 @@ export default function Show({ user, roleOptions }: ShowProps) {
                             </table>
                         </div>
                     ) : (
-                        <p className="mt-4 text-sm text-white/40">No invoices recorded for this user yet.</p>
+                        <p className="mt-4 text-sm text-white/40">{t('users.no_invoices')}</p>
                     )}
                 </GlassCard>
             </div>
@@ -111,13 +113,13 @@ export default function Show({ user, roleOptions }: ShowProps) {
                 open={confirmToggle}
                 onClose={() => setConfirmToggle(false)}
                 onConfirm={toggleActive}
-                title={user.is_active ? 'Disable this account?' : 'Activate this account?'}
+                title={user.is_active ? t('users.disable_confirm_title') : t('users.activate_confirm_title')}
                 message={
                     user.is_active
-                        ? `${user.name} will immediately lose access to the application. You can re-enable it anytime.`
-                        : `${user.name} will regain access to the application.`
+                        ? t('users.disable_confirm_message', { name: user.name })
+                        : t('users.activate_confirm_message', { name: user.name })
                 }
-                confirmLabel={user.is_active ? 'Disable' : 'Activate'}
+                confirmLabel={user.is_active ? t('users.disable') : t('users.activate')}
                 danger={user.is_active}
             />
         </AuthenticatedLayout>

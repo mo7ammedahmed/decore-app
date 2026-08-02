@@ -5,9 +5,10 @@ import GlassButton from '@/Components/GlassButton';
 import EmptyState from '@/Components/EmptyState';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import StatusBadge from '@/Components/StatusBadge';
+import { invoiceStatusKey, useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { Customer, Invoice } from '@/types/domain';
-import { formatDate, INVOICE_STATUS_LABELS, invoiceTone } from '@/Utilities/format';
+import { formatDate, invoiceTone } from '@/Utilities/format';
 
 interface ShowProps {
     customer: Customer & { invoices?: Invoice[] };
@@ -16,28 +17,30 @@ interface ShowProps {
 }
 
 export default function Show({ customer, canManage = false, canCreateInvoice = false }: ShowProps) {
+    const { t } = useI18n();
+
     const details: [string, string][] = [
-        ['Company', customer.company_name ?? '—'],
-        ['Email', customer.email ?? '—'],
-        ['Phone', customer.phone ?? '—'],
-        ['Tax number', customer.tax_number ?? '—'],
-        ['City', customer.city ?? '—'],
-        ['Address', customer.address ?? '—'],
-        ['Created by', customer.creator?.name ?? '—'],
+        [t('common.company'), customer.company_name ?? '—'],
+        [t('common.email'), customer.email ?? '—'],
+        [t('common.phone'), customer.phone ?? '—'],
+        [t('common.tax_number'), customer.tax_number ?? '—'],
+        [t('common.city'), customer.city ?? '—'],
+        [t('common.address'), customer.address ?? '—'],
+        [t('customers.created_by'), customer.creator?.name ?? '—'],
     ];
 
     return (
         <AuthenticatedLayout>
             <Head title={customer.name} />
 
-            <PageHeader title={customer.name} description={customer.company_name ?? 'Customer'}>
-                {canManage && <GlassButton href={route('customers.edit', customer.id)} variant="secondary">Edit customer</GlassButton>}
-                {canCreateInvoice && <GlassButton href={route('invoices.create')}>New invoice</GlassButton>}
+            <PageHeader title={customer.name} description={customer.company_name ?? t('customers.entity')}>
+                {canManage && <GlassButton href={route('customers.edit', customer.id)} variant="secondary">{t('customers.edit_customer')}</GlassButton>}
+                {canCreateInvoice && <GlassButton href={route('invoices.create')}>{t('customers.new_invoice')}</GlassButton>}
             </PageHeader>
 
             <div className="grid gap-6 lg:grid-cols-3">
                 <GlassCard className="p-6 lg:col-span-1">
-                    <h2 className="font-heading text-xl italic text-white">Details</h2>
+                    <h2 className="font-heading text-xl italic text-white">{t('common.details')}</h2>
                     <dl className="mt-5 space-y-3.5 text-sm">
                         {details.map(([label, value]) => (
                             <div key={label} className="flex items-start justify-between gap-4">
@@ -49,18 +52,18 @@ export default function Show({ customer, canManage = false, canCreateInvoice = f
                 </GlassCard>
 
                 <GlassCard className="p-6 lg:col-span-2">
-                    <h2 className="font-heading text-xl italic text-white">Invoices</h2>
+                    <h2 className="font-heading text-xl italic text-white">{t('customers.invoices')}</h2>
                     {!customer.invoices || customer.invoices.length === 0 ? (
-                        <EmptyState title="No invoices yet" description="Create an invoice for this customer to get started." />
+                        <EmptyState title={t('customers.no_invoices_title')} description={t('customers.no_invoices_desc')} />
                     ) : (
                         <div className="mt-4 overflow-x-auto">
                             <table className="table-glass w-full min-w-[520px]">
                                 <thead>
                                     <tr>
-                                        <th>Number</th>
-                                        <th>Issue date</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
+                                        <th>{t('common.number')}</th>
+                                        <th>{t('common.issue_date')}</th>
+                                        <th>{t('common.total')}</th>
+                                        <th>{t('common.status')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,7 +79,7 @@ export default function Show({ customer, canManage = false, canCreateInvoice = f
                                                 <MoneyDisplay value={invoice.total} currency={invoice.currency_code} />
                                             </td>
                                             <td>
-                                                <StatusBadge label={INVOICE_STATUS_LABELS[invoice.status]} tone={invoiceTone(invoice.status)} />
+                                                <StatusBadge label={t(invoiceStatusKey(invoice.status))} tone={invoiceTone(invoice.status)} />
                                             </td>
                                         </tr>
                                     ))}

@@ -29,19 +29,24 @@ class ProfileSettingsController extends Controller
 
         // Portrait handling: a new file replaces the old one, remove_portrait
         // clears it. Store the new file BEFORE deleting the old one so a
-        // storage failure never destroys the existing portrait.
-        if ($request->hasFile('portrait')) {
-            $path = $request->file('portrait')->store('settings', (string) config('filesystems.default'));
+        // storage failure never destroys the existing portrait. Storage
+        // failures surface as a localized error toast instead of a 500.
+        try {
+            if ($request->hasFile('portrait')) {
+                $path = $request->file('portrait')->store('settings', (string) config('filesystems.default'));
 
-            if ($path === false) {
-                throw new \RuntimeException('Unable to store the portrait.');
+                if ($path === false) {
+                    throw new \RuntimeException(__('errors.portrait_store_failed'));
+                }
+
+                $settings->deleteStoredPortrait();
+                $data['portrait_path'] = $path;
+            } elseif ($request->boolean('remove_portrait')) {
+                $settings->deleteStoredPortrait();
+                $data['portrait_path'] = null;
             }
-
-            $settings->deleteStoredPortrait();
-            $data['portrait_path'] = $path;
-        } elseif ($request->boolean('remove_portrait')) {
-            $settings->deleteStoredPortrait();
-            $data['portrait_path'] = null;
+        } catch (\RuntimeException) {
+            return back()->with('error', 'profile_settings.portrait_store_failed');
         }
 
         unset($data['portrait'], $data['remove_portrait']);
@@ -68,6 +73,6 @@ class ProfileSettingsController extends Controller
             'theme_dark_accent' => $settings->theme_dark_accent,
         ], $request->user()->id);
 
-        return back()->with('success', 'Profile settings saved.');
+        return back()->with('success', 'profile_settings.saved');
     }
 }

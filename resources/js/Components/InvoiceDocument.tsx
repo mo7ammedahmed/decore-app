@@ -1,4 +1,5 @@
 import { money, formatDate } from '@/Utilities/format';
+import { useI18n } from '@/Utilities/i18n';
 import type { InvoiceTemplate } from '@/types/domain';
 
 export interface InvoiceDocumentShop {
@@ -73,6 +74,7 @@ export default function InvoiceDocument({
     thankYou,
     baseCurrency,
 }: InvoiceDocumentProps) {
+    const { t } = useI18n();
     const currency = invoice.currency_code;
     const initial = shop.name.charAt(0).toUpperCase();
 
@@ -103,8 +105,8 @@ export default function InvoiceDocument({
                     </div>
                     <div className="text-right">
                         <p className="text-xl font-bold">{invoice.invoice_number}</p>
-                        <p className="text-xs text-white/80">Issued {formatDate(invoice.issue_date)}</p>
-                        {invoice.due_date && <p className="text-xs text-white/80">Due {formatDate(invoice.due_date)}</p>}
+                        <p className="text-xs text-white/80">{t('invoice_doc.issued')} {formatDate(invoice.issue_date)}</p>
+                        {invoice.due_date && <p className="text-xs text-white/80">{t('invoice_doc.due')} {formatDate(invoice.due_date)}</p>}
                     </div>
                 </header>
             );
@@ -117,8 +119,8 @@ export default function InvoiceDocument({
                     <p className="text-2xl font-light uppercase tracking-[0.28em] text-neutral-800">{shop.name}</p>
                     {shop.tagline && <p className="mt-1 text-xs text-neutral-400">{shop.tagline}</p>}
                     <p className="mt-4 text-sm text-neutral-500">
-                        {invoice.invoice_number} · Issued {formatDate(invoice.issue_date)}
-                        {invoice.due_date ? ` · Due ${formatDate(invoice.due_date)}` : ''}
+                        {invoice.invoice_number} · {t('invoice_doc.issued')} {formatDate(invoice.issue_date)}
+                        {invoice.due_date ? ` · ${t('invoice_doc.due')} ${formatDate(invoice.due_date)}` : ''}
                     </p>
                 </header>
             );
@@ -142,8 +144,8 @@ export default function InvoiceDocument({
                 </div>
                 <div className="text-right">
                     <p className="text-xl font-semibold text-neutral-900">{invoice.invoice_number}</p>
-                    <p className="mt-1 text-sm text-neutral-500">Issued {formatDate(invoice.issue_date)}</p>
-                    {invoice.due_date && <p className="text-sm text-neutral-500">Due {formatDate(invoice.due_date)}</p>}
+                    <p className="mt-1 text-sm text-neutral-500">{t('invoice_doc.issued')} {formatDate(invoice.issue_date)}</p>
+                    {invoice.due_date && <p className="text-sm text-neutral-500">{t('invoice_doc.due')} {formatDate(invoice.due_date)}</p>}
                 </div>
             </header>
         );
@@ -162,21 +164,21 @@ export default function InvoiceDocument({
 
             <section className={`grid grid-cols-2 gap-6 text-sm ${template === 'minimal' ? 'mt-8' : 'mt-6'}`}>
                 <div>
-                    {sectionLabel('Billed to')}
+                    {sectionLabel(t('invoice_doc.billed_to'))}
                     <p className="mt-1.5 font-medium text-neutral-900">{invoice.customer?.name ?? '—'}</p>
                     {invoice.customer?.company_name && <p className="text-neutral-600">{invoice.customer.company_name}</p>}
-                    {invoice.customer?.tax_number && <p className="text-neutral-600">Tax: {invoice.customer.tax_number}</p>}
+                    {invoice.customer?.tax_number && <p className="text-neutral-600">{t('invoice_doc.vat')} {invoice.customer.tax_number}</p>}
                     {invoice.customer?.address && <p className="text-neutral-600">{invoice.customer.address}</p>}
                 </div>
                 <div className="text-right">
-                    {sectionLabel('From')}
+                    {sectionLabel(t('invoice_doc.from'))}
                     <p className="mt-1.5 font-medium text-neutral-900">{shop.name}</p>
                     {shop.address && <p className="text-neutral-600">{shop.address}</p>}
                     {shop.city && <p className="text-neutral-600">{shop.city}</p>}
                     {shop.phone && <p className="text-neutral-600">{shop.phone}</p>}
                     {shop.email && <p className="text-neutral-600">{shop.email}</p>}
-                    {shop.tax_number && <p className="text-neutral-600">VAT: {shop.tax_number}</p>}
-                    {shop.commercial_registration && <p className="text-neutral-600">CR: {shop.commercial_registration}</p>}
+                    {shop.tax_number && <p className="text-neutral-600">{t('invoice_doc.vat')} {shop.tax_number}</p>}
+                    {shop.commercial_registration && <p className="text-neutral-600">{t('invoice_doc.cr')} {shop.commercial_registration}</p>}
                 </div>
             </section>
 
@@ -189,11 +191,11 @@ export default function InvoiceDocument({
                                 : 'border-b border-neutral-300 text-left text-[10px] font-semibold uppercase tracking-widest text-neutral-500'
                         }
                     >
-                        <th className="pb-2">Item</th>
-                        <th className="pb-2 text-right">Qty</th>
-                        <th className="pb-2 text-right">Unit price</th>
-                        <th className="pb-2 text-right">Tax</th>
-                        <th className="pb-2 text-right">Amount</th>
+                        <th className="pb-2">{t('invoice_doc.item')}</th>
+                        <th className="pb-2 text-right">{t('invoice_doc.qty')}</th>
+                        <th className="pb-2 text-right">{t('invoice_doc.unit_price')}</th>
+                        <th className="pb-2 text-right">{t('invoice_doc.tax')}</th>
+                        <th className="pb-2 text-right">{t('invoice_doc.amount')}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -217,17 +219,17 @@ export default function InvoiceDocument({
 
             <div className={`mt-6 ml-auto w-72 space-y-2 text-sm ${template === 'minimal' ? 'border-t border-neutral-200 pt-4' : ''}`}>
                 <div className="flex justify-between text-neutral-600">
-                    <span>Subtotal</span>
+                    <span>{t('invoice_doc.subtotal')}</span>
                     <span className="tabular-nums">{money(invoice.subtotal, currency)}</span>
                 </div>
                 {Number(invoice.discount_total) > 0 && (
                     <div className="flex justify-between text-neutral-600">
-                        <span>Discount</span>
+                        <span>{t('invoice_doc.discount')}</span>
                         <span className="tabular-nums">− {money(invoice.discount_total, currency)}</span>
                     </div>
                 )}
                 <div className="flex justify-between text-neutral-600">
-                    <span>Tax</span>
+                    <span>{t('invoice_doc.tax')}</span>
                     <span className="tabular-nums">{money(invoice.tax_total, currency)}</span>
                 </div>
                 <div
@@ -235,36 +237,36 @@ export default function InvoiceDocument({
                         template === 'modern' ? '[color:var(--inv-accent)]' : ''
                     }`}
                 >
-                    <span>Total</span>
+                    <span>{t('invoice_doc.total')}</span>
                     <span className="tabular-nums">{money(invoice.total, currency)}</span>
                 </div>
                 <div className="flex justify-between border-t border-neutral-200 pt-2 text-neutral-700">
-                    <span>Paid</span>
+                    <span>{t('invoice_doc.paid')}</span>
                     <span className="tabular-nums text-neutral-900">{money(invoice.paid_total, currency)}</span>
                 </div>
                 <div className="flex justify-between font-semibold text-neutral-900">
-                    <span>Balance due</span>
+                    <span>{t('invoice_doc.balance_due')}</span>
                     <span className="tabular-nums">{money(invoice.balance_due, currency)}</span>
                 </div>
                 {baseCurrency && baseCurrency !== currency && (
                     <p className="pt-2 text-xs text-neutral-400">
-                        Base equivalent: {money(invoice.total, baseCurrency)}
+                        {t('invoice_doc.base_equivalent')} {money(invoice.total, baseCurrency)}
                     </p>
                 )}
             </div>
 
             {invoice.notes && (
                 <section className={`mt-8 rounded-lg p-4 text-sm text-neutral-600 ${template === 'minimal' ? 'bg-transparent border border-neutral-100' : 'bg-neutral-50'}`}>
-                    {sectionLabel('Notes')}
+                    {sectionLabel(t('invoice_doc.notes'))}
                     <p className="mt-1">{invoice.notes}</p>
                 </section>
             )}
 
             <footer className={`mt-12 flex items-center justify-between border-t border-neutral-200 pt-4 text-xs text-neutral-400 ${template === 'minimal' ? 'mt-10' : ''}`}>
                 <span>
-                    {footerNote || `Generated by ${shop.name}${invoice.created_at ? ` · ${formatDate(invoice.created_at)}` : ''}`}
+                    {footerNote || `${t('invoice_doc.generated_by', { name: shop.name })}${invoice.created_at ? ` · ${formatDate(invoice.created_at)}` : ''}`}
                 </span>
-                <span>{thankYou || 'Thank you for your business'}</span>
+                <span>{thankYou || t('invoice_doc.thank_you')}</span>
             </footer>
         </div>
     );

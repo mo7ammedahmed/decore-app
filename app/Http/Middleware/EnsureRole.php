@@ -16,7 +16,7 @@ class EnsureRole
         $user = $request->user();
 
         if ($user === null || ! in_array($user->role->value, $roles, true)) {
-            abort(403, 'You do not have permission to access this area.');
+            abort(403, __('errors.area_forbidden'));
         }
 
         return $next($request);

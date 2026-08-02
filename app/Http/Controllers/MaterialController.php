@@ -117,7 +117,7 @@ class MaterialController extends Controller
 
         return redirect()
             ->route('materials.show', $material)
-            ->with('success', 'Material created successfully.');
+            ->with('success', 'material.created');
     }
 
     public function show(Material $material, Request $request): Response
@@ -203,7 +203,7 @@ class MaterialController extends Controller
 
         return redirect()
             ->route('materials.show', $material)
-            ->with('success', 'Material updated successfully.');
+            ->with('success', 'material.updated');
     }
 
     public function destroy(Material $material): RedirectResponse
@@ -211,13 +211,13 @@ class MaterialController extends Controller
         $this->authorize('delete', $material);
 
         if ($material->invoiceItems()->count() > 0) {
-            return back()->with('error', 'This material cannot be deleted because it appears on invoices.');
+            return back()->with('error', 'material.delete_on_invoices');
         }
 
         $material->delete();
 
         return redirect()
             ->route('materials.index')
-            ->with('success', 'Material archived.');
+            ->with('success', 'material.archived');
     }
 }

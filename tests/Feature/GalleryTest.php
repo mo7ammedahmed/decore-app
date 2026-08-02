@@ -132,6 +132,90 @@ class GalleryTest extends TestCase
         $this->assertSame(0, GallerySection::count());
     }
 
+    public function test_admin_can_upload_multiple_images_at_once(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $section = GallerySection::factory()->create();
+
+        $this->actingAs($admin)
+            ->post("/gallery-admin/{$section->id}/images", [
+                'images' => [
+                    $this->image('a.png'),
+                    $this->image('b.png'),
+                    $this->image('c.png'),
+                ],
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->assertSame(3, $section->images()->count());
+        $this->assertSame(
+            ['a.png', 'b.png', 'c.png'],
+            $section->images()->orderBy('sort_order')->orderBy('id')->pluck('original_name')->all(),
+        );
+        $this->assertSame(
+            [0, 1, 2],
+            $section->images()->orderBy('sort_order')->orderBy('id')->pluck('sort_order')->all(),
+        );
+        $this->assertDatabaseCount('audit_logs', 3);
+    }
+
+    public function test_multi_upload_applies_alt_text_and_base_sort_order(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $section = GallerySection::factory()->create();
+
+        $this->actingAs($admin)
+            ->post("/gallery-admin/{$section->id}/images", [
+                'images' => [$this->image('x.png'), $this->image('y.png')],
+                'alt_text' => 'Showroom install',
+                'sort_order' => 10,
+            ])
+            ->assertRedirect();
+
+        $images = $section->images()->orderBy('sort_order')->orderBy('id')->get();
+        $this->assertCount(2, $images);
+        $this->assertSame('Showroom install', $images[0]->alt_text);
+        $this->assertSame(10, $images[0]->sort_order);
+        $this->assertSame(11, $images[1]->sort_order);
+    }
+
+    public function test_image_over_seven_mb_is_rejected(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $section = GallerySection::factory()->create();
+
+        // 7168 KB = 7 MB is the cap. Pad a real PNG past it — finfo still
+        // reads the PNG signature from the header, so the image/mimes rules
+        // pass and only the size rule rejects the upload.
+        $file = $this->image('huge.png');
+        $path = $file->getPathname();
+        file_put_contents($path, file_get_contents($path).str_repeat("\0", 7169 * 1024));
+
+        $this->assertGreaterThan(7168 * 1024, filesize($path));
+
+        $this->actingAs($admin)
+            ->post("/gallery-admin/{$section->id}/images", ['images' => [$file]])
+            ->assertSessionHasErrors('images.0');
+
+        $this->assertSame(0, $section->images()->count());
+    }
+
+    public function test_single_image_upload_still_works_for_backwards_compatibility(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $section = GallerySection::factory()->create();
+
+        $this->actingAs($admin)
+            ->post("/gallery-admin/{$section->id}/images", [
+                'image' => $this->image('solo.png'),
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->assertSame(1, $section->images()->count());
+    }
+
     public function test_non_image_upload_is_rejected(): void
     {
         $admin = User::factory()->admin()->create();
@@ -139,9 +223,9 @@ class GalleryTest extends TestCase
 
         $this->actingAs($admin)
             ->post("/gallery-admin/{$section->id}/images", [
-                'image' => UploadedFile::fake()->create('notes.txt', 10, 'text/plain'),
+                'images' => [UploadedFile::fake()->create('notes.txt', 10, 'text/plain')],
             ])
-            ->assertSessionHasErrors('image');
+            ->assertSessionHasErrors('images.0');
 
         $this->assertSame(0, $section->images()->count());
     }

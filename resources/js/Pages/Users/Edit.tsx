@@ -7,6 +7,7 @@ import TextInput from '@/Components/TextInput';
 import SelectInput from '@/Components/SelectInput';
 import PrimaryButton from '@/Components/PrimaryButton';
 import InputError from '@/Components/InputError';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import type { Role, Supplier, User } from '@/types/domain';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ interface EditProps {
 }
 
 export default function Edit({ user, roleOptions, suppliers }: EditProps) {
+    const { t } = useI18n();
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
@@ -38,36 +40,36 @@ export default function Edit({ user, roleOptions, suppliers }: EditProps) {
 
     return (
         <AuthenticatedLayout>
-            <Head title={`Edit ${user.name}`} />
+            <Head title={t('users.edit_name_title', { name: user.name })} />
 
-            <PageHeader title="Edit user" description={`Updating ${user.name} — only admins may assign roles.`} />
+            <PageHeader title={t('users.edit_title')} description={t('users.edit_sub', { name: user.name })} />
 
             <GlassCard className="max-w-2xl p-8">
                 <form onSubmit={submit} className="space-y-5">
-                    <FormField label="Full name" required error={errors.name} htmlFor="name">
+                    <FormField label={t('users.full_name')} required error={errors.name} htmlFor="name">
                         <TextInput id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required autoFocus />
                     </FormField>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Email" required error={errors.email} htmlFor="email">
+                        <FormField label={t('common.email')} required error={errors.email} htmlFor="email">
                             <TextInput id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required />
                         </FormField>
-                        <FormField label="Phone" error={errors.phone} htmlFor="phone">
-                            <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder="05xxxxxxxx" />
+                        <FormField label={t('common.phone')} error={errors.phone} htmlFor="phone">
+                            <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder={t('common.phone_placeholder')} />
                         </FormField>
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="New password" error={errors.password} hint="Leave blank to keep the current password." htmlFor="password">
+                        <FormField label={t('users.new_password')} error={errors.password} hint={t('users.password_hint')} htmlFor="password">
                             <TextInput id="password" type="password" value={data.password} onChange={(e) => setData('password', e.target.value)} autoComplete="new-password" />
                         </FormField>
-                        <FormField label="Confirm new password" error={errors.password_confirmation} htmlFor="password_confirmation">
+                        <FormField label={t('users.confirm_new_password')} error={errors.password_confirmation} htmlFor="password_confirmation">
                             <TextInput id="password_confirmation" type="password" value={data.password_confirmation} onChange={(e) => setData('password_confirmation', e.target.value)} autoComplete="new-password" />
                         </FormField>
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Role" required error={errors.role} htmlFor="role">
+                        <FormField label={t('users.role')} required error={errors.role} htmlFor="role">
                             <SelectInput
                                 id="role"
                                 value={data.role}
@@ -80,13 +82,13 @@ export default function Edit({ user, roleOptions, suppliers }: EditProps) {
                         </FormField>
 
                         {showSupplier && (
-                            <FormField label="Supplier" required error={errors.supplier_id} htmlFor="supplier_id">
+                            <FormField label={t('common.supplier')} required error={errors.supplier_id} htmlFor="supplier_id">
                                 <SelectInput
                                     id="supplier_id"
                                     value={data.supplier_id}
                                     onChange={(e) => setData('supplier_id', e.target.value)}
                                     options={suppliers.map((s) => ({ value: s.id, label: s.name }))}
-                                    placeholder="Select a supplier"
+                                    placeholder={t('users.select_supplier')}
                                 />
                             </FormField>
                         )}
@@ -99,14 +101,14 @@ export default function Edit({ user, roleOptions, suppliers }: EditProps) {
                             onChange={(e) => setData('is_active', e.target.checked)}
                             className="h-4 w-4 rounded border-white/20 bg-white/5 text-accent focus:ring-accent/40"
                         />
-                        Account is active
+                        {t('users.account_active')}
                     </label>
 
                     <div className="flex items-center justify-end gap-3 pt-2">
                         <GlassButton href={route('users.show', user.id)} variant="secondary">
-                            Cancel
+                            {t('common.cancel')}
                         </GlassButton>
-                        <PrimaryButton disabled={processing}>{processing ? 'Saving…' : 'Save changes'}</PrimaryButton>
+                        <PrimaryButton disabled={processing}>{processing ? t('common.saving') : t('common.save_changes')}</PrimaryButton>
                     </div>
                 </form>
             </GlassCard>

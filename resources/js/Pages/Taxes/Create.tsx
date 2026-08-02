@@ -5,9 +5,11 @@ import GlassButton from '@/Components/GlassButton';
 import FormField from '@/Components/FormField';
 import TextInput from '@/Components/TextInput';
 import PrimaryButton from '@/Components/PrimaryButton';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function Create() {
+    const { t } = useI18n();
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         rate: '',
@@ -22,17 +24,17 @@ export default function Create() {
 
     return (
         <AuthenticatedLayout>
-            <Head title="New tax rate" />
+            <Head title={t('tax.new')} />
 
-            <PageHeader title="New tax rate" description="Applied per invoice line — e.g. VAT 15%." />
+            <PageHeader title={t('tax.new')} description={t('tax.create_sub')} />
 
             <GlassCard className="max-w-xl p-8">
                 <form onSubmit={submit} className="space-y-5">
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Name" required error={errors.name} htmlFor="name">
+                        <FormField label={t('tax.name')} required error={errors.name} htmlFor="name">
                             <TextInput id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required autoFocus />
                         </FormField>
-                        <FormField label="Rate (%)" required error={errors.rate} htmlFor="rate">
+                        <FormField label={t('tax.rate')} required error={errors.rate} htmlFor="rate">
                             <TextInput
                                 id="rate"
                                 type="number"
@@ -53,7 +55,7 @@ export default function Create() {
                             checked={data.is_default}
                             onChange={(e) => setData('is_default', e.target.checked)}
                         />
-                        Use as the default rate for new invoices
+                        {t('tax.is_default')}
                     </label>
                     <label className="flex cursor-pointer items-center gap-2 text-sm text-white/70">
                         <input
@@ -62,12 +64,12 @@ export default function Create() {
                             checked={data.is_active}
                             onChange={(e) => setData('is_active', e.target.checked)}
                         />
-                        Active immediately
+                        {t('tax.active_immediately')}
                     </label>
 
                     <div className="flex items-center justify-end gap-3 border-t border-white/[0.06] pt-5">
-                        <GlassButton href={route('taxes.index')} variant="secondary">Cancel</GlassButton>
-                        <PrimaryButton disabled={processing}>{processing ? 'Creating…' : 'Create tax rate'}</PrimaryButton>
+                        <GlassButton href={route('taxes.index')} variant="secondary">{t('common.cancel')}</GlassButton>
+                        <PrimaryButton disabled={processing}>{processing ? t('tax.creating') : t('tax.create')}</PrimaryButton>
                     </div>
                 </form>
             </GlassCard>

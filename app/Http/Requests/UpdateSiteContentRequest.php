@@ -24,7 +24,7 @@ class UpdateSiteContentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.required' => 'No content was submitted.',
+            'content.required' => trans('validation.app.content_required'),
         ];
     }
 

@@ -95,7 +95,7 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 
     // ---- Accounting settings ----
     Route::middleware('role:admin,accountant')->group(function () {
-        Route::resource('taxes', TaxRateController::class)->parameters(['tax' => 'taxRate'])->except(['show']);
+        Route::resource('taxes', TaxRateController::class)->parameters(['taxes' => 'taxRate'])->except(['show']);
         Route::resource('currencies', CurrencyController::class)->except(['show']);
         Route::get('exchange-rates', [ExchangeRateController::class, 'index'])->name('exchange-rates.index');
         Route::post('exchange-rates', [ExchangeRateController::class, 'store'])->name('exchange-rates.store');

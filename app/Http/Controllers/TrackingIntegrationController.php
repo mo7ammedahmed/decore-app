@@ -104,7 +104,7 @@ class TrackingIntegrationController extends Controller
             'is_enabled' => $data['is_enabled'],
         ], $request->user()->id);
 
-        return back()->with('success', "{$platform->label()} settings updated.");
+        return back()->with('success', 'tracking.updated');
     }
 
     public function destroy(Request $request, TrackingPlatform $platform): RedirectResponse
@@ -119,6 +119,6 @@ class TrackingIntegrationController extends Controller
             'platform' => $platform->value,
         ], $request->user()->id);
 
-        return back()->with('success', "{$platform->label()} disconnected.");
+        return back()->with('success', 'tracking.disconnected');
     }
 }

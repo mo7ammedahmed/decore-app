@@ -52,7 +52,7 @@ class ClassificationController extends Controller
 
         return redirect()
             ->route('classifications.edit', $classification)
-            ->with('success', 'Classification created successfully.');
+            ->with('success', 'classification.created');
     }
 
     public function edit(Classification $classification): Response
@@ -75,7 +75,7 @@ class ClassificationController extends Controller
 
         return redirect()
             ->route('classifications.edit', $classification)
-            ->with('success', 'Classification updated successfully.');
+            ->with('success', 'classification.updated');
     }
 
     public function destroy(Classification $classification): RedirectResponse
@@ -83,13 +83,13 @@ class ClassificationController extends Controller
         $this->authorize('delete', $classification);
 
         if (Material::query()->where('classification_id', $classification->id)->exists()) {
-            return back()->with('error', 'This classification cannot be deleted because it still has materials.');
+            return back()->with('error', 'classification.delete_has_materials');
         }
 
         $classification->delete();
 
         return redirect()
             ->route('classifications.index')
-            ->with('success', 'Classification archived.');
+            ->with('success', 'classification.archived');
     }
 }

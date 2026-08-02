@@ -6,6 +6,7 @@ import StatusBadge from '@/Components/StatusBadge';
 import EmptyState from '@/Components/EmptyState';
 import Pagination from '@/Components/Pagination';
 import GlassButton from '@/Components/GlassButton';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { Paginated, Supplier } from '@/types/domain';
 
@@ -16,31 +17,33 @@ interface SuppliersIndexProps {
 }
 
 export default function Index({ suppliers, filters, canManage }: SuppliersIndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title="Suppliers" />
+            <Head title={t('suppliers.title')} />
 
-            <PageHeader title="Suppliers" description="The vendors providing your materials.">
-                {canManage && <GlassButton href={route('suppliers.create')}>New supplier</GlassButton>}
+            <PageHeader title={t('suppliers.title')} description={t('suppliers.sub')}>
+                {canManage && <GlassButton href={route('suppliers.create')}>{t('suppliers.new')}</GlassButton>}
             </PageHeader>
 
             <GlassCard className="p-6">
-                <SearchInput filters={filters} placeholder="Search suppliers…" />
+                <SearchInput filters={filters} placeholder={t('suppliers.search_placeholder')} />
 
                 {suppliers.total === 0 ? (
-                    <EmptyState title="No suppliers found" description="Try adjusting your search or create a new supplier." />
+                    <EmptyState title={t('suppliers.empty_title')} description={t('suppliers.empty_desc')} />
                 ) : (
                     <div className="mt-5 overflow-x-auto">
                         <table className="table-glass w-full min-w-[720px]">
                             <thead>
                                 <tr>
-                                    <th>Supplier</th>
-                                    <th>Contact</th>
-                                    <th>City</th>
-                                    <th>Materials</th>
-                                    <th>Accounts</th>
-                                    <th>Status</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t('suppliers.col_supplier')}</th>
+                                    <th>{t('common.contact')}</th>
+                                    <th>{t('common.city')}</th>
+                                    <th>{t('common.materials')}</th>
+                                    <th>{t('suppliers.col_accounts')}</th>
+                                    <th>{t('common.status')}</th>
+                                    <th className="text-right">{t('common.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,7 +66,7 @@ export default function Index({ suppliers, filters, canManage }: SuppliersIndexP
                                         <td>{supplier.users_count ?? 0}</td>
                                         <td>
                                             <StatusBadge
-                                                label={supplier.is_active ? 'Active' : 'Inactive'}
+                                                label={supplier.is_active ? t('common.active') : t('common.inactive')}
                                                 tone={supplier.is_active ? 'bg-success/15 text-success' : 'bg-white/[0.06] text-white/45'}
                                             />
                                         </td>
@@ -72,7 +75,7 @@ export default function Index({ suppliers, filters, canManage }: SuppliersIndexP
                                                 href={route('suppliers.show', supplier.id)}
                                                 className="text-sm text-white/60 transition-colors hover:text-accent"
                                             >
-                                                View
+                                                {t('common.view')}
                                             </Link>
                                         </td>
                                     </tr>

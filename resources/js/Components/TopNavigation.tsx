@@ -29,6 +29,18 @@ export default function TopNavigation({ onMenuClick }: { onMenuClick: () => void
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <a
+                        href={route('landing')}
+                        title={t('nav.view_site')}
+                        aria-label={t('nav.view_site')}
+                        className="hidden rounded-full p-2 text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:inline-flex"
+                    >
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                            <path d="M15 3h6v6" />
+                            <path d="M10 14L21 3" />
+                        </svg>
+                    </a>
                     <LanguageSwitcher className="hidden sm:flex" />
                     {user?.role && (
                         <span className="hidden rounded-full bg-accent/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-accent sm:inline-block">

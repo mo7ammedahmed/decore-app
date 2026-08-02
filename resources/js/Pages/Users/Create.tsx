@@ -7,6 +7,7 @@ import TextInput from '@/Components/TextInput';
 import SelectInput from '@/Components/SelectInput';
 import PrimaryButton from '@/Components/PrimaryButton';
 import InputError from '@/Components/InputError';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import type { Supplier } from '@/types/domain';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ interface CreateProps {
 }
 
 export default function Create({ roleOptions, suppliers }: CreateProps) {
+    const { t } = useI18n();
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -37,36 +39,36 @@ export default function Create({ roleOptions, suppliers }: CreateProps) {
 
     return (
         <AuthenticatedLayout>
-            <Head title="New user" />
+            <Head title={t('users.create_title')} />
 
-            <PageHeader title="New user" description="Create an account and assign a role." />
+            <PageHeader title={t('users.create_title')} description={t('users.create_sub')} />
 
             <GlassCard className="max-w-2xl p-8">
                 <form onSubmit={submit} className="space-y-5">
-                    <FormField label="Full name" required error={errors.name} htmlFor="name">
+                    <FormField label={t('users.full_name')} required error={errors.name} htmlFor="name">
                         <TextInput id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} required autoFocus />
                     </FormField>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Email" required error={errors.email} htmlFor="email">
+                        <FormField label={t('common.email')} required error={errors.email} htmlFor="email">
                             <TextInput id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required />
                         </FormField>
-                        <FormField label="Phone" error={errors.phone} htmlFor="phone">
-                            <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder="05xxxxxxxx" />
+                        <FormField label={t('common.phone')} error={errors.phone} htmlFor="phone">
+                            <TextInput id="phone" value={data.phone} onChange={(e) => setData('phone', e.target.value)} placeholder={t('common.phone_placeholder')} />
                         </FormField>
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Password" required error={errors.password} htmlFor="password">
+                        <FormField label={t('auth.password')} required error={errors.password} htmlFor="password">
                             <TextInput id="password" type="password" value={data.password} onChange={(e) => setData('password', e.target.value)} required autoComplete="new-password" />
                         </FormField>
-                        <FormField label="Confirm password" required error={errors.password_confirmation} htmlFor="password_confirmation">
+                        <FormField label={t('auth.confirm_password')} required error={errors.password_confirmation} htmlFor="password_confirmation">
                             <TextInput id="password_confirmation" type="password" value={data.password_confirmation} onChange={(e) => setData('password_confirmation', e.target.value)} required autoComplete="new-password" />
                         </FormField>
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-                        <FormField label="Role" required error={errors.role} htmlFor="role">
+                        <FormField label={t('users.role')} required error={errors.role} htmlFor="role">
                             <SelectInput
                                 id="role"
                                 value={data.role}
@@ -79,13 +81,13 @@ export default function Create({ roleOptions, suppliers }: CreateProps) {
                         </FormField>
 
                         {showSupplier && (
-                            <FormField label="Supplier" required error={errors.supplier_id} htmlFor="supplier_id">
+                            <FormField label={t('common.supplier')} required error={errors.supplier_id} htmlFor="supplier_id">
                                 <SelectInput
                                     id="supplier_id"
                                     value={data.supplier_id}
                                     onChange={(e) => setData('supplier_id', e.target.value)}
                                     options={suppliers.map((s) => ({ value: s.id, label: s.name }))}
-                                    placeholder="Select a supplier"
+                                    placeholder={t('users.select_supplier')}
                                 />
                             </FormField>
                         )}
@@ -98,16 +100,16 @@ export default function Create({ roleOptions, suppliers }: CreateProps) {
                             onChange={(e) => setData('is_active', e.target.checked)}
                             className="h-4 w-4 rounded border-white/20 bg-white/5 text-accent focus:ring-accent/40"
                         />
-                        Account is active
+                        {t('users.account_active')}
                     </label>
 
                     {errors.is_active && <InputError>{errors.is_active}</InputError>}
 
                     <div className="flex items-center justify-end gap-3 pt-2">
                         <GlassButton href={route('users.index')} variant="secondary">
-                            Cancel
+                            {t('common.cancel')}
                         </GlassButton>
-                        <PrimaryButton disabled={processing}>{processing ? 'Creating…' : 'Create user'}</PrimaryButton>
+                        <PrimaryButton disabled={processing}>{processing ? t('common.creating') : t('users.create')}</PrimaryButton>
                     </div>
                 </form>
             </GlassCard>

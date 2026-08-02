@@ -6,12 +6,11 @@ import StatusBadge from '@/Components/StatusBadge';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import PaymentProgress from '@/Components/PaymentProgress';
 import ConfirmDialog from '@/Components/ConfirmDialog';
+import { invoiceStatusKey, paymentMethodKey, paymentStatusKey, useI18n } from '@/Utilities/i18n';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { Invoice, Payment } from '@/types/domain';
 import {
-    INVOICE_STATUS_LABELS,
-    PAYMENT_STATUS_LABELS,
     formatDate,
     formatDateTime,
     invoiceTone,
@@ -26,15 +25,8 @@ interface ShowProps {
     baseCurrency: string;
 }
 
-const METHOD_LABELS: Record<string, string> = {
-    cash: 'Cash',
-    bank_transfer: 'Bank transfer',
-    card: 'Card',
-    cheque: 'Cheque',
-    other: 'Other',
-};
-
 export default function Show({ invoice, canEdit, canManage, canRecordPayment, baseCurrency }: ShowProps) {
+    const { t } = useI18n();
     const [confirmingCancel, setConfirmingCancel] = useState(false);
     const [confirmingReverse, setConfirmingReverse] = useState<Payment | null>(null);
     const issueForm = useForm({});
@@ -47,16 +39,19 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
 
     return (
         <AuthenticatedLayout>
-            <Head title={`Invoice ${invoice.invoice_number}`} />
+            <Head title={t('invoices.show_title', { number: invoice.invoice_number })} />
 
             <PageHeader
                 title={invoice.invoice_number}
-                description={`Issued ${formatDate(invoice.issue_date)} · ${invoice.customer?.name ?? 'Unknown customer'}`}
+                description={t('invoices.show_sub', {
+                    date: formatDate(invoice.issue_date),
+                    customer: invoice.customer?.name ?? t('invoices.unknown_customer'),
+                })}
             >
-                <GlassButton href={route('invoices.print', invoice.id)} variant="secondary">Print</GlassButton>
-                {canEdit && <GlassButton href={route('invoices.edit', invoice.id)} variant="secondary">Edit</GlassButton>}
+                <GlassButton href={route('invoices.print', invoice.id)} variant="secondary">{t('invoices.print')}</GlassButton>
+                {canEdit && <GlassButton href={route('invoices.edit', invoice.id)} variant="secondary">{t('common.edit')}</GlassButton>}
                 {canRecordPayment && (
-                    <GlassButton href={route('payments.create', invoice.id)}>Record payment</GlassButton>
+                    <GlassButton href={route('payments.create', invoice.id)}>{t('invoices.record_payment')}</GlassButton>
                 )}
                 {canManage && invoice.status === 'draft' && (
                     <GlassButton
@@ -64,7 +59,7 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                         disabled={issueForm.processing}
                         as="button"
                     >
-                        {issueForm.processing ? 'Issuing…' : 'Issue invoice'}
+                        {issueForm.processing ? t('invoices.issuing') : t('invoices.issue')}
                     </GlassButton>
                 )}
                 {canManage && invoice.status === 'issued' && (
@@ -73,12 +68,12 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                         disabled={completeForm.processing}
                         as="button"
                     >
-                        {completeForm.processing ? 'Completing…' : 'Mark completed'}
+                        {completeForm.processing ? t('invoices.completing') : t('invoices.mark_completed')}
                     </GlassButton>
                 )}
                 {canManage && ['draft', 'issued'].includes(invoice.status) && (
                     <GlassButton onClick={() => setConfirmingCancel(true)} variant="danger" as="button">
-                        Cancel
+                        {t('common.cancel')}
                     </GlassButton>
                 )}
             </PageHeader>
@@ -87,12 +82,16 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                 <div className="space-y-6 lg:col-span-2">
                     <GlassCard className="p-6">
                         <div className="flex flex-wrap items-center gap-3">
-                            <StatusBadge label={INVOICE_STATUS_LABELS[invoice.status]} tone={invoiceTone(invoice.status)} />
-                            <StatusBadge label={PAYMENT_STATUS_LABELS[invoice.payment_status]} tone={paymentTone(invoice.payment_status)} />
+                            <StatusBadge label={t(invoiceStatusKey(invoice.status))} tone={invoiceTone(invoice.status)} />
+                            <StatusBadge label={t(paymentStatusKey(invoice.payment_status))} tone={paymentTone(invoice.payment_status)} />
                             <span className="ml-auto text-xs text-white/40">
                                 {invoice.base_currency_code !== invoice.currency_code
-                                    ? `Rate ${invoice.exchange_rate} ${invoice.currency_code} → ${invoice.base_currency_code}`
-                                    : `Billed in ${invoice.currency_code}`}
+                                    ? t('invoices.rate_note', {
+                                          rate: invoice.exchange_rate,
+                                          code: invoice.currency_code,
+                                          base: invoice.base_currency_code,
+                                      })
+                                    : t('invoices.billed_in', { code: invoice.currency_code })}
                             </span>
                         </div>
 
@@ -100,12 +99,12 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                             <table className="table-glass w-full min-w-[640px]">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
-                                        <th>Qty</th>
-                                        <th className="text-right">Unit price</th>
-                                        <th className="text-right">Discount</th>
-                                        <th className="text-right">Tax</th>
-                                        <th className="text-right">Total</th>
+                                        <th>{t('invoices.col_item')}</th>
+                                        <th>{t('invoices.col_qty')}</th>
+                                        <th className="text-right">{t('invoices.col_unit_price')}</th>
+                                        <th className="text-right">{t('invoices.col_discount')}</th>
+                                        <th className="text-right">{t('invoices.col_tax')}</th>
+                                        <th className="text-right">{t('common.total')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -146,27 +145,27 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
 
                         <dl className="mt-6 ml-auto max-w-xs space-y-2.5 text-sm">
                             <div className="flex justify-between">
-                                <dt className="text-white/50">Subtotal</dt>
+                                <dt className="text-white/50">{t('invoices.subtotal')}</dt>
                                 <dd className="tabular-nums text-white/85">
                                     <MoneyDisplay value={invoice.subtotal} currency={currency} />
                                 </dd>
                             </div>
                             {Number(invoice.discount_total) > 0 && (
                                 <div className="flex justify-between">
-                                    <dt className="text-white/50">Discount</dt>
+                                    <dt className="text-white/50">{t('invoices.col_discount')}</dt>
                                     <dd className="tabular-nums text-danger">
                                         − <MoneyDisplay value={invoice.discount_total} currency={currency} />
                                     </dd>
                                 </div>
                             )}
                             <div className="flex justify-between">
-                                <dt className="text-white/50">Tax</dt>
+                                <dt className="text-white/50">{t('invoices.col_tax')}</dt>
                                 <dd className="tabular-nums text-white/85">
                                     <MoneyDisplay value={invoice.tax_total} currency={currency} />
                                 </dd>
                             </div>
                             <div className="flex justify-between border-t border-white/[0.08] pt-3">
-                                <dt className="font-heading text-lg italic text-white">Total</dt>
+                                <dt className="font-heading text-lg italic text-white">{t('common.total')}</dt>
                                 <dd className="font-heading text-lg italic tabular-nums text-accent">
                                     <MoneyDisplay value={invoice.total} currency={currency} />
                                 </dd>
@@ -175,16 +174,16 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
 
                         {invoice.notes && (
                             <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-                                <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">Notes</p>
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">{t('common.notes')}</p>
                                 <p className="mt-1 text-sm text-white/70">{invoice.notes}</p>
                             </div>
                         )}
                     </GlassCard>
 
                     <GlassCard className="p-6">
-                        <h2 className="font-heading text-xl italic text-white">Payment history</h2>
+                        <h2 className="font-heading text-xl italic text-white">{t('invoices.payment_history')}</h2>
                         {payments.length === 0 ? (
-                            <p className="mt-4 text-sm text-white/40">No payments recorded yet.</p>
+                            <p className="mt-4 text-sm text-white/40">{t('invoices.no_payments')}</p>
                         ) : (
                             <div className="mt-4 space-y-3">
                                 {payments.map((payment) => (
@@ -197,16 +196,16 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                                                 {payment.payment_number}
                                                 {payment.reversed_at && (
                                                     <span className="ml-2 text-xs font-medium uppercase tracking-wider text-danger">
-                                                        Reversed
+                                                        {t('invoices.reversed')}
                                                     </span>
                                                 )}
                                             </p>
                                             <p className="mt-0.5 text-xs text-white/40">
-                                                {METHOD_LABELS[payment.payment_method] ?? payment.payment_method} ·{' '}
-                                                {formatDateTime(payment.paid_at)} · by {payment.recorder?.name ?? '—'}
+                                                {t(paymentMethodKey(payment.payment_method))} ·{' '}
+                                                {formatDateTime(payment.paid_at)} · {t('invoices.by', { name: payment.recorder?.name ?? '—' })}
                                             </p>
                                             {payment.reference && (
-                                                <p className="mt-0.5 text-xs text-white/35">Ref: {payment.reference}</p>
+                                                <p className="mt-0.5 text-xs text-white/35">{t('invoices.ref', { reference: payment.reference })}</p>
                                             )}
                                         </div>
                                         <div className="flex items-center gap-4">
@@ -220,7 +219,7 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                                                     onClick={() => setConfirmingReverse(payment)}
                                                     className="text-xs font-medium text-white/40 transition-colors hover:text-danger"
                                                 >
-                                                    Reverse
+                                                    {t('invoices.reverse')}
                                                 </button>
                                             )}
                                         </div>
@@ -233,7 +232,7 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
 
                 <div className="space-y-6">
                     <GlassCard className="p-6">
-                        <h2 className="font-heading text-xl italic text-white">Payment progress</h2>
+                        <h2 className="font-heading text-xl italic text-white">{t('invoices.payment_progress')}</h2>
                         <div className="mt-4">
                             <PaymentProgress invoice={invoice} currency={baseCurrency} />
                         </div>
@@ -242,28 +241,28 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                                 href={route('payments.create', invoice.id)}
                                 className="mt-5 block w-full rounded-full bg-accent/15 py-2.5 text-center text-sm font-medium text-accent transition-colors hover:bg-accent/25"
                             >
-                                Record a payment
+                                {t('invoices.record_payment_link')}
                             </Link>
                         )}
                     </GlassCard>
 
                     <GlassCard className="p-6">
-                        <h2 className="font-heading text-xl italic text-white">Details</h2>
+                        <h2 className="font-heading text-xl italic text-white">{t('common.details')}</h2>
                         <dl className="mt-4 space-y-3 text-sm">
                             <div className="flex justify-between">
-                                <dt className="text-white/40">Customer</dt>
+                                <dt className="text-white/40">{t('invoices.customer')}</dt>
                                 <dd className="text-right text-white/80">{invoice.customer?.name ?? '—'}</dd>
                             </div>
                             <div className="flex justify-between">
-                                <dt className="text-white/40">Created by</dt>
+                                <dt className="text-white/40">{t('invoices.created_by')}</dt>
                                 <dd className="text-right text-white/80">{invoice.creator?.name ?? '—'}</dd>
                             </div>
                             <div className="flex justify-between">
-                                <dt className="text-white/40">Due date</dt>
+                                <dt className="text-white/40">{t('common.due_date')}</dt>
                                 <dd className="text-right text-white/80">{formatDate(invoice.due_date)}</dd>
                             </div>
                             <div className="flex justify-between">
-                                <dt className="text-white/40">Base total</dt>
+                                <dt className="text-white/40">{t('invoices.base_total')}</dt>
                                 <dd className="text-right text-white/80">
                                     <MoneyDisplay value={invoice.base_total} currency={invoice.base_currency_code} />
                                 </dd>
@@ -277,9 +276,9 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                 open={confirmingCancel}
                 onClose={() => setConfirmingCancel(false)}
                 onConfirm={() => cancelForm.post(route('invoices.cancel', invoice.id))}
-                title="Cancel this invoice?"
-                message="A cancelled invoice keeps its history but can no longer receive payments. This cannot be undone."
-                confirmLabel="Cancel invoice"
+                title={t('invoices.cancel_confirm_title')}
+                message={t('invoices.cancel_confirm_message')}
+                confirmLabel={t('invoices.cancel_confirm_label')}
                 processing={cancelForm.processing}
             />
 
@@ -290,9 +289,9 @@ export default function Show({ invoice, canEdit, canManage, canRecordPayment, ba
                     confirmingReverse &&
                     reverseForm.post(route('payments.reverse', confirmingReverse.id))
                 }
-                title="Reverse this payment?"
-                message="The payment record is preserved for audit, but the amount is removed from the invoice balance."
-                confirmLabel="Reverse payment"
+                title={t('invoices.reverse_confirm_title')}
+                message={t('invoices.reverse_confirm_message')}
+                confirmLabel={t('invoices.reverse_confirm_label')}
                 processing={reverseForm.processing}
             />
         </AuthenticatedLayout>

@@ -1,5 +1,6 @@
 import type { DiscountType } from '@/types/domain';
 import { money } from '@/Utilities/format';
+import { useI18n } from '@/Utilities/i18n';
 import type { ItemTotals } from '@/Components/InvoiceItemsEditor';
 
 interface InvoiceSummaryProps {
@@ -21,6 +22,7 @@ export default function InvoiceSummary({
     onDiscountValueChange,
     editable = true,
 }: InvoiceSummaryProps) {
+    const { t } = useI18n();
     const subtotal = Number(totals.subtotal) || 0;
     const invoiceDiscount =
         discountType === 'percentage'
@@ -32,20 +34,20 @@ export default function InvoiceSummary({
 
     return (
         <div className="liquid-glass rounded-[1.25rem] p-6">
-            <h3 className="font-heading text-xl italic text-white">Summary</h3>
+            <h3 className="font-heading text-xl italic text-white">{t('invoice_summary.summary')}</h3>
 
             <div className="mt-5 space-y-3 text-sm">
                 <div className="flex items-center justify-between">
-                    <span className="text-white/50">Subtotal</span>
+                    <span className="text-white/50">{t('invoice_summary.subtotal')}</span>
                     <span className="tabular-nums text-white/85">{money(totals.subtotal, currency)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                    <span className="text-white/50">Line discounts</span>
+                    <span className="text-white/50">{t('invoice_summary.line_discounts')}</span>
                     <span className="tabular-nums text-white/85">− {money(totals.discount, currency)}</span>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-white/[0.06] pt-3">
-                    <span className="text-white/50">Invoice discount</span>
+                    <span className="text-white/50">{t('invoice_summary.invoice_discount')}</span>
                     {editable ? (
                         <div className="flex items-center gap-2">
                             <select
@@ -53,9 +55,9 @@ export default function InvoiceSummary({
                                 value={discountType}
                                 onChange={(e) => onDiscountTypeChange(e.target.value as DiscountType)}
                             >
-                                <option value="none" className="bg-neutral-900">None</option>
+                                <option value="none" className="bg-neutral-900">{t('invoice_summary.none')}</option>
                                 <option value="percentage" className="bg-neutral-900">%</option>
-                                <option value="fixed" className="bg-neutral-900">Fixed</option>
+                                <option value="fixed" className="bg-neutral-900">{t('invoice_summary.fixed')}</option>
                             </select>
                             {discountType !== 'none' && (
                                 <input
@@ -76,12 +78,12 @@ export default function InvoiceSummary({
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <span className="text-white/50">Tax total</span>
+                    <span className="text-white/50">{t('invoice_summary.tax_total')}</span>
                     <span className="tabular-nums text-white/85">{money(totals.tax, currency)}</span>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-white/[0.08] pt-4">
-                    <span className="font-heading text-lg italic text-white">Total</span>
+                    <span className="font-heading text-lg italic text-white">{t('invoice_summary.total')}</span>
                     <span className="font-heading text-2xl italic tabular-nums text-accent">
                         {money(grandTotal.toFixed(2), currency)}
                     </span>

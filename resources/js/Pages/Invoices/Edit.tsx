@@ -10,6 +10,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import InvoiceItemsEditor, { computeItemTotals, type EditableItem } from '@/Components/InvoiceItemsEditor';
 import InvoiceSummary from '@/Components/InvoiceSummary';
 import InlineCustomerFields, { blankCustomer, type NewCustomer } from '@/Components/InlineCustomerFields';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { DiscountType, Invoice, Material } from '@/types/domain';
@@ -24,6 +25,7 @@ interface EditProps {
 }
 
 export default function Edit({ invoice, customers, materials, taxRates, permissions, canCreateCustomer }: EditProps) {
+    const { t } = useI18n();
     const canManageCosts = permissions?.manageCosts ?? false;
     const [addingCustomer, setAddingCustomer] = useState(false);
 
@@ -61,11 +63,11 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
 
     return (
         <AuthenticatedLayout>
-            <Head title={`Edit ${invoice.invoice_number}`} />
+            <Head title={t('invoices.edit_title', { number: invoice.invoice_number })} />
 
             <PageHeader
-                title={`Edit ${invoice.invoice_number}`}
-                description="This draft is editable. Issued invoices are locked."
+                title={t('invoices.edit_title', { number: invoice.invoice_number })}
+                description={t('invoices.edit_sub')}
             />
 
             <form onSubmit={submit}>
@@ -85,13 +87,13 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
                                         }}
                                     />
                                 ) : (
-                                    <FormField label="Customer" required error={errors.customer_id} htmlFor="customer_id">
+                                    <FormField label={t('invoices.customer')} required error={errors.customer_id} htmlFor="customer_id">
                                         <SelectInput
                                             id="customer_id"
                                             options={customers.map((c) => ({ value: c.id, label: c.name }))}
                                             value={data.customer_id}
                                             onChange={(e) => setData('customer_id', e.target.value)}
-                                            placeholder="Select customer…"
+                                            placeholder={t('invoices.select_customer')}
                                         />
                                         {canCreateCustomer && (
                                             <button
@@ -102,20 +104,20 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
                                                 }}
                                                 className="mt-2 text-xs font-medium text-white/50 transition-colors hover:text-accent"
                                             >
-                                                ＋ New customer
+                                                {t('invoices.new_customer_link')}
                                             </button>
                                         )}
                                     </FormField>
                                 )}
                                 <div className="flex items-end gap-3">
-                                    <FormField label="Issue date" required error={errors.issue_date} htmlFor="issue_date">
+                                    <FormField label={t('common.issue_date')} required error={errors.issue_date} htmlFor="issue_date">
                                         <DateInput
                                             id="issue_date"
                                             value={data.issue_date}
                                             onChange={(e) => setData('issue_date', e.target.value)}
                                         />
                                     </FormField>
-                                    <FormField label="Due date" error={errors.due_date} htmlFor="due_date">
+                                    <FormField label={t('common.due_date')} error={errors.due_date} htmlFor="due_date">
                                         <DateInput
                                             id="due_date"
                                             value={data.due_date}
@@ -127,7 +129,7 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
                         </GlassCard>
 
                         <GlassCard className="p-6">
-                            <h2 className="font-heading text-xl italic text-white">Line items</h2>
+                            <h2 className="font-heading text-xl italic text-white">{t('invoices.line_items')}</h2>
                             <div className="mt-5">
                                 <InvoiceItemsEditor
                                     items={data.items}
@@ -141,7 +143,7 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
                         </GlassCard>
 
                         <GlassCard className="p-6">
-                            <FormField label="Notes" error={errors.notes} htmlFor="notes">
+                            <FormField label={t('common.notes')} error={errors.notes} htmlFor="notes">
                                 <Textarea id="notes" value={data.notes} onChange={(e) => setData('notes', e.target.value)} />
                             </FormField>
                         </GlassCard>
@@ -159,10 +161,10 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
 
                         <GlassCard className="p-6">
                             <PrimaryButton className="w-full" disabled={processing}>
-                                {processing ? 'Saving…' : 'Save draft'}
+                                {processing ? t('common.saving') : t('invoices.save_draft')}
                             </PrimaryButton>
                             <p className="mt-3 text-xs leading-relaxed text-white/40">
-                                Currency is fixed at {invoice.currency_code} for this document.
+                                {t('invoices.currency_fixed', { code: invoice.currency_code })}
                             </p>
                         </GlassCard>
                     </div>
@@ -170,7 +172,7 @@ export default function Edit({ invoice, customers, materials, taxRates, permissi
             </form>
 
             <div className="mt-6">
-                <GlassButton href={route('invoices.show', invoice.id)} variant="secondary">Back to invoice</GlassButton>
+                <GlassButton href={route('invoices.show', invoice.id)} variant="secondary">{t('invoices.back_to_invoice')}</GlassButton>
             </div>
         </AuthenticatedLayout>
     );

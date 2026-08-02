@@ -196,6 +196,46 @@ return [
     |
     */
 
-    'attributes' => [],
+    /*
+    |--------------------------------------------------------------------------
+    | App-Specific Validation Messages
+    |--------------------------------------------------------------------------
+    |
+    | Messages for the rules declared in the application's Form Requests.
+    | They are referenced via trans('validation.app.*') so they resolve in the
+    | active locale (SetLocale middleware) — same mechanism as the defaults.
+    |
+    */
+
+    'app' => [
+        'image_invalid' => 'The uploaded file is not a valid image.',
+        'image_mimes' => 'Only JPEG, PNG and WebP images are accepted.',
+        'image_max_2mb' => 'Images must be 2MB or smaller.',
+        'gallery_image_max_7mb' => 'Gallery images must be 7MB or smaller.',
+        'images_required' => 'Select at least one image to upload.',
+        'currencies_differ' => 'The base and quote currencies must differ.',
+        'rate_positive' => 'The exchange rate must be greater than zero.',
+        'items_required' => 'Add at least one line item.',
+        'quantity_positive' => 'Quantity must be greater than zero.',
+        'unit_price_non_negative' => 'Unit price cannot be negative.',
+        'unit_cost_non_negative' => 'Unit cost cannot be negative.',
+        'customer_name_required' => 'Customer name is required when adding a new customer.',
+        'payment_amount_positive' => 'Payment amounts must be greater than zero.',
+        'supplier_required_for_supplier' => 'A supplier must be selected for supplier accounts.',
+        'portrait_image' => 'The portrait must be an image file (JPEG, PNG or WebP).',
+        'portrait_max_4mb' => 'The portrait must not be larger than 4 MB.',
+        'logo_image' => 'The logo must be an image file (JPEG, PNG or WebP).',
+        'logo_max_2mb' => 'The logo must not be larger than 2 MB.',
+        'hex_accent' => 'The accent colour must be a valid hex value, e.g. #8a6d3b.',
+        'content_required' => 'No content was submitted.',
+        'material_missing_supplier_classification' => 'The material is missing its supplier or classification.',
+    ],
+
+    'attributes' => [
+        'shop_name' => 'shop name',
+        'theme_dark_accent' => 'dark accent colour',
+        'theme_dark_background' => 'dark background colour',
+        'theme_light_accent' => 'light accent colour',
+    ],
 
 ];

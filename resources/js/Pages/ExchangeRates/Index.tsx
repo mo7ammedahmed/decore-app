@@ -8,6 +8,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import Pagination from '@/Components/Pagination';
 import EmptyState from '@/Components/EmptyState';
 import ConfirmDialog from '@/Components/ConfirmDialog';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { ExchangeRate, Paginated } from '@/types/domain';
@@ -20,6 +21,7 @@ interface IndexProps {
 }
 
 export default function Index({ rates, currencies }: IndexProps) {
+    const { t } = useI18n();
     const { data, setData, post, processing, errors } = useForm({
         base_currency_code: '',
         quote_currency_code: '',
@@ -36,36 +38,36 @@ export default function Index({ rates, currencies }: IndexProps) {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Exchange rates" />
+            <Head title={t('exchange_rates.title')} />
 
             <PageHeader
-                title="Exchange rates"
-                description="Daily rates used to convert invoice totals into the base currency."
+                title={t('exchange_rates.title')}
+                description={t('exchange_rates.sub')}
             />
 
             <div className="grid gap-6 lg:grid-cols-3">
                 <GlassCard className="p-6 lg:col-span-1">
-                    <h2 className="font-heading text-xl italic text-white">Add a rate</h2>
+                    <h2 className="font-heading text-xl italic text-white">{t('exchange_rates.add')}</h2>
                     <form onSubmit={submit} className="mt-5 space-y-4">
-                        <FormField label="Base currency" required error={errors.base_currency_code} htmlFor="base_currency_code">
+                        <FormField label={t('exchange_rates.base_currency')} required error={errors.base_currency_code} htmlFor="base_currency_code">
                             <SelectInput
                                 id="base_currency_code"
                                 options={currencies.map((c) => ({ value: c.code, label: `${c.code} — ${c.name}` }))}
                                 value={data.base_currency_code}
                                 onChange={(e) => setData('base_currency_code', e.target.value)}
-                                placeholder="Select…"
+                                placeholder={t('exchange_rates.select')}
                             />
                         </FormField>
-                        <FormField label="Quote currency" required error={errors.quote_currency_code} htmlFor="quote_currency_code">
+                        <FormField label={t('exchange_rates.quote_currency')} required error={errors.quote_currency_code} htmlFor="quote_currency_code">
                             <SelectInput
                                 id="quote_currency_code"
                                 options={currencies.map((c) => ({ value: c.code, label: `${c.code} — ${c.name}` }))}
                                 value={data.quote_currency_code}
                                 onChange={(e) => setData('quote_currency_code', e.target.value)}
-                                placeholder="Select…"
+                                placeholder={t('exchange_rates.select')}
                             />
                         </FormField>
-                        <FormField label="Rate" required error={errors.rate} htmlFor="rate" hint="1 base currency = X quote currency.">
+                        <FormField label={t('exchange_rates.rate')} required error={errors.rate} htmlFor="rate" hint={t('exchange_rates.rate_hint')}>
                             <TextInput
                                 id="rate"
                                 type="number"
@@ -76,7 +78,7 @@ export default function Index({ rates, currencies }: IndexProps) {
                                 required
                             />
                         </FormField>
-                        <FormField label="Effective date" required error={errors.effective_date} htmlFor="effective_date">
+                        <FormField label={t('exchange_rates.effective_date')} required error={errors.effective_date} htmlFor="effective_date">
                             <TextInput
                                 id="effective_date"
                                 type="date"
@@ -86,26 +88,26 @@ export default function Index({ rates, currencies }: IndexProps) {
                             />
                         </FormField>
                         <PrimaryButton className="w-full" disabled={processing}>
-                            {processing ? 'Saving…' : 'Save rate'}
+                            {processing ? t('common.saving') : t('exchange_rates.save_rate')}
                         </PrimaryButton>
                     </form>
                 </GlassCard>
 
                 <GlassCard className="p-6 lg:col-span-2">
-                    <h2 className="font-heading text-xl italic text-white">Rate history</h2>
+                    <h2 className="font-heading text-xl italic text-white">{t('exchange_rates.history')}</h2>
                     {rates.total === 0 ? (
                         <div className="mt-4">
-                            <EmptyState title="No rates yet" description="Add the first exchange rate above." />
+                            <EmptyState title={t('exchange_rates.empty_title')} description={t('exchange_rates.empty_desc')} />
                         </div>
                     ) : (
                         <div className="mt-4 overflow-x-auto">
                             <table className="table-glass w-full min-w-[560px]">
                                 <thead>
                                     <tr>
-                                        <th>Pair</th>
-                                        <th>Effective date</th>
-                                        <th className="text-right">Rate</th>
-                                        <th className="text-right">Actions</th>
+                                        <th>{t('exchange_rates.col_pair')}</th>
+                                        <th>{t('exchange_rates.col_effective_date')}</th>
+                                        <th className="text-right">{t('exchange_rates.col_rate')}</th>
+                                        <th className="text-right">{t('common.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,7 +126,7 @@ export default function Index({ rates, currencies }: IndexProps) {
                                                     onClick={() => setConfirmingDelete(rate)}
                                                     className="text-xs font-medium text-white/40 transition-colors hover:text-danger"
                                                 >
-                                                    Delete
+                                                    {t('common.delete')}
                                                 </button>
                                             </td>
                                         </tr>
@@ -143,9 +145,9 @@ export default function Index({ rates, currencies }: IndexProps) {
                 onConfirm={() =>
                     confirmingDelete && deleteForm.delete(route('exchange-rates.destroy', confirmingDelete.id))
                 }
-                title="Delete this exchange rate?"
-                message="Historical invoices keep the rate they were issued with. Only this rate record is removed."
-                confirmLabel="Delete rate"
+                title={t('exchange_rates.delete_confirm_title')}
+                message={t('exchange_rates.delete_confirm_message')}
+                confirmLabel={t('exchange_rates.delete_confirm_label')}
                 processing={deleteForm.processing}
             />
         </AuthenticatedLayout>

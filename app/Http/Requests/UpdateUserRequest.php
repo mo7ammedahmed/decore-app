@@ -36,7 +36,10 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'supplier_id.required_if' => 'A supplier must be selected for supplier accounts.',
+            // Rule::requiredIf() compiles to the `required` rule, so the
+            // custom message must be keyed `supplier_id.required` (a previous
+            // `required_if` key silently fell back to the generic message).
+            'supplier_id.required' => trans('validation.app.supplier_required_for_supplier'),
         ];
     }
 }

@@ -4,6 +4,7 @@ import GlassCard from '@/Components/GlassCard';
 import MoneyDisplay from '@/Components/MoneyDisplay';
 import StatusBadge from '@/Components/StatusBadge';
 import EmptyState from '@/Components/EmptyState';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, router } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { formatDate, formatDateTime, invoiceTone } from '@/Utilities/format';
@@ -18,24 +19,26 @@ interface ReportProps {
     [key: string]: unknown;
 }
 
-const REPORTS: { value: string; label: string }[] = [
-    { value: 'revenue', label: 'Revenue' },
-    { value: 'outstanding', label: 'Outstanding' },
-    { value: 'payments', label: 'Payments' },
-    { value: 'costs', label: 'Costs' },
-    { value: 'profit', label: 'Profit' },
-    { value: 'sales_by_staff', label: 'Sales by staff' },
-    { value: 'materials', label: 'Materials' },
-];
-
-const PERIODS: { value: string; label: string }[] = [
-    { value: 'today', label: 'Today' },
-    { value: 'week', label: 'This week' },
-    { value: 'month', label: 'This month' },
-    { value: 'year', label: 'This year' },
-];
-
 export default function ReportsIndex({ report, period, periodBounds, title, summary, rows }: ReportProps) {
+    const { t } = useI18n();
+
+    const REPORTS: { value: string; label: string }[] = [
+        { value: 'revenue', label: t('reports.revenue') },
+        { value: 'outstanding', label: t('reports.outstanding') },
+        { value: 'payments', label: t('reports.payments') },
+        { value: 'costs', label: t('reports.costs') },
+        { value: 'profit', label: t('reports.profit') },
+        { value: 'sales_by_staff', label: t('reports.sales_by_staff') },
+        { value: 'materials', label: t('reports.materials') },
+    ];
+
+    const PERIODS: { value: string; label: string }[] = [
+        { value: 'today', label: t('reports.today') },
+        { value: 'week', label: t('reports.week') },
+        { value: 'month', label: t('reports.month') },
+        { value: 'year', label: t('reports.year') },
+    ];
+
     const switchReport = (value: string) => {
         router.get(route('reports.index'), { report: value, period }, { preserveState: true, replace: true });
     };
@@ -46,7 +49,7 @@ export default function ReportsIndex({ report, period, periodBounds, title, summ
 
     return (
         <AuthenticatedLayout>
-            <Head title="Reports" />
+            <Head title={t('reports.title')} />
 
             <PageHeader title={title} description={`${formatDate(periodBounds.from)} → ${formatDate(periodBounds.to)}`}>
                 <div className="flex flex-wrap items-center gap-2">
@@ -97,7 +100,7 @@ export default function ReportsIndex({ report, period, periodBounds, title, summ
                 </div>
 
                 {rows.length === 0 ? (
-                    <EmptyState title="No data in this period" description="Try a different period or report type." />
+                    <EmptyState title={t('reports.empty_title')} description={t('reports.empty_desc')} />
                 ) : (
                     <ReportTable report={report} rows={rows} />
                 )}

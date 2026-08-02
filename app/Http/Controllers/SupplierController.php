@@ -53,7 +53,7 @@ class SupplierController extends Controller
 
         return redirect()
             ->route('suppliers.show', $supplier)
-            ->with('success', 'Supplier created successfully.');
+            ->with('success', 'supplier.created');
     }
 
     public function show(Supplier $supplier, Request $request): Response
@@ -95,7 +95,7 @@ class SupplierController extends Controller
 
         return redirect()
             ->route('suppliers.show', $supplier)
-            ->with('success', 'Supplier updated successfully.');
+            ->with('success', 'supplier.updated');
     }
 
     public function destroy(Supplier $supplier): RedirectResponse
@@ -103,13 +103,13 @@ class SupplierController extends Controller
         $this->authorize('delete', $supplier);
 
         if (Material::query()->where('supplier_id', $supplier->id)->exists()) {
-            return back()->with('error', 'This supplier cannot be deleted because it still has materials. Archive it instead.');
+            return back()->with('error', 'supplier.delete_has_materials');
         }
 
         $supplier->delete();
 
         return redirect()
             ->route('suppliers.index')
-            ->with('success', 'Supplier archived.');
+            ->with('success', 'supplier.archived');
     }
 }

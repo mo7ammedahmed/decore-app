@@ -85,9 +85,9 @@ class UpdateShopSettingsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'logo.image' => 'The logo must be an image file (JPEG, PNG or WebP).',
-            'logo.max' => 'The logo must not be larger than 2 MB.',
-            'invoice_accent.regex' => 'The accent colour must be a valid hex value, e.g. #8a6d3b.',
+            'logo.image' => trans('validation.app.logo_image'),
+            'logo.max' => trans('validation.app.logo_max_2mb'),
+            'invoice_accent.regex' => trans('validation.app.hex_accent'),
         ];
     }
 }

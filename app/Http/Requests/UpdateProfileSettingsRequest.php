@@ -70,19 +70,19 @@ class UpdateProfileSettingsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'portrait.image' => 'The portrait must be an image file (JPEG, PNG or WebP).',
-            'portrait.max' => 'The portrait must not be larger than 4 MB.',
-            'theme_dark_accent.regex' => 'The accent colour must be a valid hex value, e.g. #8a6d3b.',
+            'portrait.image' => trans('validation.app.portrait_image'),
+            'portrait.max' => trans('validation.app.portrait_max_4mb'),
+            'theme_dark_accent.regex' => trans('validation.app.hex_accent'),
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'shop_name' => 'shop name',
-            'theme_dark_accent' => 'dark accent colour',
-            'theme_dark_background' => 'dark background colour',
-            'theme_light_accent' => 'light accent colour',
+            'shop_name' => trans('validation.attributes.shop_name'),
+            'theme_dark_accent' => trans('validation.attributes.theme_dark_accent'),
+            'theme_dark_background' => trans('validation.attributes.theme_dark_background'),
+            'theme_light_accent' => trans('validation.attributes.theme_light_accent'),
         ];
     }
 }

@@ -4,6 +4,7 @@ import GlassCard from '@/Components/GlassCard';
 import GlassButton from '@/Components/GlassButton';
 import StatusBadge from '@/Components/StatusBadge';
 import EmptyState from '@/Components/EmptyState';
+import { useI18n } from '@/Utilities/i18n';
 import { Head, Link } from '@inertiajs/react';
 import type { TaxRate } from '@/types/domain';
 
@@ -12,27 +13,29 @@ interface IndexProps {
 }
 
 export default function Index({ taxRates }: IndexProps) {
+    const { t } = useI18n();
+
     return (
         <AuthenticatedLayout>
-            <Head title="Tax rates" />
+            <Head title={t('tax.title')} />
 
-            <PageHeader title="Tax rates" description="VAT and other rates applied per invoice line. Prices are tax-exclusive.">
-                <GlassButton href={route('taxes.create')}>New tax rate</GlassButton>
+            <PageHeader title={t('tax.title')} description={t('tax.sub')}>
+                <GlassButton href={route('taxes.create')}>{t('tax.new')}</GlassButton>
             </PageHeader>
 
             <GlassCard className="p-6">
                 {taxRates.length === 0 ? (
-                    <EmptyState title="No tax rates" description="Create a rate to apply it to invoice lines." />
+                    <EmptyState title={t('tax.empty_title')} description={t('tax.empty_desc')} />
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="table-glass w-full min-w-[560px]">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th className="text-right">Rate</th>
-                                    <th>Default</th>
-                                    <th>Status</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t('tax.name')}</th>
+                                    <th className="text-right">{t('tax.rate_column')}</th>
+                                    <th>{t('tax.default')}</th>
+                                    <th>{t('tax.status')}</th>
+                                    <th className="text-right">{t('tax.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,20 +45,20 @@ export default function Index({ taxRates }: IndexProps) {
                                         <td className="text-right tabular-nums text-white/85">{tax.rate}%</td>
                                         <td>
                                             {tax.is_default ? (
-                                                <StatusBadge label="Default" tone="bg-accent/15 text-accent" />
+                                                <StatusBadge label={t('tax.default')} tone="bg-accent/15 text-accent" />
                                             ) : (
                                                 <span className="text-white/30">—</span>
                                             )}
                                         </td>
                                         <td>
                                             <StatusBadge
-                                                label={tax.is_active ? 'Active' : 'Inactive'}
+                                                label={tax.is_active ? t('tax.active') : t('tax.inactive')}
                                                 tone={tax.is_active ? 'bg-success/15 text-success' : 'bg-white/[0.06] text-white/45'}
                                             />
                                         </td>
                                         <td className="text-right">
                                             <Link href={route('taxes.edit', tax.id)} className="text-sm text-white/60 transition-colors hover:text-accent">
-                                                Edit
+                                                {t('tax.edit_link')}
                                             </Link>
                                         </td>
                                     </tr>

@@ -3,10 +3,12 @@ import type { Material } from '@/types/domain';
 import { money, unitLabel } from '@/Utilities/format';
 import ImagePreview from '@/Components/ImagePreview';
 import StatusBadge from '@/Components/StatusBadge';
+import { useI18n } from '@/Utilities/i18n';
 import { motion } from 'framer-motion';
 import { staggerItem } from '@/Utilities/motion';
 
 export default function MaterialCard({ material }: { material: Material }) {
+    const { t } = useI18n();
     const firstImage = material.image_url ?? null;
     const firstHex = null;
     const lowStock =
@@ -28,7 +30,7 @@ export default function MaterialCard({ material }: { material: Material }) {
                                 {material.localized_name ?? material.name_en}
                             </h3>
                             <StatusBadge
-                                label={material.is_active ? 'Active' : 'Archived'}
+                                label={material.is_active ? t('common.active') : t('common.archived')}
                                 tone={material.is_active ? 'bg-success/15 text-success' : 'bg-white/[0.06] text-white/45'}
                                 dot={false}
                             />
@@ -41,18 +43,18 @@ export default function MaterialCard({ material }: { material: Material }) {
 
                 <div className="mt-5 grid grid-cols-3 gap-3 border-t border-white/[0.06] pt-4 text-sm">
                     <div>
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">Price</p>
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">{t('material_card.price')}</p>
                         <p className="mt-1 text-white/85">{money(material.selling_price, material.currency_code)}</p>
                     </div>
                     <div>
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">SKU</p>
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">{t('material_card.sku')}</p>
                         <p className="mt-1 truncate text-white/85">{material.sku}</p>
                     </div>
                     <div>
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">Stock</p>
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">{t('material_card.stock')}</p>
                         <p className={`mt-1 ${lowStock ? 'text-danger' : 'text-white/85'}`}>
                             {material.stock_quantity ?? '—'}
-                            {lowStock && <span className="ml-1 text-xs">low</span>}
+                            {lowStock && <span className="ml-1 text-xs">{t('material_card.low')}</span>}
                         </p>
                     </div>
                 </div>

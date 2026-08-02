@@ -21,7 +21,7 @@ class EnsureUserIsActive
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            abort(403, 'Your account has been disabled. Please contact an administrator.');
+            abort(403, __('errors.account_disabled'));
         }
 
         return $next($request);

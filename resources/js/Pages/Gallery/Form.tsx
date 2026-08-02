@@ -75,9 +75,9 @@ export default function GalleryForm({ section }: GalleryFormProps) {
                     </label>
 
                     <div className="flex items-center justify-end gap-3 pt-2">
-                        <GlassButton href={route('gallery.index')} variant="secondary">Cancel</GlassButton>
+                        <GlassButton href={route('gallery.index')} variant="secondary">{t('common.cancel')}</GlassButton>
                         <PrimaryButton disabled={processing}>
-                            {processing ? (isEditing ? 'Saving…' : 'Creating…') : isEditing ? 'Save changes' : t('gallery.new_section')}
+                            {processing ? (isEditing ? t('common.saving') : t('common.creating')) : isEditing ? t('common.save_changes') : t('gallery.new_section')}
                         </PrimaryButton>
                     </div>
                 </form>

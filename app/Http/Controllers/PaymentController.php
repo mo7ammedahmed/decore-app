@@ -45,17 +45,33 @@ class PaymentController extends Controller
 
     public function store(StorePaymentRequest $request, Invoice $invoice): RedirectResponse
     {
-       /*  $this->authorize('store', Payment::class, $invoice); */
+        /*  $this->authorize('store', Payment::class, $invoice); */
 
         try {
             $this->payments->record($invoice, $request->validated(), $request->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Payment recorded successfully.');
+            ->with('success', 'payment.recorded');
+    }
+
+    /**
+     * Map a domain exception message to a translation key so the error toast
+     * renders in the active locale. Unknown messages fall through raw — the
+     * front-end translator returns the literal value for unknown keys.
+     */
+    private function errorKey(\DomainException $e): string
+    {
+        return match ($e->getMessage()) {
+            'Payments cannot be recorded against cancelled invoices.' => 'payment.error_cancelled_invoice',
+            'Payments can only be recorded against issued or completed invoices.' => 'payment.error_invalid_status',
+            'Payment amounts must be greater than zero.' => 'payment.error_zero_amount',
+            'This payment has already been reversed.' => 'payment.error_already_reversed',
+            default => $e->getMessage(),
+        };
     }
 
     public function reverse(Payment $payment): RedirectResponse
@@ -65,11 +81,11 @@ class PaymentController extends Controller
         try {
             $this->payments->reverse($payment, auth()->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.show', $payment->invoice_id)
-            ->with('success', 'Payment reversed. The financial record is preserved.');
+            ->with('success', 'payment.reversed');
     }
 }

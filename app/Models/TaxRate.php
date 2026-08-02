@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Database\Factories\TaxRateFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['name', 'rate', 'is_default', 'is_active'])]
 class TaxRate extends Model
 {
+    /** @use HasFactory<TaxRateFactory> */
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

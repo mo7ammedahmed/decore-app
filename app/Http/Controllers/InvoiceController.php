@@ -90,7 +90,7 @@ class InvoiceController extends Controller
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Invoice draft created successfully.');
+            ->with('success', 'invoice.draft_created');
     }
 
     public function show(Invoice $invoice): Response
@@ -154,7 +154,27 @@ class InvoiceController extends Controller
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Invoice draft updated successfully.');
+            ->with('success', 'invoice.draft_updated');
+    }
+
+    /**
+     * Map a domain exception message to a translation key so the error toast
+     * renders in the active locale. Unknown messages fall through raw — the
+     * front-end translator returns the literal value for unknown keys.
+     *
+     * Note: InvoicePolicy gates these state transitions (403) before the
+     * service throws, so the mapped keys are defensive — they only fire if the
+     * exception ever surfaces past the policy (e.g. policy loosened later).
+     */
+    private function errorKey(\DomainException $e): string
+    {
+        return match ($e->getMessage()) {
+            'Only draft invoices can be issued.' => 'invoice.error_only_draft_issue',
+            'Only issued invoices can be completed.' => 'invoice.error_only_issued_complete',
+            'This invoice cannot be cancelled.' => 'invoice.error_cannot_cancel',
+            'Only draft invoices can be deleted. Issued financial records are preserved.' => 'invoice.error_only_draft_delete',
+            default => $e->getMessage(),
+        };
     }
 
     /**
@@ -188,12 +208,12 @@ class InvoiceController extends Controller
         try {
             $this->invoices->deleteDraft($invoice, auth()->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.index')
-            ->with('success', 'Invoice draft deleted.');
+            ->with('success', 'invoice.draft_deleted');
     }
 
     public function issue(Invoice $invoice): RedirectResponse
@@ -203,12 +223,12 @@ class InvoiceController extends Controller
         try {
             $this->invoices->issue($invoice, auth()->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Invoice issued.');
+            ->with('success', 'invoice.issued');
     }
 
     public function complete(Invoice $invoice): RedirectResponse
@@ -218,12 +238,12 @@ class InvoiceController extends Controller
         try {
             $this->invoices->complete($invoice, auth()->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Invoice completed.');
+            ->with('success', 'invoice.completed');
     }
 
     public function cancel(Invoice $invoice): RedirectResponse
@@ -233,12 +253,12 @@ class InvoiceController extends Controller
         try {
             $this->invoices->cancel($invoice, auth()->user());
         } catch (\DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $this->errorKey($e));
         }
 
         return redirect()
             ->route('invoices.show', $invoice)
-            ->with('success', 'Invoice cancelled.');
+            ->with('success', 'invoice.cancelled');
     }
 
     public function print(Invoice $invoice): Response

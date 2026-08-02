@@ -1,5 +1,6 @@
 import FormField from '@/Components/FormField';
 import TextInput from '@/Components/TextInput';
+import { useI18n } from '@/Utilities/i18n';
 
 /**
  * Fields for creating a customer inline while creating or editing an invoice,
@@ -34,20 +35,22 @@ interface InlineCustomerFieldsProps {
 }
 
 export default function InlineCustomerFields({ customer, errors, setField, onCancel }: InlineCustomerFieldsProps) {
+    const { t } = useI18n();
+
     return (
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:col-span-2">
             <div className="mb-3 flex items-center justify-between gap-2">
-                <p className="font-heading text-sm italic text-white/80">New customer</p>
+                <p className="font-heading text-sm italic text-white/80">{t('customers.new')}</p>
                 <button
                     type="button"
                     onClick={onCancel}
                     className="text-xs font-medium text-white/50 transition-colors hover:text-accent"
                 >
-                    ← Choose existing
+                    {t('inline_customer.choose_existing')}
                 </button>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-                <FormField label="Name" required error={errors['customer.name']} htmlFor="new_customer_name">
+                <FormField label={t('common.name')} required error={errors['customer.name']} htmlFor="new_customer_name">
                     <TextInput
                         id="new_customer_name"
                         value={customer?.name ?? ''}
@@ -55,14 +58,14 @@ export default function InlineCustomerFields({ customer, errors, setField, onCan
                         autoFocus
                     />
                 </FormField>
-                <FormField label="Company name" error={errors['customer.company_name']} htmlFor="new_customer_company">
+                <FormField label={t('common.company_name')} error={errors['customer.company_name']} htmlFor="new_customer_company">
                     <TextInput
                         id="new_customer_company"
                         value={customer?.company_name ?? ''}
                         onChange={(e) => setField('company_name', e.target.value)}
                     />
                 </FormField>
-                <FormField label="Email" error={errors['customer.email']} htmlFor="new_customer_email">
+                <FormField label={t('common.email')} error={errors['customer.email']} htmlFor="new_customer_email">
                     <TextInput
                         id="new_customer_email"
                         type="email"
@@ -70,22 +73,22 @@ export default function InlineCustomerFields({ customer, errors, setField, onCan
                         onChange={(e) => setField('email', e.target.value)}
                     />
                 </FormField>
-                <FormField label="Phone" error={errors['customer.phone']} htmlFor="new_customer_phone">
+                <FormField label={t('common.phone')} error={errors['customer.phone']} htmlFor="new_customer_phone">
                     <TextInput
                         id="new_customer_phone"
                         value={customer?.phone ?? ''}
                         onChange={(e) => setField('phone', e.target.value)}
-                        placeholder="05xxxxxxxx"
+                        placeholder={t('common.phone_placeholder')}
                     />
                 </FormField>
-                <FormField label="Tax number" error={errors['customer.tax_number']} htmlFor="new_customer_tax">
+                <FormField label={t('common.tax_number')} error={errors['customer.tax_number']} htmlFor="new_customer_tax">
                     <TextInput
                         id="new_customer_tax"
                         value={customer?.tax_number ?? ''}
                         onChange={(e) => setField('tax_number', e.target.value)}
                     />
                 </FormField>
-                <FormField label="City" error={errors['customer.city']} htmlFor="new_customer_city">
+                <FormField label={t('common.city')} error={errors['customer.city']} htmlFor="new_customer_city">
                     <TextInput
                         id="new_customer_city"
                         value={customer?.city ?? ''}
