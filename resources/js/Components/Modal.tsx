@@ -66,7 +66,7 @@ export default function Modal({
                             leaveTo="opacity-0 translate-y-4 sm:scale-95"
                         >
                             <DialogPanel
-                                className={`liquid-glass-strong w-full overflow-hidden rounded-modal text-left align-middle shadow-2xl transition-all ${maxWidthClass}`}
+                                className={`liquid-glass-strong w-full overflow-hidden rounded-modal text-left align-middle shadow-2xl transition-[transform,opacity] ${maxWidthClass}`}
                             >
                                 {children}
                             </DialogPanel>

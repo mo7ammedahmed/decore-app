@@ -421,7 +421,10 @@ function ThemeColorControl({
                 maxLength={7}
                 spellCheck={false}
                 onChange={(event) => onChange(event.target.value)}
-                className="form-input w-full font-mono text-xs uppercase"
+                // Force LTR so the '#' prefix stays at the start in RTL/Arabic layouts
+                // (a bare hex value like #F4F4F1 would otherwise render as F4F4F1#).
+                dir="ltr"
+                className="form-input w-full text-left font-mono text-xs uppercase"
             />
         </div>
     );

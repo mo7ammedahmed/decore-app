@@ -20,7 +20,7 @@ class SessionExpiredHandlingTest extends TestCase
         $request = Request::create('/settings/profile', 'PATCH');
         $request->headers->set('X-Inertia', 'true');
 
-        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException());
+        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException);
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertStringContainsString('/login', $response->headers->get('Location'));
@@ -35,7 +35,7 @@ class SessionExpiredHandlingTest extends TestCase
     {
         $request = Request::create('/analytics/collect', 'POST', server: ['HTTP_ACCEPT' => 'application/json']);
 
-        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException());
+        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException);
 
         $this->assertEquals(419, $response->getStatusCode());
         $this->assertSame(
@@ -52,7 +52,7 @@ class SessionExpiredHandlingTest extends TestCase
     {
         $request = Request::create('/settings', 'PATCH', ['foo' => 'bar']);
 
-        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException());
+        $response = $this->app->make(ExceptionHandler::class)->render($request, new TokenMismatchException);
 
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertStringContainsString('/login', $response->headers->get('Location'));
@@ -66,7 +66,7 @@ class SessionExpiredHandlingTest extends TestCase
     {
         $request = Request::create('/missing', 'GET');
 
-        $response = $this->app->make(ExceptionHandler::class)->render($request, new NotFoundHttpException());
+        $response = $this->app->make(ExceptionHandler::class)->render($request, new NotFoundHttpException);
 
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertNull($response->headers->get('Location'));

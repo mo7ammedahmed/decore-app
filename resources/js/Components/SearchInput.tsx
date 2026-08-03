@@ -61,17 +61,21 @@ export default function SearchInput({
                 stroke="currentColor"
                 strokeWidth={1.8}
                 strokeLinecap="round"
+                aria-hidden="true"
             >
                 <circle cx="11" cy="11" r="7" />
                 <path d="M21 21l-4.35-4.35" />
             </svg>
             <input
                 type="search"
+                name={queryKey}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder={resolvedPlaceholder}
                 aria-label={resolvedPlaceholder}
-                className="form-input w-full ps-10 pe-9 sm:w-64"
+                autoComplete="off"
+                spellCheck={false}
+                className="form-input w-full ps-10 pe-12 sm:w-64"
             />
             {value !== '' && (
                 <button
@@ -79,9 +83,9 @@ export default function SearchInput({
                     onClick={clear}
                     aria-label={t('search.clear')}
                     title={t('search.clear')}
-                    className="absolute end-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-fg/40 transition-colors hover:bg-fg/[0.06] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+                    className="absolute end-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-fg/40 transition-colors hover:bg-fg/[0.06] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                 >
-                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true">
                         <path d="M6 6l12 12M18 6L6 18" />
                     </svg>
                 </button>

@@ -20,7 +20,7 @@ export default function MaterialCard({ material }: { material: Material }) {
         <motion.div variants={staggerItem}>
             <Link
                 href={route('materials.show', material.id)}
-                className="liquid-glass group block rounded-[1.25rem] p-5 transition-all duration-300 hover:bg-white/[0.03]"
+                className="liquid-glass group block rounded-[1.25rem] p-5 transition-colors duration-300 hover:bg-white/[0.03]"
             >
                 <div className="flex items-start gap-4">
                     <ImagePreview url={firstImage} hex={firstHex} alt={material.localized_name ?? material.name_en} size="lg" />

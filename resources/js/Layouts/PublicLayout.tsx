@@ -31,6 +31,25 @@ function rgba(hex: string, alpha: number): string {
     return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
 }
 
+/** Pick the higher-contrast black/white foreground for a configurable accent. */
+function contrastText(hex: string): '#000000' | '#ffffff' {
+    const match = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    if (!match) return '#000000';
+
+    const value = parseInt(match[1], 16);
+    const channels = [(value >> 16) & 255, (value >> 8) & 255, value & 255].map((channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.03928
+            ? normalized / 12.92
+            : ((normalized + 0.055) / 1.055) ** 2.4;
+    });
+    const luminance = 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+    const blackContrast = (luminance + 0.05) / 0.05;
+    const whiteContrast = 1.05 / (luminance + 0.05);
+
+    return whiteContrast > blackContrast ? '#ffffff' : '#000000';
+}
+
 interface ResolvedPalette {
     accent: string;
     background: string;
@@ -87,6 +106,7 @@ function usePublicTheme(palette: ThemePalette | undefined, appearance: 'dark' | 
             '--color-accent-soft': rgba(active.accent, 0.16),
             '--color-accent-runtime': active.accent,
             '--color-accent-soft-runtime': rgba(active.accent, 0.16),
+            '--color-on-accent-runtime': contrastText(active.accent),
             // Text
             '--color-foreground': active.foreground,
             '--color-foreground-soft': rgba(active.foreground, 0.75),
@@ -125,12 +145,15 @@ function usePublicTheme(palette: ThemePalette | undefined, appearance: 'dark' | 
         }
         const previousScheme = root.style.colorScheme;
         const previousTheme = root.dataset.theme;
+        const themeMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+        const previousThemeColor = themeMeta?.getAttribute('content') ?? null;
 
         for (const [name, value] of Object.entries(vars)) {
             root.style.setProperty(name, value);
         }
         root.style.colorScheme = appearance;
         root.dataset.theme = appearance;
+        themeMeta?.setAttribute('content', active.background);
 
         return () => {
             for (const [name, value] of previous) {
@@ -140,6 +163,7 @@ function usePublicTheme(palette: ThemePalette | undefined, appearance: 'dark' | 
             root.style.colorScheme = previousScheme;
             if (previousTheme === undefined) delete root.dataset.theme;
             else root.dataset.theme = previousTheme;
+            if (themeMeta && previousThemeColor !== null) themeMeta.setAttribute('content', previousThemeColor);
         };
     }, [palette, appearance]);
 }
@@ -231,21 +255,29 @@ export default function PublicLayout({
         >
             <Head title={title} />
 
+            <a
+                href="#public-main-content"
+                onClick={() => document.getElementById('public-main-content')?.focus()}
+                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-canvas focus:px-5 focus:py-3 focus:text-sm focus:text-fg focus:ring-2 focus:ring-accent"
+            >
+                {t('shell.skip_to_content')}
+            </a>
+
             {/* ---- Header ---- */}
             <header className={`sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-300 ${headerClass}`}>
                 <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
                     <Link
                         href="/"
-                        className="flex min-w-0 items-center gap-3 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+                        className="flex min-h-11 min-w-0 items-center gap-3 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                     >
                         {shop?.logo_url ? (
-                            <img src={shop.logo_url} alt={shopName} className="h-9 w-9 rounded-full object-cover" />
+                            <img src={shop.logo_url} alt={shopName} width={36} height={36} className="h-9 w-9 rounded-full object-cover" />
                         ) : (
                             <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface">
                                 <span className="font-heading text-lg italic text-accent">{shopName.charAt(0).toUpperCase()}</span>
                             </span>
                         )}
-                        <span className="truncate font-heading text-xl italic leading-none text-fg">{shopName}</span>
+                        <span className="hidden truncate font-heading text-xl italic leading-none text-fg min-[430px]:inline">{shopName}</span>
                     </Link>
 
                     <nav className="hidden items-center gap-1 lg:flex" aria-label={t('nav.main')}>
@@ -274,7 +306,7 @@ export default function PublicLayout({
                         <LanguageSwitcher />
                         <Link
                             href={user ? '/dashboard' : '/catalog'}
-                            className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-canvas transition-all duration-200 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90 active:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                         >
                             {user ? t('common.open_dashboard') : t('header.explore_materials')}
                             <svg className="h-4 w-4 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -292,9 +324,9 @@ export default function PublicLayout({
                             aria-expanded={menuOpen}
                             aria-controls="public-mobile-menu"
                             aria-label={menuOpen ? t('nav.close_navigation') : t('nav.toggle_navigation')}
-                            className="rounded-full p-2 text-fg/70 transition-colors hover:bg-fg/[0.05] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+                            className="flex h-11 w-11 items-center justify-center rounded-full text-fg/70 transition-colors hover:bg-fg/[0.05] hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                         >
-                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" aria-hidden="true">
                                 {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
                             </svg>
                         </button>
@@ -334,7 +366,7 @@ export default function PublicLayout({
                                     <Link
                                         href={user ? '/dashboard' : '/catalog'}
                                         onClick={() => setMenuOpen(false)}
-                                        className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-canvas"
+                                        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-on-accent"
                                     >
                                         {user ? t('common.open_dashboard') : t('header.explore_materials')}
                                     </Link>
@@ -346,7 +378,7 @@ export default function PublicLayout({
             </header>
 
             {/* ---- Body ---- */}
-            <main className="flex-1">{children}</main>
+            <main id="public-main-content" tabIndex={-1} className="flex-1 outline-none">{children}</main>
 
             {/* ---- Footer ---- */}
             <footer className="mt-24 border-t border-line bg-surface/40">
@@ -356,7 +388,7 @@ export default function PublicLayout({
                         <div>
                             <div className="flex items-center gap-3">
                                 {shop?.logo_url ? (
-                                    <img src={shop.logo_url} alt={shopName} className="h-10 w-10 rounded-full object-cover" />
+                                    <img src={shop.logo_url} alt={shopName} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
                                 ) : (
                                     <span className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface">
                                         <span className="font-heading text-base italic text-accent">{shopName.charAt(0).toUpperCase()}</span>
@@ -383,7 +415,7 @@ export default function PublicLayout({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             aria-label={social.label}
-                                            className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-fg/55 transition-colors hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+                                            className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-fg/55 transition-colors hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
                                         >
                                             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                                 <path d={social.path} />

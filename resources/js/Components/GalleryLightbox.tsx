@@ -173,7 +173,7 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                         /* Inline position: .liquid-glass-strong sets position:relative in
                            unlayered CSS, which overrides the `absolute` utility (@layer). */
                         style={{ position: 'absolute' }}
-                        className="absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                        className="absolute end-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-colors duration-200 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                     >
                         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
                             <path d="M6 6l12 12M18 6L6 18" />
@@ -187,7 +187,7 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                             onClick={previous}
                             aria-label={t('gallery.lightbox_previous')}
                             style={{ position: 'absolute' }}
-                            className="absolute start-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:start-5"
+                            className="absolute start-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-[transform,color] duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:start-5"
                         >
                             <svg className="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M15 6l-6 6 6 6" />
@@ -202,7 +202,7 @@ export default function GalleryLightbox({ items, startIndex, open, onClose }: Ga
                             onClick={next}
                             aria-label={t('gallery.lightbox_next')}
                             style={{ position: 'absolute' }}
-                            className="absolute end-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-all duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:end-5"
+                            className="absolute end-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full liquid-glass-strong text-white/80 transition-[transform,color] duration-200 hover:scale-105 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:end-5"
                         >
                             <svg className="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M9 6l6 6-6 6" />

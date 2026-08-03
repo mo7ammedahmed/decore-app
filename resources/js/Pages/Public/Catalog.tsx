@@ -71,7 +71,7 @@ export default function Catalog({ materials, classifications, filters }: Catalog
                             <button
                                 type="button"
                                 onClick={() => updateClassification('')}
-                                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
+                                className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
                                     !filters.classification
                                         ? 'border-accent bg-accent/10 text-fg'
                                         : 'border-line text-fg/55 hover:border-fg/30 hover:text-fg'
@@ -87,7 +87,7 @@ export default function Catalog({ materials, classifications, filters }: Catalog
                                         type="button"
                                         onClick={() => updateClassification(active ? '' : String(classification.id))}
                                         aria-pressed={active}
-                                        className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
+                                        className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
                                             active
                                                 ? 'border-accent bg-accent/10 text-fg'
                                                 : 'border-line text-fg/55 hover:border-fg/30 hover:text-fg'
@@ -110,7 +110,7 @@ export default function Catalog({ materials, classifications, filters }: Catalog
                         <button
                             type="button"
                             onClick={clearFilters}
-                            className="text-sm font-medium text-accent transition-colors hover:text-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                            className="inline-flex min-h-11 items-center text-sm font-medium text-accent transition-colors hover:text-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                         >
                             {t('catalog.clear')}
                         </button>

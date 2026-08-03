@@ -114,6 +114,24 @@ class TrackingIntegrationTest extends TestCase
             ->assertSee('123456789012345', false);
     }
 
+    public function test_enabled_integration_is_not_shared_or_rendered_on_staff_pages(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->put('/settings/integrations/meta_pixel', [
+            'installation_method' => 'managed',
+            'tracking_id' => '123456789012345',
+            'is_enabled' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/dashboard')
+            ->assertOk()
+            ->assertDontSee('connect.facebook.net', false)
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('tracking_integrations', []));
+    }
+
     public function test_disabled_integration_is_not_shared(): void
     {
         $admin = User::factory()->admin()->create();

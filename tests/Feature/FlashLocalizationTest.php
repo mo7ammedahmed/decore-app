@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Classification;
-use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Material;
@@ -26,7 +25,9 @@ class FlashLocalizationTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private InvoiceService $invoices;
+
     private PaymentService $payments;
 
     protected function setUp(): void

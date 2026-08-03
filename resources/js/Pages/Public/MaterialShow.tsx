@@ -132,7 +132,7 @@ export default function MaterialShow({ material, currency, related }: MaterialSh
                                 href={quoteHref}
                                 target={whatsapp ? '_blank' : undefined}
                                 rel={whatsapp ? 'noopener noreferrer' : undefined}
-                                className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-200 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                                className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90 active:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                             >
                                 {whatsapp ? t('show.whatsapp_cta') : t('show.quote_cta')}
                                 <svg className="h-4 w-4 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

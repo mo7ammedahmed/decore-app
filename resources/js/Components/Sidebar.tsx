@@ -75,7 +75,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
                                 key={item.key ?? item.route}
                                 href={route(item.route)}
                                 onClick={onClose}
-                                className={`group flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
+                                className={`group flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
                                     active
                                         ? 'liquid-glass-strong text-white'
                                         : 'text-white/60 hover:bg-white/[0.04] hover:text-white'

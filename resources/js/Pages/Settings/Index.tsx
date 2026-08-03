@@ -217,7 +217,7 @@ export default function Index({
                                 {LANDING_SECTIONS.map(({ key, title, hint }) => (
                                     <label
                                         key={key}
-                                        className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 ${
+                                        className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors duration-200 ${
                                             data.landing_sections[key] === false
                                                 ? 'border-white/10 bg-white/[0.02] opacity-60'
                                                 : 'border-accent/40 bg-accent/[0.06]'
@@ -352,7 +352,7 @@ export default function Index({
                                             type="button"
                                             onClick={() => setData('invoice_template', tpl.id)}
                                             aria-pressed={selected}
-                                            className={`w-full rounded-xl border p-4 text-start transition-all duration-200 ${
+                                            className={`w-full rounded-xl border p-4 text-start transition-colors duration-200 ${
                                                 selected
                                                     ? 'border-accent bg-accent/[0.08]'
                                                     : 'border-white/10 bg-white/[0.02] hover:border-white/25'

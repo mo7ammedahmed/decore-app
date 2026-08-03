@@ -51,14 +51,14 @@ class GalleryImageService
     public function replace(UploadedFile $file, GalleryImage $image): GalleryImage
     {
         $disk = (string) config('filesystems.default', 'public');
+        $previousDisk = $image->disk;
+        $previousPath = $image->path;
 
         $path = $file->store('gallery/'.$image->section_id, $disk);
 
         if ($path === false) {
             throw new \RuntimeException(__('errors.gallery_image_replace_failed'));
         }
-
-        $previousPath = $image->path;
 
         $image->forceFill([
             'disk' => $disk,
@@ -68,7 +68,9 @@ class GalleryImageService
             'size' => $file->getSize(),
         ])->save();
 
-        Storage::disk($disk)->delete($previousPath);
+        // The default may change between uploads (for example, local storage
+        // during setup and S3 in production). Delete from the recorded disk.
+        Storage::disk($previousDisk)->delete($previousPath);
 
         return $image;
     }

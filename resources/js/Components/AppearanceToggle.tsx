@@ -19,7 +19,7 @@ export default function AppearanceToggle() {
             aria-pressed={!isDark}
             aria-label={label}
             title={label}
-            className="liquid-glass flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-fg/70 transition-colors duration-200 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
+            className="liquid-glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-fg/70 transition-colors duration-200 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30"
         >
             {isDark ? (
                 /* Sun — tap to switch to light */

@@ -258,7 +258,7 @@ function UploadForm({ section }: { section: GallerySection }) {
                     }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
-                    className={`liquid-glass group flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-card border border-dashed p-6 text-center transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
+                    className={`liquid-glass group flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-card border border-dashed p-6 text-center transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 ${
                         dragOver ? 'border-accent/60 bg-accent/5' : 'border-white/15'
                     } ${processing ? 'cursor-not-allowed opacity-50' : ''}`}
                 >

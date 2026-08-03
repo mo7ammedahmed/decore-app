@@ -64,7 +64,7 @@ export default function FloatingContactButtons({ profile }: Props) {
                     href={telHref(phone)}
                     aria-label={t('fab.call')}
                     title={t('fab.call')}
-                    className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-canvas shadow-lg shadow-black/25 transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/40"
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-on-accent shadow-lg shadow-black/25 transition-transform duration-200 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/40"
                 >
                     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <title>{t('fab.call')}</title>

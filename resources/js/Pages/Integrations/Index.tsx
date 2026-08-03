@@ -164,7 +164,7 @@ function IntegrationCard({
                                 onToggleCustom(false);
                                 setData('installation_method', 'managed');
                             }}
-                            className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+                            className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
                                 installationMethod === 'managed' ? 'liquid-glass-strong text-white' : 'text-white/45 hover:text-white'
                             }`}
                         >
@@ -176,7 +176,7 @@ function IntegrationCard({
                                 onToggleCustom(true);
                                 setData('installation_method', 'custom');
                             }}
-                            className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+                            className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
                                 installationMethod === 'custom' ? 'liquid-glass-strong text-white' : 'text-white/45 hover:text-white'
                             }`}
                         >

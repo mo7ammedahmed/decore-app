@@ -197,7 +197,7 @@ export default function About({ stats, classifications, inspiration }: AboutProp
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                         <Link
                             href={route('catalog')}
-                            className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-200 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                            className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90 active:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                         >
                             {t('landing.cta_catalog')}
                         </Link>

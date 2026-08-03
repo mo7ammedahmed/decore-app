@@ -46,6 +46,7 @@
        every accent utility; the admin keeps the brass default. */
     --color-accent: var(--color-accent-runtime, var(--primitive-color-brass-400));
     --color-accent-soft: var(--color-accent-soft-runtime, var(--primitive-color-brass-400-soft));
+    --color-on-accent: var(--color-on-accent-runtime, var(--primitive-color-black));
     --color-danger: var(--primitive-color-danger-400);
     --color-success: var(--primitive-color-success-400);
     --color-warning: var(--primitive-color-warning-400);

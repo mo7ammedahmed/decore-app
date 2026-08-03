@@ -56,7 +56,7 @@ export default function MiniBarChart({ data, format, title, tone = 'accent' }: M
                             {compact(d.value)}
                         </span>
                         <div
-                            className={`w-full rounded-t-lg bg-gradient-to-t transition-all duration-500 ${TONES[tone]}`}
+                            className={`w-full rounded-t-lg bg-gradient-to-t transition-[height,background-color] duration-500 ${TONES[tone]}`}
                             style={{ height: `${Math.max(6, Math.round((d.value / max) * MAX_BAR_PX))}px` }}
                             title={`${d.label}: ${format(d.value)}`}
                         />

@@ -41,7 +41,7 @@ export default function TrafficChart({ data, title }: TrafficChartProps) {
                             {compact(d.page_views)}
                         </span>
                         <div
-                            className={`w-full rounded-t-lg bg-gradient-to-t from-accent/25 to-accent/80 transition-all duration-500 group-hover:from-accent/40 group-hover:to-accent ${
+                            className={`w-full rounded-t-lg bg-gradient-to-t from-accent/25 to-accent/80 transition-colors duration-500 group-hover:from-accent/40 group-hover:to-accent ${
                                 d.page_views === 0 ? 'opacity-30' : ''
                             }`}
                             style={{ height: `${Math.max(4, Math.round((d.page_views / max) * MAX_BAR_PX))}px` }}

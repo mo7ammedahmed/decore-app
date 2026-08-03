@@ -69,7 +69,7 @@ export default function PublicGallery({ sections }: GalleryProps) {
                             type="button"
                             onClick={() => setActive('all')}
                             aria-pressed={active === 'all'}
-                            className={`rounded-full border px-5 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
+                            className={`min-h-11 rounded-full border px-5 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
                                 active === 'all'
                                     ? 'border-accent bg-accent/10 text-fg'
                                     : 'border-line text-fg/55 hover:border-fg/30 hover:text-fg'
@@ -85,7 +85,7 @@ export default function PublicGallery({ sections }: GalleryProps) {
                                     type="button"
                                     onClick={() => setActive(isActive ? 'all' : String(section.id))}
                                     aria-pressed={isActive}
-                                    className={`rounded-full border px-5 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
+                                    className={`min-h-11 rounded-full border px-5 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/30 ${
                                         isActive
                                             ? 'border-accent bg-accent/10 text-fg'
                                             : 'border-line text-fg/55 hover:border-fg/30 hover:text-fg'
@@ -167,7 +167,7 @@ export default function PublicGallery({ sections }: GalleryProps) {
                                                         </span>
                                                     </button>
                                                     {image.alt_text && (
-                                                        <figcaption className="pointer-events-none absolute bottom-0 start-0 end-0 translate-y-2 bg-gradient-to-t from-black/70 to-transparent p-4 text-sm text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                                                        <figcaption className="pointer-events-none absolute bottom-0 start-0 end-0 translate-y-2 bg-gradient-to-t from-black/70 to-transparent p-4 text-sm text-white opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                                                             {image.alt_text}
                                                         </figcaption>
                                                     )}

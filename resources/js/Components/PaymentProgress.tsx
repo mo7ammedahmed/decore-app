@@ -16,7 +16,7 @@ export default function PaymentProgress({ invoice, currency }: { invoice: Invoic
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
                 <div
-                    className="h-full rounded-full bg-gradient-to-r from-accent/70 to-accent transition-all duration-700"
+                    className="h-full rounded-full bg-gradient-to-r from-accent/70 to-accent transition-[width] duration-700"
                     style={{ width: `${percent}%` }}
                 />
             </div>

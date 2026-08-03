@@ -34,6 +34,7 @@ export default function PublicImage({ src, alt, label, eager = false, className 
             src={src}
             alt={alt}
             loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
             onError={() => setFailed(true)}
             className={className}
         />

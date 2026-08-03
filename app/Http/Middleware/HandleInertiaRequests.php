@@ -44,8 +44,26 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $isPublicPage = $request->routeIs('landing', 'catalog', 'catalog.show', 'about', 'contact', 'gallery');
         // One row, one query — reused for both public identity views.
         $settings = ShopSetting::instance();
+
+        // Marketing tags must never execute inside authenticated staff pages:
+        // besides skewing analytics, custom snippets would run in a privileged
+        // page context. Keep them scoped to the visitor website.
+        $trackingIntegrations = $isPublicPage
+            ? TrackingIntegration::query()
+                ->where('is_enabled', true)
+                ->get(['platform', 'tracking_id', 'installation_method', 'head_code', 'body_code'])
+                ->map(fn (TrackingIntegration $row) => [
+                    'platform' => $row->platform->value,
+                    'tracking_id' => $row->tracking_id,
+                    'installation_method' => $row->installation_method->value,
+                    'head_code' => $row->head_code,
+                    'body_code' => $row->body_code,
+                ])
+                ->all()
+            : [];
 
         return [
             ...parent::share($request),
@@ -65,17 +83,7 @@ class HandleInertiaRequests extends Middleware
             // Admin-editable overrides for visitor-facing text (empty => code default).
             'site_content' => SiteContent::overrides(),
             // Enabled analytics/pixels rendered by the tracking blade components.
-            'tracking_integrations' => TrackingIntegration::query()
-                ->where('is_enabled', true)
-                ->get(['platform', 'tracking_id', 'installation_method', 'head_code', 'body_code'])
-                ->map(fn (TrackingIntegration $row) => [
-                    'platform' => $row->platform->value,
-                    'tracking_id' => $row->tracking_id,
-                    'installation_method' => $row->installation_method->value,
-                    'head_code' => $row->head_code,
-                    'body_code' => $row->body_code,
-                ])
-                ->all(),
+            'tracking_integrations' => $trackingIntegrations,
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,

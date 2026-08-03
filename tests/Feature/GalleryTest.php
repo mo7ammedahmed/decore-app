@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\GallerySection;
 use App\Models\User;
+use App\Services\GalleryImageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -110,6 +111,23 @@ class GalleryTest extends TestCase
 
         Storage::disk('public')->assertMissing($path);
         $this->assertDatabaseMissing('gallery_images', ['id' => $image->id]);
+    }
+
+    public function test_replacing_image_across_disks_removes_the_original_file(): void
+    {
+        Storage::fake('s3');
+        $section = GallerySection::factory()->create();
+        $service = app(GalleryImageService::class);
+
+        $image = $service->store($this->image('local.png'), $section);
+        $originalPath = $image->path;
+
+        config(['filesystems.default' => 's3']);
+        $service->replace($this->image('cloud.png'), $image);
+
+        Storage::disk('public')->assertMissing($originalPath);
+        Storage::disk('s3')->assertExists($image->path);
+        $this->assertSame('s3', $image->fresh()->disk);
     }
 
     public function test_deleting_section_removes_its_images_and_files(): void
